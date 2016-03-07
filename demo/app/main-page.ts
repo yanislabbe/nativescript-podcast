@@ -18,19 +18,12 @@ function pageLoaded(args) {
 exports.pageLoaded = pageLoaded;
 
 function startRecord(args) {
-    try {
-        console.log('START');
-        recorder = new MediaRecorder();
-        console.log(recorder);
-        recorder.setAudioSource(0);
-        recorder.setOutputFormat(0);
-        recorder.setAudioEncoder(0);
-        recorder.setOutputFile("/sdcard/example.mp4");
-        recorder.prepare();
-        recorder.start();
-    } catch (ex) {
-        console.log(ex);
-    }
+    var options = { filename: "sdcard/example.mp4" };
+    audio.startRecording(options).then(function(result) {
+        recorder = result;
+    }, function(err) {
+        alert(err);
+    });
 }
 exports.startRecord = startRecord
 
@@ -59,33 +52,33 @@ function playAudio(args) {
     //var url = "http://www.noiseaddicts.com/samples_1w72b820/17.mp3";
     var url = "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3";
 
-    var onComplete = function () {
+    var onComplete = function() {
         alert('Audio File Completed');
     };
 
-    var onError = function () {
+    var onError = function() {
         alert('Error callback');
     };
 
-    var onInfo = function () {
+    var onInfo = function() {
         alert('Info callback');
     }
 
     var options = { audioUrl: url, completeCallback: onComplete, errorCallback: onError, infoCallback: onInfo };
 
-    audio.playAudio(options).then(function (result) {
+    audio.playAudio(options).then(function(result) {
         console.log(result);
         mediaPlayer = result;
-    }, function (err) {
+    }, function(err) {
         alert(err);
     });
 }
 exports.playAudio = playAudio;
 
 function pauseAudio(args) {
-    audio.pauseAudio(mediaPlayer).then(function (result) {
+    audio.pauseAudio(mediaPlayer).then(function(result) {
         console.log(result);
-    }, function (err) {
+    }, function(err) {
         console.log(err);
     });
 }
@@ -98,11 +91,11 @@ function startAudio(args) {
 exports.startAudio = startAudio;
 
 function getFileDuration(args) {
-    audio.getAudioTrackDuration(mediaPlayer).then(function (result) {
+    audio.getAudioTrackDuration(mediaPlayer).then(function(result) {
         console.log(result);
         var convertedTime = msToTime(result);
         data.set("trackDuration", convertedTime);
-    }, function (err) {
+    }, function(err) {
         alert(err);
     });
 }

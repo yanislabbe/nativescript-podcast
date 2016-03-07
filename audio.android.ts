@@ -16,6 +16,7 @@ import definition = require("audio");
 // }
  
 var MediaPlayer = android.media.MediaPlayer;
+var MediaRecorder = android.media.MediaRecorder;
 
 export var playAudio = function(options: definition.AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -34,14 +35,14 @@ export var playAudio = function(options: definition.AudioPlayerOptions): Promise
             
             // On Error
             mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
-                onError: function (mp: any, what: number, extra: number) {
+                onError: function(mp: any, what: number, extra: number) {
                     options.errorCallback();
                 }
             }));
             
             // On Info
             mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
-                onInfo: function (mp: any, what: number, extra: number) {
+                onInfo: function(mp: any, what: number, extra: number) {
                     console.log('what: ' + what + ' ' + 'extra: ' + extra);
                     options.infoCallback();
                 }
@@ -53,7 +54,7 @@ export var playAudio = function(options: definition.AudioPlayerOptions): Promise
                     mp.start();
                     resolve(mediaPlayer);
                 }
-            }));           
+            }));
 
         } catch (ex) {
             reject(ex);
@@ -61,7 +62,7 @@ export var playAudio = function(options: definition.AudioPlayerOptions): Promise
     });
 }
 
-export var pauseAudio = function (player: any): Promise<boolean> {
+export var pauseAudio = function(player: any): Promise<boolean> {
     return new Promise((resolve, reject) => {
         try {
             var isPlaying = player.isPlaying();
@@ -77,23 +78,41 @@ export var pauseAudio = function (player: any): Promise<boolean> {
     });
 }
 
-export var getAudioTrackDuration = function (player: any): Promise<string> {
+export var getAudioTrackDuration = function(player: any): Promise<string> {
     return new Promise((resolve, reject) => {
-       try {
-           var duration = player.getDuration();
-           resolve(duration.toString());
-       } catch (ex) {
-           reject(ex);
-       } 
+        try {
+            var duration = player.getDuration();
+            resolve(duration.toString());
+        } catch (ex) {
+            reject(ex);
+        }
     });
 }
 
-export var disposeAudioPlayer = function (player: any): Promise<any> {
+export var disposeAudioPlayer = function(player: any): Promise<any> {
     return new Promise((resolve, reject) => {
-       try {
-           player.release();
-       } catch (ex) {
-           reject(ex);
-       } 
+        try {
+            player.release();
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
+
+export var startRecording = function(options: definition.AudioRecorderOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+            var recorder = new MediaRecorder();
+            recorder.setAudioSource(0);
+            recorder.setOutputFormat(0);
+            recorder.setAudioEncoder(0);
+            // recorder.setOutputFile("/sdcard/example.mp4");
+            recorder.setOutputFile(options.filename);
+            recorder.prepare();
+            recorder.start();
+            resolve(recorder);
+        } catch (ex) {
+            console.log(ex);
+        }
     });
 }

@@ -12,7 +12,7 @@ declare module "audio" {
     * Starts playing audio file.
     * @param url The URL to request from.
     */
-    export function playAudio(options: AudioPlayerOptions): Promise<string>;
+    export function playAudio(options: AudioPlayerOptions): Promise<any>;
     
     /**
      * Pauses playing audio file.
@@ -39,6 +39,11 @@ declare module "audio" {
       export function getAudioTrackDuration(player: any): Promise<number>;
     
     /**
+     * Starts the native audio recording control.
+     */
+      export function startRecording(options: AudioRecordingOptions): Promise<any>;
+    
+    /**
     * Provides options for the audio player.
     */
     export interface AudioPlayerOptions {
@@ -61,6 +66,13 @@ declare module "audio" {
          * Gets or sets the callback to be invoked to communicate some info and/or warning about the media or its playback.
          */
         infoCallback?: Function;
+      }
+    
+    export interface AudioRecordingOptions {
+        /**
+         * Gets or sets the recorded file name.
+         */
+        filename: string;
     }
        
 }
