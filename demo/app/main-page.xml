@@ -1,0 +1,58 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd"
+      xmlns:sb="nativescript-statusbar" loaded="pageLoaded"
+      backgroundColor="#000">
+       <!-- Use the tag with StatusBar to style it 
+           Available ios settings:
+           default 
+           light 
+           dark
+           opaque
+      -->
+      <sb:StatusBar ios:barStyle="default" android:barStyle="#C2185B" />
+      
+<Page.actionBar>
+    <ActionBar title="NativeScript Audio" backgroundColor="#E91E63" color="#fff" />
+</Page.actionBar>
+  
+  <ScrollView>
+  
+  <StackLayout>
+    
+    <label text="{{ audioFile }}" textWrap="false" />
+        
+    <grid-layout rows="auto" columns="auto, *, auto">
+        <label text="&#xE148;" class="material-icons gray font20" margin="5" row="0" col="0" />
+            <image src="~/pics/toad.jpg" stretch="aspectFit" margin="10" height="200" row="0" col="1" />
+        <label text="&#xE5D4;" class="material-icons gray font20" margin="5" row="0" col="2" />
+    </grid-layout>
+    
+  <label text="Theory of a Deadman" class=" gray center font20" textWrap="true" />
+    <label text="Santa Monica" class="white center font20" textWrap="true" />
+    
+    <grid-layout rows="auto, auto, auto" columns="auto, *, auto" margin="15">
+         <label text="0:00" row="1" col="0" textWrap="true" class="white" />   
+          <!--<Progress value="{{ someProperty }}" row="1" col="1" />   -->
+          <label text="{{ trackDuration }}" row="1" col="2" textWrap="true" class="white" />   
+    </grid-layout>
+    
+        <button text="&#xE037;" width="20%" class="material-icons white font50" height="70" backgroundColor="#9FA8DA" borderRadius="40" tap="playAudio" row="2" col="1" />
+      
+    
+
+  
+      
+<!--      
+    <button text="PAUSE AUDIO" tap="pauseAudio" />
+    <button text="RESUME AUDIO" tap="startAudio" />
+    <button text="GET DURATION" tap="getFileDuration" />
+    
+    
+     <Label text="{{ message }}" class="message" textWrap="true"/>
+    <button text="START RECORDING" tap="startRecord" />
+    <button text="STOP RECORDING" tap="stopRecord" />
+    <button text="GET FILE" tap="getFile" />
+    -->
+  </StackLayout>
+  
+  </ScrollView>
+</Page>

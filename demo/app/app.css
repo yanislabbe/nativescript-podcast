@@ -1,0 +1,43 @@
+﻿.message {
+  color: #000;
+  font-size: 20;
+  horizontal-align: center;
+  padding:20;
+}
+
+.material-icons {
+   font-family: MaterialIcons-Regular, Material Icons;
+}
+
+.playBtn {
+    font-size: 30;
+    color: #9FA8DA;
+}
+
+.center {
+    horizontal-align: center;
+}
+
+.white {
+    color: #fff;
+}
+.gray {
+    color: #888;
+}
+.blue {
+    color: #9FA8DA;
+}
+
+
+.font20 {
+    font-size: 20;
+}
+.font28 {
+    font-size: 28;
+}
+.font40{
+    font-size: 40;
+}
+.font50{
+    font-size: 50;
+}
