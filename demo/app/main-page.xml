@@ -47,7 +47,7 @@
       tap="pauseAudio" row="2" col="1" />
     
     
-    
+     
 
   
       
@@ -58,10 +58,13 @@
     
     
      <Label text="{{ message }}" class="message" textWrap="true"/>-->
+     
     <button text="START RECORDING" tap="startRecord" />
-    <!--<button text="STOP RECORDING" tap="stopRecord" />
-    <button text="GET FILE" tap="getFile" />
-    -->
+    <button text="STOP RECORDING" tap="stopRecord" />
+    
+    <!--<button text="GET FILE" tap="getFile" />-->
+    
+    
   </StackLayout>
   
   </ScrollView>

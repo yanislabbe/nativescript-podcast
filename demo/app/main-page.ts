@@ -2,6 +2,7 @@ var observable = require('data/observable');
 var page = require('ui/page');
 var fs = require('file-system');
 var audioModule = require("nativescript-audio");
+var snackbar = require("nativescript-snackbar");
 
 
 var MediaRecorder = android.media.MediaRecorder;
@@ -25,33 +26,39 @@ function pageLoaded(args) {
 exports.pageLoaded = pageLoaded;
 
 function startRecord(args) {
-    
-    var onInfo = function() {
-        console.log('INFO CALLBACK ');
+
+    var canRecord = audioModule.canDeviceRecord();
+
+    if (canRecord) {
+        var onInfo = function() {
+            console.log('INFO CALLBACK ');
+        }
+
+        var onError = function() {
+            console.log('ERROR CALLBACK ');
+        }
+
+        var options = {
+            filename: "sdcard/example.mp4",
+            infoCallback: onInfo,
+            errorCallback: onError
+        }
+
+        audioModule.startRecorder(options).then(function(result) {
+            recorder = result;
+        }, function(err) {
+            alert(err);
+        });
+    } else {
+        alert("This device cannot record audio.");
     }
-    
-    var onError = function() {
-        console.log('ERROR CALLBACK ');
-    }
-    
-    var options = { 
-        filename: "sdcard/example.mp4",
-        infoCallback: onInfo,
-        errorCallback: onError
-    }
-    
-    audioModule.startRecorder(options).then(function(result) {
-        recorder = result;
-    }, function(err) {
-        alert(err);
-    });
 }
 exports.startRecord = startRecord
 
 function stopRecord(args) {
     audioModule.stopRecorder(recorder).then(function(result) {
         console.log(result);
-        alert('Recorder stopped.');
+        snackbar.simple("Recorder stopped");
     }, function(ex) {
         console.log(ex);
     });
@@ -79,7 +86,7 @@ function playAudio(args) {
     var url = "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3";
 
     var onComplete = function() {
-        alert('Audio File Completed');
+        snackbar.simple("Audio file complete");
     };
 
     var onError = function() {
@@ -92,7 +99,7 @@ function playAudio(args) {
 
     var options = { audioUrl: url, completeCallback: onComplete, errorCallback: onError, infoCallback: onInfo };
 
-    data.set("isPlaying", true);    
+    data.set("isPlaying", true);
     audioModule.startPlayer(options).then(function(result) {
         console.log(result);
         mediaPlayer = result;

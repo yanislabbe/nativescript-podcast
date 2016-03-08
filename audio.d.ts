@@ -39,6 +39,11 @@ declare module "audio" {
       export function getAudioTrackDuration(player: any): Promise<number>;
     
     /**
+     * Gets the capability of the device if it can record audio.
+     */
+      export function deviceCanRecord(): boolean;
+    
+    /**
      * Starts the native audio recording control.
      */
       export function startRecorder(options: AudioRecorderOptions): Promise<any>;

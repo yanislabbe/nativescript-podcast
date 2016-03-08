@@ -1,5 +1,6 @@
 import {Common} from './audio.common';
 import definition from "./audio";
+import app = require("application");
 
 // export class Audio extends Common {
 //     private _android: android.media.MediaPlayer;
@@ -111,6 +112,16 @@ export var getAudioTrackDuration = function(player: any): Promise<string> {
 
 
 /**** AUDIO RECORDING ****/
+
+export var canDeviceRecord = function(): boolean {
+    var pManager = app.android.context.getPackageManager();
+    var canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
+    if (canRecord) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 export var startRecorder = function(options: definition.AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
