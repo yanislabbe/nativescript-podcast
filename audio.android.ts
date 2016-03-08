@@ -134,7 +134,7 @@ export var startRecorder = function(options: definition.AudioRecorderOptions): P
             }));
             
             // On Info
-            recorder.setOnInfoListerner(new MediaRecorder.OnInfoListener({
+            recorder.setOnInfoListener(new MediaRecorder.OnInfoListener({
                 onInfo: function(mr: any, what: number, extra: number) {
                     options.infoCallback();
                 }
