@@ -1,10 +1,17 @@
 var observable = require('data/observable');
 var page = require('ui/page');
 var fs = require('file-system');
-var audio = require("nativescript-audio");
-var data = new observable.Observable({});
+var audioModule = require("nativescript-audio");
+
+
 var MediaRecorder = android.media.MediaRecorder;
 var MediaPlayer = android.media.MediaPlayer;
+
+var data = new observable.Observable({
+    isPlaying: false
+});
+
+
 var recorder;
 var mediaPlayer;
 
@@ -18,8 +25,22 @@ function pageLoaded(args) {
 exports.pageLoaded = pageLoaded;
 
 function startRecord(args) {
-    var options = { filename: "sdcard/example.mp4" };
-    audio.startRecording(options).then(function(result) {
+    
+    var onInfo = function() {
+        console.log('INFO CALLBACK ');
+    }
+    
+    var onError = function() {
+        console.log('ERROR CALLBACK ');
+    }
+    
+    var options = { 
+        filename: "sdcard/example.mp4",
+        infoCallback: onInfo,
+        errorCallback: onError
+    }
+    
+    audioModule.startRecorder(options).then(function(result) {
         recorder = result;
     }, function(err) {
         alert(err);
@@ -28,12 +49,12 @@ function startRecord(args) {
 exports.startRecord = startRecord
 
 function stopRecord(args) {
-    try {
-        recorder.stop();
-        console.log('STOP');
-    } catch (ex) {
+    audioModule.stopRecorder(recorder).then(function(result) {
+        console.log(result);
+        alert('Recorder stopped.');
+    }, function(ex) {
         console.log(ex);
-    }
+    });
 }
 exports.stopRecord = stopRecord;
 
@@ -47,6 +68,11 @@ function getFile(args) {
     }
 }
 exports.getFile = getFile;
+
+
+
+
+/***** AUDIO PLAYER *****/
 
 function playAudio(args) {
     //var url = "http://www.noiseaddicts.com/samples_1w72b820/17.mp3";
@@ -66,20 +92,25 @@ function playAudio(args) {
 
     var options = { audioUrl: url, completeCallback: onComplete, errorCallback: onError, infoCallback: onInfo };
 
-    audio.playAudio(options).then(function(result) {
+    data.set("isPlaying", true);    
+    audioModule.startPlayer(options).then(function(result) {
         console.log(result);
         mediaPlayer = result;
+        getFileDuration(mediaPlayer);
     }, function(err) {
         alert(err);
+        data.set("isPlaying", false);
     });
 }
 exports.playAudio = playAudio;
 
 function pauseAudio(args) {
-    audio.pauseAudio(mediaPlayer).then(function(result) {
+    audioModule.pausePlayer(mediaPlayer).then(function(result) {
         console.log(result);
+        data.set("isPlaying", false);
     }, function(err) {
         console.log(err);
+        data.set("isPlaying", true);
     });
 }
 exports.pauseAudio = pauseAudio;
@@ -91,7 +122,7 @@ function startAudio(args) {
 exports.startAudio = startAudio;
 
 function getFileDuration(args) {
-    audio.getAudioTrackDuration(mediaPlayer).then(function(result) {
+    audioModule.getAudioTrackDuration(args).then(function(result) {
         console.log(result);
         var convertedTime = msToTime(result);
         data.set("trackDuration", convertedTime);

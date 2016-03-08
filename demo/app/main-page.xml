@@ -30,13 +30,21 @@
     <label text="Santa Monica" class="white center font20" textWrap="true" />
     
     <grid-layout rows="auto, auto, auto" columns="auto, *, auto" margin="15">
-         <label text="0:00" row="1" col="0" textWrap="true" class="white" />   
-          <!--<Progress value="{{ someProperty }}" row="1" col="1" />   -->
+         <label text="0:56" row="1" col="0" textWrap="true" class="white" />   
+          <Slider value="40" maxValue="100" minValue="0" row="1" col="1" />
           <label text="{{ trackDuration }}" row="1" col="2" textWrap="true" class="white" />   
     </grid-layout>
     
-        <button text="&#xE037;" width="20%" class="material-icons white font50" height="70" backgroundColor="#9FA8DA" borderRadius="40" tap="playAudio" row="2" col="1" />
-      
+    <!--PLAY-->
+    <button text="&#xE037;" width="20%" class="material-icons white font50"
+     height="70" backgroundColor="#9FA8DA" borderRadius="40"
+      visibility="{{ isPlaying ? 'collapsed' : 'visible' }}"
+      tap="playAudio" row="2" col="1" />
+    <!-- PAUSE -->
+    <button text="&#xE034;" width="20%" class="material-icons white font50"
+     height="70" backgroundColor="#9FA8DA" borderRadius="40"
+     visibility="{{ isPlaying ? 'visible' : 'collapsed' }}"
+      tap="pauseAudio" row="2" col="1" />
     
 
   

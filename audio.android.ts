@@ -1,5 +1,5 @@
 import {Common} from './audio.common';
-import definition = require("audio");
+import definition from "./audio";
 
 // export class Audio extends Common {
 //     private _android: android.media.MediaPlayer;
@@ -14,11 +14,12 @@ import definition = require("audio");
 //     
 //     
 // }
- 
-var MediaPlayer = android.media.MediaPlayer;
-var MediaRecorder = android.media.MediaRecorder;
 
-export var playAudio = function(options: definition.AudioPlayerOptions): Promise<any> {
+// let android: any;
+let MediaPlayer = android.media.MediaPlayer;
+let MediaRecorder = android.media.MediaRecorder;
+
+export var startPlayer = function(options: definition.AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
         try {
             var mediaPlayer = new MediaPlayer();
@@ -52,7 +53,7 @@ export var playAudio = function(options: definition.AudioPlayerOptions): Promise
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
                 onPrepared: function(mp) {
                     mp.start();
-                    resolve(mediaPlayer);
+                    resolve(mp);
                 }
             }));
 
@@ -62,7 +63,7 @@ export var playAudio = function(options: definition.AudioPlayerOptions): Promise
     });
 }
 
-export var pauseAudio = function(player: any): Promise<boolean> {
+export var pausePlayer = function(player: any): Promise<any> {
     return new Promise((resolve, reject) => {
         try {
             var isPlaying = player.isPlaying();
@@ -73,9 +74,28 @@ export var pauseAudio = function(player: any): Promise<boolean> {
             }
             resolve(false);
         } catch (ex) {
-            reject(false);
+            reject(ex);
         }
     });
+}
+
+export var disposePlayer = function(player: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+            player.release();
+            resolve();
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
+
+export var isAudioPlaying = function(player: any): boolean {
+    if (player.isPlaying() === true) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 export var getAudioTrackDuration = function(player: any): Promise<string> {
@@ -89,17 +109,10 @@ export var getAudioTrackDuration = function(player: any): Promise<string> {
     });
 }
 
-export var disposeAudioPlayer = function(player: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-        try {
-            player.release();
-        } catch (ex) {
-            reject(ex);
-        }
-    });
-}
 
-export var startRecording = function(options: definition.AudioRecorderOptions): Promise<any> {
+/**** AUDIO RECORDING ****/
+
+export var startRecorder = function(options: definition.AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
         try {
             var recorder = new MediaRecorder();
@@ -110,9 +123,49 @@ export var startRecording = function(options: definition.AudioRecorderOptions): 
             recorder.setOutputFile(options.filename);
             recorder.prepare();
             recorder.start();
+            
+            // Is there any benefit to calling start() before setting listener?
+            
+            // On Error
+            recorder.setOnErrorListener(new MediaRecorder.OnErrorListener({
+                onError: function(mr: any, what: number, extra: number) {
+                    options.errorCallback();
+                }
+            }));
+            
+            // On Info
+            recorder.setOnInfoListerner(new MediaRecorder.OnInfoListener({
+                onInfo: function(mr: any, what: number, extra: number) {
+                    options.infoCallback();
+                }
+            }));
+
             resolve(recorder);
+
         } catch (ex) {
-            console.log(ex);
+            reject(ex);
+        }
+    });
+}
+
+export var stopRecorder = function(recorder: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+            recorder.stop();
+            resolve();
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
+
+export var disposeRecorder = function(recorder: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+            recorder.release();
+            resolve();
+        } catch (ex) {
+            reject(ex);
         }
     });
 }

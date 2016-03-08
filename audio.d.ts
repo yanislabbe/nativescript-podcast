@@ -12,19 +12,19 @@ declare module "audio" {
     * Starts playing audio file.
     * @param url The URL to request from.
     */
-    export function playAudio(options: AudioPlayerOptions): Promise<any>;
+    export function startPlayer(options: AudioPlayerOptions): Promise<any>;
     
     /**
      * Pauses playing audio file.
      * @param player The audio player to pause.
      */
-    export function pauseAudio(player: any): Promise<boolean>;
+    export function pausePlayer(player: any): Promise<boolean>;
     
     /**
-     * Resets the audio player.
+     * Releases resources from the audio player.
      * @param player The audio player to reset.
      */
-     export function resetAudioPlayer(player: any): Promise<boolean>; 
+     export function disposePlayer(player: any): Promise<boolean>; 
      
      /**
       * Check if the audio is actively playing.
@@ -41,7 +41,18 @@ declare module "audio" {
     /**
      * Starts the native audio recording control.
      */
-      export function startRecording(options: AudioRecordingOptions): Promise<any>;
+      export function startRecorder(options: AudioRecorderOptions): Promise<any>;
+    
+     /**
+     * Stops the native audio recording control.
+     */
+      export function stopRecorder(recorder: any): Promise<any>;
+    
+    /**
+     * Releases resources from the recorder.
+     * @param recorder The audio player to reset.
+     */
+     export function disposeRecorder(recorder: any): Promise<any>; 
     
     /**
     * Provides options for the audio player.
@@ -68,11 +79,26 @@ declare module "audio" {
         infoCallback?: Function;
       }
     
-    export interface AudioRecordingOptions {
+    export interface AudioRecorderOptions {
         /**
          * Gets or sets the recorded file name.
          */
         filename: string;
+        
+        /**
+         * Gets or set the max duration of the recording session.
+         */
+        maxDuration?: number;
+        
+         /**
+         * Gets or sets the callback when an error occurs with the media recorder.
+         */
+        errorCallback?: Function;
+        
+         /**
+         * Gets or sets the callback to be invoked to communicate some info and/or warning about the media or its playback.
+         */
+        infoCallback?: Function;
     }
        
 }
