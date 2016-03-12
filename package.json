@@ -24,11 +24,12 @@
 		"NativeScript",
 		"JavaScript",
 		"Android",
-        "audio"
+        "audio",
+        "bradmartin"
 	],
 	"author": {
-		"name": "Your Name",
-		"email": "youremail@yourdomain.com"
+		"name": "Brad Martin",
+		"email": "bradwaynemartin@gmail.com"
 	},
 	"bugs": {
 		"url": "https://github.com/bradmartin/nativescript-audio/issues"
