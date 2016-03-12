@@ -50,13 +50,11 @@ function startRecord(args) {
         var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
         console.log(JSON.stringify(audioFolder));
 
-        var recordedFile = audioFolder.getFile("recording.mp3");
-
-        var path = "~/audio/recording.mp3";        
+        var file = "~/audio/recording.mp3";        
         
         var recorderOptions = {
 
-            filename: path,
+            filename: audioFolder.path + "/recording.mp3",
 
             infoCallback: function() {
                 console.log();
@@ -104,6 +102,7 @@ function getFile(args) {
     }
 }
 exports.getFile = getFile;
+
 
 function playRecordedFile(args) {
 

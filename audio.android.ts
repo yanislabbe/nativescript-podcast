@@ -50,31 +50,25 @@ export var playFromFile = function(options: definition.AudioPlayerOptions): Prom
             mediaPlayer.prepareAsync();
 
             // On Complete
-            if (options.completeCallback) {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
                     onCompletion: function(mp) {
                         options.completeCallback();
                     }
                 }));
-            }
 
             // On Error
-            if (options.errorCallback) {
                 mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
                     onError: function(mp: any, what: number, extra: number) {
                         options.errorCallback();
                     }
                 }));
-            }
 
             // On Info
-            if (options.infoCallback) {
                 mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
                     onInfo: function(mp: any, what: number, extra: number) {
                         options.infoCallback();
                     }
                 }))
-            }
 
             // On Prepared
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({

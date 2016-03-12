@@ -23,7 +23,7 @@
             <button class="darkBtn" text="STOP PLAYING" tap="pauseAudio" />
             </stack-layout>   
          </ScrollView>
-       </TabViewItem.view>
+       </TabViewItem.view> 
      </TabViewItem>
      
 <TabViewItem title="Player">
