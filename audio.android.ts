@@ -1,54 +1,130 @@
 import {Common} from './audio.common';
-import definition from "./audio";
+import types = require("utils/types");
+import definition = require("./audio");
 import app = require("application");
+import * as utilsModule from "utils/utils";
+import * as fileSystemModule from "file-system";
+import * as enumsModule from "ui/enums";
 
-// export class Audio extends Common {
-//     private _android: android.media.MediaPlayer;
-//     
-//     get android(): android.media.MediaPlayer {
-//         return this._android;
-//     }
-//     
-//     var startAudio = function (params:type) {
-//         
-//     }
-//     
-//     
-// }
-
-// let android: any;
 let MediaPlayer = android.media.MediaPlayer;
 let MediaRecorder = android.media.MediaRecorder;
 
-export var startPlayer = function(options: definition.AudioPlayerOptions): Promise<any> {
+var utils: typeof utilsModule; 
+function ensureUtils() {
+    if (!utils) {
+        utils = require("utils/utils");
+    }
+}
+
+var fs: typeof fileSystemModule;
+function ensureFS() {
+    if (!fs) {
+        fs = require("file-system");
+    }
+}
+
+var enums: typeof enumsModule;
+function ensureEnums() {
+    if (!enums) {
+        enums = require("ui/enums");
+    }
+}
+
+export var playFromFile = function(options: definition.AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
         try {
+            var audioPath;
+
+            ensureFS();
+
+            var fileName = types.isString(options.audioFile) ? options.audioFile.trim() : "";
+            if (fileName.indexOf("~/") === 0) {
+                fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
+                console.log('fileName: ' + fileName);
+                audioPath = fileName;
+            }
+
             var mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(options.audioUrl);
+            mediaPlayer.setDataSource(audioPath);
             mediaPlayer.prepareAsync();
-            
+
             // On Complete
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
-                onCompletion: function(mp) {
-                    options.completeCallback();
-                }
-            }));
-            
+            if (options.completeCallback) {
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
+                    onCompletion: function(mp) {
+                        options.completeCallback();
+                    }
+                }));
+            }
+
             // On Error
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
-                onError: function(mp: any, what: number, extra: number) {
-                    options.errorCallback();
+            if (options.errorCallback) {
+                mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
+                    onError: function(mp: any, what: number, extra: number) {
+                        options.errorCallback();
+                    }
+                }));
+            }
+
+            // On Info
+            if (options.infoCallback) {
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
+                    onInfo: function(mp: any, what: number, extra: number) {
+                        options.infoCallback();
+                    }
+                }))
+            }
+
+            // On Prepared
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
+                onPrepared: function(mp) {
+                    mp.start();
+                    resolve(mp);
                 }
             }));
-            
+
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+}
+
+export var playFromUrl = function(options: definition.AudioPlayerOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+
+            var mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(options.audioFile);
+            mediaPlayer.prepareAsync();
+
+            // On Complete
+            if (options.completeCallback) {
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
+                    onCompletion: function(mp) {
+                        options.completeCallback();
+                    }
+                }));
+            }
+
+            // On Error
+            if (options.errorCallback) {
+                mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
+                    onError: function(mp: any, what: number, extra: number) {
+                        options.errorCallback();
+                    }
+                }));
+            }
+
             // On Info
-            mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
-                onInfo: function(mp: any, what: number, extra: number) {
-                    console.log('what: ' + what + ' ' + 'extra: ' + extra);
-                    options.infoCallback();
-                }
-            }))
+            if (options.infoCallback) {
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
+                    onInfo: function(mp: any, what: number, extra: number) {
+                        options.infoCallback();
+                    }
+                }))
+            }
 
             // On Prepared
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
@@ -134,20 +210,20 @@ export var startRecorder = function(options: definition.AudioRecorderOptions): P
             recorder.setOutputFile(options.filename);
             recorder.prepare();
             recorder.start();
-            
+
             // Is there any benefit to calling start() before setting listener?
-            
+
             // On Error
             recorder.setOnErrorListener(new MediaRecorder.OnErrorListener({
                 onError: function(mr: any, what: number, extra: number) {
-                    options.errorCallback();
+                    options.errorCallback({ msg: what, extra: extra });
                 }
             }));
-            
+
             // On Info
             recorder.setOnInfoListener(new MediaRecorder.OnInfoListener({
                 onInfo: function(mr: any, what: number, extra: number) {
-                    options.infoCallback();
+                    options.infoCallback({ msg: what, extra: extra });
                 }
             }));
 
@@ -180,3 +256,75 @@ export var disposeRecorder = function(recorder: any): Promise<any> {
         }
     });
 }
+
+
+
+
+
+
+
+
+
+// export var playFromResource = function(options: definition.AudioPlayerOptions): Promise<any> {
+//     return new Promise((resolve, reject) => {
+//         try {
+//             var audioPath;
+
+//             ensureUtils();
+
+//             var res = utils.ad.getApplicationContext().getResources();
+//             var packageName = utils.ad.getApplication().getPackageName();
+//             var identifier = utils.ad.getApplicationContext().getResources().getIdentifier("in_the_night", "raw", packageName);
+//             console.log(identifier);
+//             console.log(packageName);
+//             console.log(res);
+//             if (res) {
+//                 var resourcePath = "android.resource://" + packageName + "/raw/" + options.audioFile;
+//                 audioPath = resourcePath;
+//             }
+
+//             var mediaPlayer = new MediaPlayer();
+//             mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+//             mediaPlayer.setDataSource(audioPath);
+//             mediaPlayer.prepareAsync();
+
+//             // On Complete            
+//             if (options.completeCallback) {
+//                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
+//                     onCompletion: function(mp) {
+//                         options.completeCallback();
+//                     }
+//                 }));
+//             }
+
+//             // On Error
+//             if (options.errorCallback) {
+//                 mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
+//                     onError: function(mp: any, what: number, extra: number) {
+//                         options.errorCallback({ msg: what, extra: extra });
+//                     }
+//                 }));
+//             }
+
+//             // On Info
+//             if (options.infoCallback) {
+//                 mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
+//                     onInfo: function(mp: any, what: number, extra: number) {
+//                         options.infoCallback({ msg: what, extra: extra });
+//                     }
+//                 }))
+//             }
+
+//             // On Prepared - this resolves and returns the android.media.MediaPlayer;
+//             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
+//                 onPrepared: function(mp) {
+//                     mp.start();
+//                     resolve(mp);
+//                 }
+//             }));
+
+//         } catch (ex) {
+//             reject(ex);
+//         }
+//     });
+// }

@@ -1,71 +1,57 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd"
-      xmlns:sb="nativescript-statusbar" loaded="pageLoaded"
-      backgroundColor="#000">
-       <!-- Use the tag with StatusBar to style it 
-           Available ios settings:
-           default 
-           light 
-           dark
-           opaque
-      -->
-      <sb:StatusBar ios:barStyle="default" android:barStyle="#C2185B" />
+<Page  xmlns="http://schemas.nativescript.org/tns.xsd"
+      xmlns:sb="nativescript-statusbar"
+       loaded="pageLoaded">
+       
+<sb:StatusBar ios:barStyle="default" android:barStyle="#303F9F" />
       
 <Page.actionBar>
-    <ActionBar title="NativeScript Audio" backgroundColor="#E91E63" color="#fff" />
+    <ActionBar title="NativeScript Audio" backgroundColor="#3F51B5" color="#fff" />
 </Page.actionBar>
-  
-  <ScrollView>
-  
-  <StackLayout>
-    
-    <label text="{{ audioFile }}" textWrap="false" />
-        
-    <grid-layout rows="auto" columns="auto, *, auto">
-        <label text="&#xE148;" class="material-icons gray font20" margin="5" row="0" col="0" />
-            <image src="~/pics/toad.jpg" stretch="aspectFit" margin="10" height="200" row="0" col="1" />
-        <label text="&#xE5D4;" class="material-icons gray font20" margin="5" row="0" col="2" />
-    </grid-layout>
-    
-  <label text="Theory of a Deadman" class=" gray center font20" textWrap="true" />
-    <label text="Santa Monica" class="white center font20" textWrap="true" />
-    
-    <grid-layout rows="auto, auto, auto" columns="auto, *, auto" margin="15">
-         <label text="0:56" row="1" col="0" textWrap="true" class="white" />   
-          <Slider value="40" maxValue="100" minValue="0" row="1" col="1" />
-          <label text="{{ trackDuration }}" row="1" col="2" textWrap="true" class="white" />   
-    </grid-layout>
-    
-    <!--PLAY-->
-    <button text="&#xE037;" width="20%" class="material-icons white font50"
-     height="70" backgroundColor="#9FA8DA" borderRadius="40"
-      visibility="{{ isPlaying ? 'collapsed' : 'visible' }}"
-      tap="playAudio" row="2" col="1" />
-    <!-- PAUSE -->
-    <button text="&#xE034;" width="20%" class="material-icons white font50"
-     height="70" backgroundColor="#9FA8DA" borderRadius="40"
-     visibility="{{ isPlaying ? 'visible' : 'collapsed' }}"
-      tap="pauseAudio" row="2" col="1" />
-    
-    
-     
 
-  
-      
-<!--      
-    <button text="PAUSE AUDIO" tap="pauseAudio" />
-    <button text="RESUME AUDIO" tap="startAudio" />
-    <button text="GET DURATION" tap="getFileDuration" />
-    
-    
-     <Label text="{{ message }}" class="message" textWrap="true"/>-->
+<TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081">
+   <TabView.items>
+     <TabViewItem title="Recorder">
+       <TabViewItem.view>
+          <ScrollView>
+            <stack-layout>
+               <ActivityIndicator color="#3489db" busy="{{ isRecording }}" />
+               <button row="0" col="0" class="darkBtn" text="START RECORDING" tap="startRecord" />
+            <button class="darkBtn" text="STOP RECORDING" tap="stopRecord" />    
+            <button class="darkBtn" text="GET FILE" tap="getFile" /> 
+            <label text="{{ recordedAudioFile }}" class="gray" textWrap="true" />  
+            <button class="darkBtn" text="play recorded" tap="playRecordedFile" /> 
+            <button class="darkBtn" text="STOP PLAYING" tap="pauseAudio" />
+            </stack-layout>   
+         </ScrollView>
+       </TabViewItem.view>
+     </TabViewItem>
      
-    <button text="START RECORDING" tap="startRecord" />
-    <button text="STOP RECORDING" tap="stopRecord" />
-    
-    <!--<button text="GET FILE" tap="getFile" />-->
-    
-    
-  </StackLayout>
+<TabViewItem title="Player">
+   <TabViewItem.view>
+      <ScrollView>
+        <StackLayout>
+           
+        <!--<button class="darkBtn" text="Play Res Audio" tap="playResFile" />
+        <label class="gray center" text="In The Night - The Weeknd" textWrap="true" />-->
+
+        <button class="darkBtn" text="Play Remote Audio" tap="playRemoteFile" />
+        <label class="blue center" text="Welcome To Fight Club!" textWrap="true" />
+        
+        <label text="REMINDER: Remote files can have a lag before playing due to processing and network speeds." class="gray" textWrap="true"  />
+
+
+        <button class="darkBtn" text="Play Local File" tap="playLocalFile" />
+        <label class="blue center" text="Angel - Theory of a Deadman" textWrap="true" />        
+        
+        <button class="darkBtn" text="STOP" tap="stopPlaying" />
+      
+       </StackLayout>
   
   </ScrollView>
+       </TabViewItem.view>
+     </TabViewItem>
+   </TabView.items>
+ </TabView>
+  
+  
 </Page>

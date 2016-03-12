@@ -1,8 +1,17 @@
 ﻿.message {
   color: #000;
-  font-size: 20;
+  font-size: 40;
   horizontal-align: center;
   padding:20;
+}
+
+button{
+    horizontal-align: center;
+}
+
+.darkBtn {
+    color: #333;
+    margin: 5;
 }
 
 .material-icons {
@@ -10,8 +19,13 @@
 }
 
 .playBtn {
-    font-size: 30;
-    color: #9FA8DA;
+    background-color: #3F51B5;
+    color: #fff;
+}
+
+.whiteBtn {
+    background-color: #fff;
+    color: #333;
 }
 
 .center {
