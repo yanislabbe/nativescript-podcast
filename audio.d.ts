@@ -3,7 +3,6 @@
  */
 
 declare module "audio" {
-    import fs = require("file-system");
 
     //    export class Audio {
     //        
