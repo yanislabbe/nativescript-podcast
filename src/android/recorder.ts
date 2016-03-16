@@ -1,7 +1,8 @@
 import * as app from 'application';
-import * as definition from '../../audio';
+import {TNSRecordI} from '../common';
+import {AudioRecorderOptions} from '../options';
 
-export class TNSRecorder {
+export class TNSRecorder implements TNSRecordI {
   private recorder: any;
 
   constructor() {
@@ -18,7 +19,7 @@ export class TNSRecorder {
     }
   }
 
-  public start(options: definition.AudioRecorderOptions): Promise<any> {
+  public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         let MediaRecorder = android.media.MediaRecorder;

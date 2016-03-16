@@ -1,11 +1,12 @@
 import {isString} from 'utils/types';
-import {AudioPlayerOptions} from '../../audio';
+import {TNSPlayerI} from '../common';
+import {AudioPlayerOptions} from '../options';
 import * as app from 'application';
 import * as utils from 'utils/utils';
 import * as fs from 'file-system';
 import * as enums from 'ui/enums';
 
-export class TNSPlayer {
+export class TNSPlayer implements TNSPlayerI {
   private player: any;
 
   constructor() {
@@ -117,18 +118,30 @@ export class TNSPlayer {
   public pause(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        var isPlaying = this.player.isPlaying();
-        if (isPlaying) {
+        if (this.player.isPlaying()) {
           console.log('PAUSE');
           this.player.pause();
           resolve(true);
         }
-        resolve(false);
       } catch (ex) {
         reject(ex);
       }
     });
   }
+
+  public play(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (!this.player.isPlaying()) {
+          console.log('RESUME');
+          this.player.start();
+          resolve(true);
+        }
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  }  
 
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {

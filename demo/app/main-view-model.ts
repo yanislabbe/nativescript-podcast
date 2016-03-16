@@ -31,13 +31,11 @@ export class AudioDemo extends Observable {
       if (TNSRecorder.CAN_RECORD()) {
 
           var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
-          console.log(JSON.stringify(audioFolder));
-
-          var file = "~/audio/recording.mp3";        
+          console.log(JSON.stringify(audioFolder));    
           
           var recorderOptions = {
 
-              filename: audioFolder.path + "/recording.mp3",
+              filename: `${audioFolder.path}/recording.${app.android ? 'mp3' : 'caf'}`,
 
               infoCallback: () => {
                   console.log();
@@ -62,7 +60,7 @@ export class AudioDemo extends Observable {
   }
 
   public stopRecord(args) {
-      this.recorder.dispose().then(() => {
+      this.recorder.stop().then(() => {
           this.set("isRecording", false);
           snackbar.simple("Recorder stopped");
       }, (ex) => {
@@ -74,7 +72,7 @@ export class AudioDemo extends Observable {
   public getFile(args) {
       try {
           var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
-          var recordedFile = audioFolder.getFile("recording.mp3");
+          var recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
           console.log(JSON.stringify(recordedFile));
           console.log('recording exists: ' + fs.File.exists(recordedFile.path));
           this.set("recordedAudioFile", recordedFile.path);
@@ -87,11 +85,11 @@ export class AudioDemo extends Observable {
   public playRecordedFile(args) {
 
       var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
-      var recordedFile = audioFolder.getFile("recording.mp3");
+      var recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
       console.log("RECORDED FILE : " + JSON.stringify(recordedFile));
 
       var playerOptions = {
-          audioFile: "~/audio/recording.mp3",
+          audioFile: `~/audio/recording.${this.platformExtension()}`,
 
           completeCallback: () => {
               snackbar.simple("Audio file complete");
@@ -127,7 +125,7 @@ export class AudioDemo extends Observable {
 
   /***** AUDIO PLAYER *****/
 
-  public playAudio(filepath: any, fileType: any) {
+  public playAudio(filepath: string, fileType: string) {
 
       try {
           var playerOptions = {
@@ -249,4 +247,12 @@ export class AudioDemo extends Observable {
       console.log('START');
       this.player.start();
   }
+
+  public tabChange(e: any) {
+    console.log(e);
+  }  
+
+  private platformExtension() {
+    return `${app.android ? 'mp3' : 'caf'}`;
+  }  
 }
