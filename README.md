@@ -1,9 +1,17 @@
 # NativeScript-Audio
-NativeScript plugin to play and record audio files.
+NativeScript plugin to play and record audio files for Android and iOS.
 
-*Currently Android only, iOS is in the works.*
+Uses the following native classes:
 
-[Android Media Recorder Docs](http://developer.android.com/reference/android/media/MediaRecorder.html)
+#### Android
+
+* [Player](http://developer.android.com/reference/android/media/MediaPlayer.html)
+* [Recorder](http://developer.android.com/reference/android/media/MediaRecorder.html)
+
+#### iOS
+
+* [Player](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
+* [Recorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
 
 ## Installation
 `npm install nativescript-audio`
@@ -12,41 +20,38 @@ NativeScript plugin to play and record audio files.
 
 ![AudioExample](screens/audiosample.gif)
 
-
 ## API
 
-#### *Recording*
+#### TNSRecorder
 
-##### canDeviceRecord() - *Promise*
-- retruns:  *boolean*
+Method |  Description
+-------- | ---------
+`TNSRecorder.CAN_RECORD()`: `boolean` | Determine if ready to record.
+`start({ filename: string, errorCallback?: Function, infoCallback?: Function })`: `Promise` | Start recording file.
+`stop()`: `void` | Stop recording.
+`dispose()`: `void` | Free up system resources when done with recorder.
 
-##### startRecorder( { filename: string, errorCallback?: Function, infoCallback?: Function } ) - *Promise*
-- returns: *recorder* (android.media.MediaRecorder)
+#### TNSPlayer
 
-##### stopRecorder(recorder: recorder object from startRecorder)
+Method |  Description
+-------- | ---------
+`playFromFile( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a file.
+`playFromUrl( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a url.
+`pause()`: `void` | Pause playback.
+`dispose()`: `void` | Free up resources when done playing audio.
+`isAudioPlaying()`: `boolean` | Determine if player is playing.
+`getAudioTrackDuration()`: `Promise` | duration of media file assigned to mediaPlayer
 
+## Why the TNS prefixed name?
 
-##### disposeRecorder(recorder: recorder object from startRecorder)
-- *Free up system resources when done with recorder*
+`TNS` stands for **T**elerik **N**ative**S**cript
 
+iOS uses classes prefixed with `NS` (stemming from the [NeXTSTEP](https://en.wikipedia.org/wiki/NeXTSTEP) days of old):
+https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/
 
-#### *Playing* 
+To avoid confusion with iOS native classes, `TNS` is used instead.
 
-##### playFromFile( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } ) - *Promise*
-- returns mediaPlayer (android.media.MediaPlayer)
+# License
 
-##### playFromUrl( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } ) - *Promise*
-- returns mediaPlayer (android.media.MediaPlayer)
-
-##### pausePlayer(mediaPlayer) - *Promise*
-- return boolean
-
-##### disposePlayer(mediaPlayer)
- -- Free up resources when done playing audio with this instance of your mediaPlayer
-
-##### isAudioPlaying(mediaPlayer) - *Promise*
-- returns boolean
-
-##### getAudioTrackDuration(mediaPlayer) - *Promise*
-- returns string - duration of media file assigned to mediaPlayer
+[MIT](/LICENSE)
 

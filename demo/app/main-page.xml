@@ -1,57 +1,47 @@
-<Page  xmlns="http://schemas.nativescript.org/tns.xsd"
+<Page xmlns="http://schemas.nativescript.org/tns.xsd"
       xmlns:sb="nativescript-statusbar"
-       loaded="pageLoaded">
+      loaded="pageLoaded">
        
-<sb:StatusBar ios:barStyle="default" android:barStyle="#303F9F" />
+<sb:StatusBar ios:barStyle="light" android:barStyle="#303F9F" />
       
 <Page.actionBar>
     <ActionBar title="NativeScript Audio" backgroundColor="#3F51B5" color="#fff" />
 </Page.actionBar>
 
-<TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081">
-   <TabView.items>
-     <TabViewItem title="Recorder">
-       <TabViewItem.view>
-          <ScrollView>
-            <stack-layout>
-               <ActivityIndicator color="#3489db" busy="{{ isRecording }}" />
-               <button row="0" col="0" class="darkBtn" text="START RECORDING" tap="startRecord" />
-            <button class="darkBtn" text="STOP RECORDING" tap="stopRecord" />    
-            <button class="darkBtn" text="GET FILE" tap="getFile" /> 
+<TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081" selectedIndexChanged="{{tabChange}}">
+  <TabView.items>
+    <TabViewItem title="Recorder">
+      <TabViewItem.view>
+        <ScrollView>
+          <StackLayout>
+            <ActivityIndicator color="#3489db" busy="{{ isRecording }}" />
+            <button row="0" col="0" class="darkBtn" text="START RECORDING" tap="{{startRecord}}" />
+            <button class="darkBtn" text="STOP RECORDING" tap="{{stopRecord}}" />    
+            <button class="darkBtn" text="GET FILE" tap="{{getFile}}" /> 
             <label text="{{ recordedAudioFile }}" class="gray" textWrap="true" />  
-            <button class="darkBtn" text="play recorded" tap="playRecordedFile" /> 
-            <button class="darkBtn" text="STOP PLAYING" tap="pauseAudio" />
-            </stack-layout>   
-         </ScrollView>
-       </TabViewItem.view> 
-     </TabViewItem>
+            <button class="darkBtn" text="play recorded" tap="{{playRecordedFile}}" /> 
+            <button class="darkBtn" text="STOP PLAYING" tap="{{pauseAudio}}" />
+          </StackLayout>   
+        </ScrollView>
+      </TabViewItem.view> 
+    </TabViewItem>
      
-<TabViewItem title="Player">
-   <TabViewItem.view>
-      <ScrollView>
-        <StackLayout>
-           
-        <!--<button class="darkBtn" text="Play Res Audio" tap="playResFile" />
-        <label class="gray center" text="In The Night - The Weeknd" textWrap="true" />-->
-
-        <button class="darkBtn" text="Play Remote Audio" tap="playRemoteFile" />
-        <label class="blue center" text="Welcome To Fight Club!" textWrap="true" />
-        
-        <label text="REMINDER: Remote files can have a lag before playing due to processing and network speeds." class="gray" textWrap="true"  />
-
-
-        <button class="darkBtn" text="Play Local File" tap="playLocalFile" />
-        <label class="blue center" text="Angel - Theory of a Deadman" textWrap="true" />        
-        
-        <button class="darkBtn" text="STOP" tap="stopPlaying" />
-      
-       </StackLayout>
-  
-  </ScrollView>
-       </TabViewItem.view>
-     </TabViewItem>
+    <TabViewItem title="Player">
+      <TabViewItem.view>
+        <ScrollView>
+          <StackLayout>  
+            <!--<button class="darkBtn" text="Play Res Audio" tap="{{playResFile}}" />
+            <label class="gray center" text="In The Night - The Weeknd" textWrap="true" />-->
+            <button class="darkBtn" text="Play Remote Audio" tap="{{playRemoteFile}}" />
+            <label class="blue center" text="Welcome To Fight Club!" textWrap="true" />
+            <label text="REMINDER: Remote files can have a lag before playing due to processing and network speeds." class="gray" textWrap="true"  />
+            <button class="darkBtn" text="Play Local File" tap="{{playLocalFile}}" />
+            <label class="blue center" text="Angel - Theory of a Deadman" textWrap="true" />        
+            <button class="darkBtn" text="STOP" tap="{{stopPlaying}}" />
+          </StackLayout>
+        </ScrollView>
+      </TabViewItem.view>
+    </TabViewItem>
    </TabView.items>
  </TabView>
-  
-  
 </Page>

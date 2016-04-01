@@ -1,5 +1,15 @@
-import {Common} from './audio.common';
+/**
+ * Option interfaces
+ */
+export * from './src/options';
 
-// export class YourPlugin extends Common {
-//   
-// }
+/**
+ * Player
+ */
+export * from './src/ios/player';
+
+/**
+ * Recorder
+ */
+export * from './src/ios/recorder';
+
