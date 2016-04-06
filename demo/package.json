@@ -5,14 +5,14 @@
       "version": "1.7.0"
     },
     "tns-android": {
-      "version": "1.7.0"
+      "version": "1.7.1"
     }
   },
   "dependencies": {
     "nativescript-audio": "file:..",
     "nativescript-snackbar": "^1.0.3",
     "nativescript-statusbar": "^1.0.0",
-    "tns-core-modules": "latest"
+    "tns-core-modules": "1.7.1"
   },
   "devDependencies": {
     "nativescript-dev-typescript": "^0.3.1",

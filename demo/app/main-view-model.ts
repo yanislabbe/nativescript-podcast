@@ -248,10 +248,6 @@ export class AudioDemo extends Observable {
       this.player.start();
   }
 
-  public tabChange(e: any) {
-    console.log(e);
-  }  
-
   private platformExtension() {
     return `${app.android ? 'mp3' : 'caf'}`;
   }  
