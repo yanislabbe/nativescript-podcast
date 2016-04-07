@@ -26,7 +26,9 @@ export class TNSPlayer implements TNSPlayerI {
           audioPath = fileName;
         }
 
-        this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+        this.player = new MediaPlayer();
+          
+        this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);         
         this.player.setDataSource(audioPath);
         this.player.prepareAsync();
 
@@ -70,6 +72,8 @@ export class TNSPlayer implements TNSPlayerI {
       try {
         let MediaPlayer = android.media.MediaPlayer;
 
+        this.player = new MediaPlayer();
+          
         this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
         this.player.setDataSource(options.audioFile);
         this.player.prepareAsync();
