@@ -8,7 +8,7 @@
     <ActionBar title="NativeScript Audio" backgroundColor="#3F51B5" color="#fff" />
 </Page.actionBar>
 
-<TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081" selectedIndexChanged="{{tabChange}}">
+<TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081">
   <TabView.items>
     <TabViewItem title="Recorder">
       <TabViewItem.view>

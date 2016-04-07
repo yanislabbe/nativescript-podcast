@@ -29,12 +29,12 @@ export interface TNSPlayerI {
   /**
    * Check if the audio is actively playing.
    */
-  isAudioPlaying(): Promise<boolean>;
+  isAudioPlaying(): boolean;
 
   /**
    * Get the duration of the audio file playing.
    */
-  getAudioTrackDuration(): Promise<number>;
+  getAudioTrackDuration(): Promise<string>;
 }
 
 export interface TNSRecordI {
