@@ -31,28 +31,28 @@ export class TNSPlayer implements TNSPlayerI {
         this.player.prepareAsync();
 
         // On Complete
-        this.player.setOnCompletionListener(MediaPlayer.OnCompletionListener({
+        this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
           onCompletion: (mp) => {
             options.completeCallback();
           }
         }));
 
         // On Error
-        this.player.setOnErrorListener(MediaPlayer.OnErrorListener({
+        this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
           onError: (mp: any, what: number, extra: number) => {
             options.errorCallback();
           }
         }));
 
         // On Info
-        this.player.setOnInfoListener(MediaPlayer.OnInfoListener({
+        this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
           onInfo: (mp: any, what: number, extra: number) => {
             options.infoCallback();
           }
         }))
 
         // On Prepared
-        this.player.setOnPreparedListener(MediaPlayer.OnPreparedListener({
+        this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
             mp.start();
             resolve();
@@ -76,7 +76,7 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Complete
         if (options.completeCallback) {
-          this.player.setOnCompletionListener(MediaPlayer.OnCompletionListener({
+          this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
             onCompletion: (mp) => {
               options.completeCallback();
             }
@@ -85,7 +85,7 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Error
         if (options.errorCallback) {
-          this.player.setOnErrorListener(MediaPlayer.OnErrorListener({
+          this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
             onError: (mp: any, what: number, extra: number) => {
               options.errorCallback();
             }
@@ -94,7 +94,7 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Info
         if (options.infoCallback) {
-          this.player.setOnInfoListener(MediaPlayer.OnInfoListener({
+          this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
             onInfo: (mp: any, what: number, extra: number) => {
               options.infoCallback();
             }
@@ -102,7 +102,7 @@ export class TNSPlayer implements TNSPlayerI {
         }
 
         // On Prepared
-        this.player.setOnPreparedListener(MediaPlayer.OnPreparedListener({
+        this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
             mp.start();
             resolve();

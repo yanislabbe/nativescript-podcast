@@ -30,14 +30,14 @@ export class TNSRecorder implements TNSRecordI {
         // Is there any benefit to calling start() before setting listener?
 
         // On Error
-        this.recorder.setOnErrorListener(android.media.MediaRecorder.OnErrorListener({
+        this.recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
           onError: (mr: any, what: number, extra: number) => {
             options.errorCallback({ msg: what, extra: extra });
           }
         }));
 
         // On Info
-        this.recorder.setOnInfoListener(android.media.MediaRecorder.OnInfoListener({
+        this.recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
           onInfo: (mr: any, what: number, extra: number) => {
             options.infoCallback({ msg: what, extra: extra });
           }
