@@ -1,6 +1,6 @@
 {
 	"name": "nativescript-audio",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "NativeScript plugin to record and play audio.",
 	"main": "audio.js",
 	"nativescript": {
@@ -23,14 +23,27 @@
 	"keywords": [
 		"NativeScript",
 		"JavaScript",
+        "TypeScript",
 		"Android",
+        "iOS",
+        "music",
+        "microphone",
+        "recorder",
         "audio",
-        "bradmartin"
+        "bradmartin",
+        "nathanwalker"
 	],
 	"author": {
 		"name": "Brad Martin",
 		"email": "bradwaynemartin@gmail.com"
 	},
+     "contributors": [
+    {
+      "name": "Nathanael Walker",
+      "email": "nathan.walker@infowrap.com",
+      "url": "https://github.com/NathanWalker"
+    }
+  ],
 	"bugs": {
 		"url": "https://github.com/bradmartin/nativescript-audio/issues"
 	},
