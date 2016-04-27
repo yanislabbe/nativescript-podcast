@@ -33,25 +33,31 @@ export class TNSPlayer implements TNSPlayerI {
         this.player.prepareAsync();
 
         // On Complete
-        this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
-          onCompletion: (mp) => {
-            options.completeCallback();
-          }
-        }));
+        if (options.completeCallback) {
+          this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
+            onCompletion: (mp) => {
+              options.completeCallback();
+            }
+          }));
+        }
 
         // On Error
-        this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
-          onError: (mp: any, what: number, extra: number) => {
-            options.errorCallback();
-          }
-        }));
+        if (options.errorCallback) {
+          this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
+            onError: (mp: any, what: number, extra: number) => {
+              options.errorCallback();
+            }
+          }));
+        }
 
         // On Info
-        this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
-          onInfo: (mp: any, what: number, extra: number) => {
-            options.infoCallback();
-          }
-        }))
+        if (options.infoCallback) {
+          this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
+            onInfo: (mp: any, what: number, extra: number) => {
+              options.infoCallback();
+            }
+          }))
+        }
 
         // On Prepared
         this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
