@@ -46,6 +46,7 @@ export class TNSPlayer implements TNSPlayerI {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
             onError: (mp: any, what: number, extra: number) => {
               options.errorCallback();
+              return true;
             }
           }));
         }
@@ -55,6 +56,7 @@ export class TNSPlayer implements TNSPlayerI {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
             onInfo: (mp: any, what: number, extra: number) => {
               options.infoCallback();
+              return true;
             }
           }))
         }
@@ -98,6 +100,7 @@ export class TNSPlayer implements TNSPlayerI {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
             onError: (mp: any, what: number, extra: number) => {
               options.errorCallback();
+              return true;
             }
           }));
         }
@@ -107,6 +110,7 @@ export class TNSPlayer implements TNSPlayerI {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
             onInfo: (mp: any, what: number, extra: number) => {
               options.infoCallback();
+              return true;
             }
           }))
         }
