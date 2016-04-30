@@ -1,3 +1,6 @@
+[![npm](https://img.shields.io/npm/v/nativescript-audio.svg)](https://www.npmjs.com/package/nativescript-audio)
+[![npm](https://img.shields.io/npm/dt/nativescript-audio.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-audio)
+
 # NativeScript-Audio
 NativeScript plugin to play and record audio files for Android and iOS.
 
