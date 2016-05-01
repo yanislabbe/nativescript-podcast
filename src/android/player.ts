@@ -25,6 +25,9 @@ export class TNSPlayer implements TNSPlayerI {
           console.log('fileName: ' + fileName);
           audioPath = fileName;
         }
+        else {
+          audioPath = fileName;
+        }
 
         this.player = new MediaPlayer();
           
