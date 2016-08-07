@@ -5,8 +5,8 @@
 	"main": "audio.js",
 	"nativescript": {
 		"platforms": {
-			"android": "2.0.0",
-      "ios": "1.7.0"
+			"android": "2.1.1",
+      "ios": "2.1.1"
 		}
 	},
 	"scripts": {
@@ -54,6 +54,6 @@
 	"homepage": "https://github.com/bradmartin/nativescript-audio",
 	"readmeFilename": "README.md",
 	"devDependencies": {
-		"typescript": "^1.8.7"
+		"typescript": "^1.8.10"
 	}
 }
