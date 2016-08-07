@@ -3,6 +3,7 @@
 	"version": "2.0.1",
 	"description": "NativeScript plugin to record and play audio.",
 	"main": "audio.js",
+  "typings": "index.d.ts",
 	"nativescript": {
 		"platforms": {
 			"android": "2.1.1",
