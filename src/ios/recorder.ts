@@ -4,6 +4,8 @@ import {knownFolders, path} from 'file-system';
 import {TNSRecordI} from '../common';
 import {AudioRecorderOptions} from '../options';
 
+declare var interop;
+
 export class TNSRecorder extends NSObject implements TNSRecordI {
   public static ObjCProtocols = [AVAudioRecorderDelegate];
   private _recorder: any;
@@ -27,14 +29,14 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
         this._recordingSession.requestRecordPermission((allowed: boolean) => {
           if (allowed) {
 
-            var recordSetting = new NSMutableDictionary([NSNumber.numberWithInt(kAudioFormatMPEG4AAC), NSNumber.numberWithInt(AVAudioQuality.Medium.rawValue), NSNumber.numberWithFloat(16000.0), NSNumber.numberWithInt(1)],
-                ["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]);
+            var recordSetting = new NSMutableDictionary((<any>[NSNumber.numberWithInt(kAudioFormatMPEG4AAC), NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue), NSNumber.numberWithFloat(16000.0), NSNumber.numberWithInt(1)]),
+                (<any>["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]));
 
             errorRef = new interop.Reference();
 
             let url = NSURL.fileURLWithPath(options.filename);
 
-            this._recorder = AVAudioRecorder.alloc().initWithURLSettingsError(url, recordSetting, errorRef);
+            this._recorder = (<any>AVAudioRecorder.alloc()).initWithURLSettingsError(url, recordSetting, errorRef);
             if (errorRef && errorRef.value) {
               console.log(errorRef.value);
             } else {
@@ -58,7 +60,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
         this._recorder.stop();
         // may need this in future
         // this._recordingSession.setActiveError(false, null);
-        _this._recorder.meteringEnabled = false;
+        this._recorder.meteringEnabled = false;
         resolve();
       } catch (ex) {
         reject(ex);

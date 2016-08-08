@@ -2,3 +2,5 @@ demo/
 screens/
 *.png
 *.log
+*.ts
+!index.d.ts
