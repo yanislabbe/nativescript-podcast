@@ -54,6 +54,14 @@ export class TNSRecorder implements TNSRecordI {
     });
   }
 
+  public getMeters(): number {
+    if (this.recorder != null)
+      return this.recorder.getMaxAmplitude();
+    else
+      return 0;
+
+  }
+
   public stop(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {

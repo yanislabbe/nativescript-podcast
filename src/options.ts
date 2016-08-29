@@ -35,6 +35,11 @@ export interface AudioRecorderOptions {
   maxDuration?: number;
 
   /**
+   * Enable metering. Off by default.
+   */
+  metering?: boolean;
+
+  /**
   * Gets or sets the callback when an error occurs with the media recorder.
   */
   errorCallback?: Function;
