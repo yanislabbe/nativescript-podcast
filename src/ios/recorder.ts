@@ -41,6 +41,9 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
               console.log(errorRef.value);
             } else {
               this._recorder.delegate = this;
+              if (options.metering) {
+                this._recorder.meteringEnabled = true;
+              }
               this._recorder.prepareToRecord();
               this._recorder.record();
               resolve();
@@ -84,17 +87,15 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
   }
 
   public isRecording() {
-    var _this = this;
-    return _this._recorder.recording;
+    return this._recorder.recording;
   }
 
   public getMeters(channel: number) {
-    var _this = this;
-    if(!_this._recorder.meteringEnabled) {
-      _this._recorder.meteringEnabled = true;
+    if(!this._recorder.meteringEnabled) {
+      this._recorder.meteringEnabled = true;
     }
-    _this._recorder.updateMeters();
-    return _this._recorder.averagePowerForChannel(channel);
+    this._recorder.updateMeters();
+    return this._recorder.averagePowerForChannel(channel);
   }
 
 
