@@ -41,6 +41,7 @@ Method |  Description
 `playFromFile( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a file.
 `playFromUrl( { audioFile: string, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a url.
 `pause()`: `void` | Pause playback.
+`seekTo(time:number)`: `Promise<boolean>` | Seek to position.
 `dispose()`: `void` | Free up resources when done playing audio.
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
 `getAudioTrackDuration()`: `Promise` | duration of media file assigned to mediaPlayer
