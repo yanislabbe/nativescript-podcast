@@ -7,6 +7,12 @@ export interface AudioPlayerOptions {
 export interface AudioRecorderOptions {
     filename: string;
     maxDuration?: number;
+    metering?: boolean;
+    format?: any;
+    channels?: any;
+    sampleRate?: any;
+    bitRate?: any;
+    encoder?: any;
     errorCallback?: Function;
     infoCallback?: Function;
 }

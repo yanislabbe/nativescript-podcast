@@ -160,6 +160,20 @@ export class TNSPlayer implements TNSPlayerI {
     });
   }  
 
+  public seekTo(time: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.player) {
+          console.log(`seek to: ${time}`);
+          this.player.seekTo(time);
+          resolve(true);
+        }
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  }  
+
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {

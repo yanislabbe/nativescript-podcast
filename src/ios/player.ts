@@ -108,6 +108,20 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     });
   }   
 
+  public seekTo(time: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this._player) {
+          console.log(`seek to: ${time}`);
+          this._player.currentTime = time;
+          resolve(true);
+        }
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  } 
+
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {

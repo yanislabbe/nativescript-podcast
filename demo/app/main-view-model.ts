@@ -4,7 +4,9 @@ import * as snackbar from 'nativescript-snackbar';
 import * as app from 'application';
 import * as color from 'color';
 import * as platform from 'platform';
-import {TNSRecorder, TNSPlayer} from 'nativescript-audio';
+import {TNSRecorder, TNSPlayer, AudioRecorderOptions} from 'nativescript-audio';
+
+declare var android;
 
 export class AudioDemo extends Observable {
   public isPlaying: boolean;
@@ -34,9 +36,25 @@ export class AudioDemo extends Observable {
       var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
       console.log(JSON.stringify(audioFolder));
 
-      var recorderOptions = {
+      let androidFormat;
+      let androidEncoder;
+      if (platform.isAndroid) {
+        // m4a
+        // static constants are not available, using raw values here
+        // androidFormat = android.media.MediaRecorder.OutputFormat.MPEG_4;
+        androidFormat = 2;
+        // androidEncoder = android.media.MediaRecorder.AudioEncoder.AAC;
+        androidEncoder = 3;
+      }
 
-        filename: `${audioFolder.path}/recording.${app.android ? 'mp3' : 'caf'}`,
+      let recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;      
+      let recorderOptions: AudioRecorderOptions = {
+
+        filename: recordingPath,
+
+        format: androidFormat,
+
+        encoder: androidEncoder,
 
         metering: true,
 
@@ -46,7 +64,7 @@ export class AudioDemo extends Observable {
 
         errorCallback: () => {
           console.log();
-          snackbar.simple('Error recording.');
+          // snackbar.simple('Error recording.');
         }
       };
 
@@ -67,6 +85,7 @@ export class AudioDemo extends Observable {
   }
 
   public stopRecord(args) {
+    this.resetMeter();
     this.recorder.stop().then(() => {
       this.set("isRecording", false);
       snackbar.simple("Recorder stopped");
@@ -272,6 +291,7 @@ export class AudioDemo extends Observable {
   }
 
   private platformExtension() {
-    return `${app.android ? 'mp3' : 'caf'}`;
+    //'mp3'
+    return `${app.android ? 'm4a' : 'caf'}`;
   }
 }
