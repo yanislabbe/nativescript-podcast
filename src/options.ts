@@ -40,6 +40,31 @@ export interface AudioRecorderOptions {
   metering?: boolean;
 
   /**
+   * Format
+   */
+  format?: any;
+
+  /**
+   * Channels
+   */
+  channels?: any;
+
+  /**
+   * Sampling rate
+   */
+  sampleRate?: any;
+
+  /**
+   * Bit rate
+   */
+  bitRate?: any;
+
+  /**
+   * Encoding
+   */
+  encoder?: any;
+
+  /**
   * Gets or sets the callback when an error occurs with the media recorder.
   */
   errorCallback?: Function;

@@ -2,6 +2,8 @@ import * as app from 'application';
 import {TNSRecordI} from '../common';
 import {AudioRecorderOptions} from '../options';
 
+let MediaRecorder = android.media.MediaRecorder;
+
 export class TNSRecorder implements TNSRecordI {
   private recorder: any;
 
@@ -18,11 +20,29 @@ export class TNSRecorder implements TNSRecordI {
   public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this.recorder = new android.media.MediaRecorder();
+        this.recorder = new MediaRecorder();
 
         this.recorder.setAudioSource(0);
-        this.recorder.setOutputFormat(0);
-        this.recorder.setAudioEncoder(0);
+        if (options.format) {
+          this.recorder.setOutputFormat(options.format);
+        } else {
+          this.recorder.setOutputFormat(0);
+        }
+        if (options.encoder) {
+          this.recorder.setAudioEncoder(options.encoder);
+        } else {
+          this.recorder.setAudioEncoder(0);
+        }
+        if (options.channels) {
+          this.recorder.setAudioChannels(options.channels);
+        } 
+        if (options.sampleRate) {
+          this.recorder.setAudioSamplingRate(options.sampleRate);
+        }
+        if (options.bitRate) {
+          this.recorder.setAudioEncodingBitRate(options.bitRate);
+        }
+
         // recorder.setOutputFile("/sdcard/example.mp4");
         this.recorder.setOutputFile(options.filename);
         
