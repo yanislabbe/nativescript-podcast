@@ -40,20 +40,17 @@ export class AudioDemo extends Observable {
       let androidEncoder;
       if (platform.isAndroid) {
         // m4a
-        if (android.media.MediaRecorder) {
-          for (let key in android.media.MediaRecorder) {
-            console.log(key);
-          }
-        }
+        // static constants are not available, using raw values here
         // androidFormat = android.media.MediaRecorder.OutputFormat.MPEG_4;
         androidFormat = 2;
         // androidEncoder = android.media.MediaRecorder.AudioEncoder.AAC;
         androidEncoder = 3;
       }
 
+      let recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;      
       let recorderOptions: AudioRecorderOptions = {
 
-        filename: `${audioFolder.path}/recording.${this.platformExtension()}`,
+        filename: recordingPath,
 
         format: androidFormat,
 
