@@ -28,6 +28,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
         this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(NSURL.fileURLWithPath(fileName));
         this._player.delegate = this;
+        if (options.doLoop) this._player.numberOfLoops = -1;
         this._player.play();
         resolve();
 
@@ -58,7 +59,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
           this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
           this._player.delegate = this;
-          this._player.numberOfLoops = 0;
+          this._player.numberOfLoops = options.doLoop ? -1 : 0;
           this._player.play();
           resolve();
         });
