@@ -20,6 +20,11 @@ export interface TNSPlayerI {
    * Pauses playing audio file.
    */
   pause(): Promise<boolean>;
+  
+  /**
+   * Seeks to specific time.
+   */
+  seekTo(time: number): Promise<boolean>;
 
   /**
    * Releases resources from the audio player.
