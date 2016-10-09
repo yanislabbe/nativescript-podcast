@@ -1,10 +1,10 @@
 import {Observable} from 'data/observable';
 import * as fs from 'file-system';
-import * as snackbar from 'nativescript-snackbar';
 import * as app from 'application';
 import * as color from 'color';
 import * as platform from 'platform';
-import {TNSRecorder, TNSPlayer, AudioRecorderOptions} from 'nativescript-audio';
+import { SnackBar } from 'nativescript-snackbar';
+import {TNSRecorder, TNSPlayer, AudioPlayerOptions, AudioRecorderOptions} from 'nativescript-audio';
 
 declare var android;
 
@@ -22,12 +22,14 @@ export class AudioDemo extends Observable {
     { name: 'Marlon Brando', pic: '~/pics/northern_lights.jpeg', url: 'http://www.noiseaddicts.com/samples_1w72b820/47.mp3' }
   ];
   private meterInterval: any;
+  private _SnackBar: SnackBar;
 
   constructor() {
     super();
 
     this.player = new TNSPlayer();
     this.recorder = new TNSRecorder();
+    this._SnackBar = new SnackBar();
   }
 
   public startRecord(args) {
@@ -47,7 +49,7 @@ export class AudioDemo extends Observable {
         androidEncoder = 3;
       }
 
-      let recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;      
+      let recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;
       let recorderOptions: AudioRecorderOptions = {
 
         filename: recordingPath,
@@ -88,7 +90,7 @@ export class AudioDemo extends Observable {
     this.resetMeter();
     this.recorder.stop().then(() => {
       this.set("isRecording", false);
-      snackbar.simple("Recorder stopped");
+      this._SnackBar.simple("Recorder stopped");
       this.resetMeter();
     }, (ex) => {
       console.log(ex);
@@ -122,7 +124,7 @@ export class AudioDemo extends Observable {
       console.log(ex);
     }
   }
-
+ 
 
   public playRecordedFile(args) {
 
@@ -130,17 +132,20 @@ export class AudioDemo extends Observable {
     var recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
     console.log("RECORDED FILE : " + JSON.stringify(recordedFile));
 
-    var playerOptions = {
+    var playerOptions: AudioPlayerOptions = {
       audioFile: `~/audio/recording.${this.platformExtension()}`,
-
+      loop: true,
       completeCallback: () => {
-        snackbar.simple("Audio file complete");
+        this._SnackBar.simple("Audio file complete");
         this.set("isPlaying", false);
-        this.player.dispose().then(() => {
-          console.log('DISPOSED');
-        }, (err) => {
-          console.log(err);
-        });
+        if (!playerOptions.loop) {
+          this.player.dispose().then(() => {
+            console.log('DISPOSED');
+          }, (err) => {
+            console.log(err);
+          });
+        }
+
       },
 
       errorCallback: () => {
@@ -174,7 +179,7 @@ export class AudioDemo extends Observable {
         audioFile: filepath,
 
         completeCallback: () => {
-          snackbar.simple("Audio file complete");
+          this._SnackBar.simple("Audio file complete");
 
           this.player.dispose().then(() => {
             this.set("isPlaying", false);
@@ -185,7 +190,7 @@ export class AudioDemo extends Observable {
         },
 
         errorCallback: (err) => {
-          snackbar.simple('Error occurred during playback.');
+          this._SnackBar.simple('Error occurred during playback.');
           console.log(err);
           this.set("isPlaying", false);
         },
@@ -220,17 +225,6 @@ export class AudioDemo extends Observable {
   }
 
 
-
-  ///**
-  //  * PLAY RESOURCES FILE
-  //  */
-  // public playResFile(args) {
-  //     var filepath = 'in_the_night';
-
-  //     this.playAudio(filepath, 'resFile');
-
-  // }
-
   /**
    * PLAY REMOTE AUDIO FILE
    */
@@ -240,6 +234,12 @@ export class AudioDemo extends Observable {
 
     this.playAudio(filepath, 'remoteFile');
 
+  }
+
+
+  public resumePlayer() {
+    console.log(this.player);
+    this.player.resume();
   }
 
   /**
@@ -275,7 +275,7 @@ export class AudioDemo extends Observable {
 
   public stopPlaying(args) {
     this.player.dispose().then(() => {
-      snackbar.simple("Media Player Disposed");
+      this._SnackBar.simple("Media Player Disposed");
     }, (err) => {
       console.log(err);
     });

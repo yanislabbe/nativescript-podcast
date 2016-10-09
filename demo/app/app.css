@@ -1,4 +1,6 @@
-﻿.message {
+﻿@import '~/css/core.light.css'; 
+
+.message {
   color: #000;
   font-size: 40;
   horizontal-align: center;
@@ -9,10 +11,6 @@ button{
     horizontal-align: center;
 }
 
-.darkBtn {
-    color: #333;
-    margin: 5;
-}
 
 .material-icons {
    font-family: MaterialIcons-Regular, Material Icons;

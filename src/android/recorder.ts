@@ -2,6 +2,8 @@ import * as app from 'application';
 import {TNSRecordI} from '../common';
 import {AudioRecorderOptions} from '../options';
 
+declare var android: any;
+
 let MediaRecorder = android.media.MediaRecorder;
 
 export class TNSRecorder implements TNSRecordI {

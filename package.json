@@ -1,6 +1,6 @@
 {
   "name": "nativescript-audio",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "NativeScript plugin to record and play audio.",
   "main": "audio.js",
   "typings": "index.d.ts",
@@ -8,6 +8,9 @@
     "platforms": {
       "android": "2.2.0",
       "ios": "2.2.1"
+    },
+    "tns-ios": {
+      "version": "2.3.0"
     }
   },
   "scripts": {
@@ -57,5 +60,8 @@
   "devDependencies": {
     "tns-platform-declarations": "^2.0.0",
     "typescript": "^1.8.10"
+  },
+  "dependencies": {
+    "nativescript-theme-core": "^0.1.2"
   }
 }

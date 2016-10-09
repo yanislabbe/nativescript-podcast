@@ -2,16 +2,17 @@
   "nativescript": {
     "id": "org.nativescript.audio",
     "tns-ios": {
-      "version": "2.2.1"
+      "version": "2.3.0"
     },
     "tns-android": {
-      "version": "2.2.0"
+      "version": "2.3.0"
     }
   },
   "dependencies": {
     "nativescript-audio": "file:..",
     "nativescript-snackbar": "^1.0.3",
     "nativescript-statusbar": "^1.0.0",
+    "nativescript-theme-core": "^0.1.2",
     "tns-core-modules": "next"
   },
   "devDependencies": {

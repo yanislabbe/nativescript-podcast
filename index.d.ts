@@ -1,13 +1,51 @@
 export interface AudioPlayerOptions {
+
+    /**
+     * The audio file to play.
+     */
     audioFile: string;
+
+    /**
+     * Set true to loop audio playback.
+     */
+    loop: boolean;
+
+    /**
+     * Callback to execute when playback has completed.
+     */
     completeCallback?: Function;
+
+    /**
+     * Callback to execute when playback has an error.
+     */
     errorCallback?: Function;
+
+    /**
+     * Callback to execute when info is emitted from the player.
+     */
     infoCallback?: Function;
 }
+
+
 export interface AudioRecorderOptions {
+    /**
+     * The name of the file recorded.
+     */
     filename: string;
+
+    /**
+     * The max duration of the audio recording.
+     */
     maxDuration?: number;
+
+    /**
+     * Set true to enable audio metering.
+     */
     metering?: boolean;
+
+    /**
+     * The format of the audio recording.
+     */
     format?: any;
     channels?: any;
     sampleRate?: any;
@@ -21,6 +59,7 @@ export interface TNSPlayerI {
     playFromUrl(options: AudioPlayerOptions): Promise<any>;
     play(): Promise<boolean>;
     pause(): Promise<boolean>;
+    resume(): void;
     seekTo(time: number): Promise<any>;
     dispose(): Promise<boolean>;
     isAudioPlaying(): boolean;
@@ -41,6 +80,7 @@ export declare class TNSPlayer {
     playFromFile(options: AudioPlayerOptions): Promise<any>;
     playFromUrl(options: AudioPlayerOptions): Promise<any>;
     pause(): Promise<any>;
+    resume(): void;
     seekTo(time: number): Promise<any>;
     play(): Promise<any>;
     dispose(): Promise<any>;

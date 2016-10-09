@@ -6,12 +6,18 @@ import * as utils from 'utils/utils';
 import * as fs from 'file-system';
 import * as enums from 'ui/enums';
 
+declare var android: any
+
 export class TNSPlayer implements TNSPlayerI {
   private player: any;
 
+  get android(): any {
+    return this.player;
+  }
+
   constructor() {
     this.player = new android.media.MediaPlayer();
-  }  
+  }
 
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -22,7 +28,6 @@ export class TNSPlayer implements TNSPlayerI {
         let fileName = isString(options.audioFile) ? options.audioFile.trim() : "";
         if (fileName.indexOf("~/") === 0) {
           fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
-          console.log('fileName: ' + fileName);
           audioPath = fileName;
         }
         else {
@@ -30,8 +35,8 @@ export class TNSPlayer implements TNSPlayerI {
         }
 
         this.player = new MediaPlayer();
-          
-        this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);         
+
+        this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
         this.player.setDataSource(audioPath);
         this.player.prepareAsync();
 
@@ -39,7 +44,14 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.completeCallback) {
           this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
             onCompletion: (mp) => {
+
+              if (options.loop === true) {
+                mp.seekTo(5);
+                mp.start();
+              }
+
               options.completeCallback();
+
             }
           }));
         }
@@ -84,7 +96,7 @@ export class TNSPlayer implements TNSPlayerI {
         let MediaPlayer = android.media.MediaPlayer;
 
         this.player = new MediaPlayer();
-          
+
         this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
         this.player.setDataSource(options.audioFile);
         this.player.prepareAsync();
@@ -93,7 +105,14 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.completeCallback) {
           this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
             onCompletion: (mp) => {
+
+              if (options.loop === true) {
+                mp.seekTo(5);
+                mp.start();
+              }
+
               options.completeCallback();
+
             }
           }));
         }
@@ -136,7 +155,6 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this.player.isPlaying()) {
-          console.log('PAUSE');
           this.player.pause();
           resolve(true);
         }
@@ -150,7 +168,6 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (!this.player.isPlaying()) {
-          console.log('RESUME');
           this.player.start();
           resolve(true);
         }
@@ -158,13 +175,17 @@ export class TNSPlayer implements TNSPlayerI {
         reject(ex);
       }
     });
-  }  
+  }
+
+  public resume(): void {
+    this.player.start();
+  }
+
 
   public seekTo(time: number): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (this.player) {
-          console.log(`seek to: ${time}`);
           this.player.seekTo(time);
           resolve(true);
         }
@@ -172,7 +193,7 @@ export class TNSPlayer implements TNSPlayerI {
         reject(ex);
       }
     });
-  }  
+  }
 
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -200,67 +221,3 @@ export class TNSPlayer implements TNSPlayerI {
     });
   }
 }
-
-// TODO: convert this into above
-
-// export var playFromResource = function(options: definition.AudioPlayerOptions): Promise<any> {
-//     return new Promise((resolve, reject) => {
-//         try {
-//             var audioPath;
-
-//             var res = utils.ad.getApplicationContext().getResources();
-//             var packageName = utils.ad.getApplication().getPackageName();
-//             var identifier = utils.ad.getApplicationContext().getResources().getIdentifier("in_the_night", "raw", packageName);
-//             console.log(identifier);
-//             console.log(packageName);
-//             console.log(res);
-//             if (res) {
-//                 var resourcePath = "android.resource://" + packageName + "/raw/" + options.audioFile;
-//                 audioPath = resourcePath;
-//             }
-
-//             var mediaPlayer = new MediaPlayer();
-//             mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
-//             mediaPlayer.setDataSource(audioPath);
-//             mediaPlayer.prepareAsync();
-
-//             // On Complete            
-//             if (options.completeCallback) {
-//                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
-//                     onCompletion: function(mp) {
-//                         options.completeCallback();
-//                     }
-//                 }));
-//             }
-
-//             // On Error
-//             if (options.errorCallback) {
-//                 mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener({
-//                     onError: function(mp: any, what: number, extra: number) {
-//                         options.errorCallback({ msg: what, extra: extra });
-//                     }
-//                 }));
-//             }
-
-//             // On Info
-//             if (options.infoCallback) {
-//                 mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener({
-//                     onInfo: function(mp: any, what: number, extra: number) {
-//                         options.infoCallback({ msg: what, extra: extra });
-//                     }
-//                 }))
-//             }
-
-//             // On Prepared - this resolves and returns the android.media.MediaPlayer;
-//             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
-//                 onPrepared: function(mp) {
-//                     mp.start();
-//                     resolve(mp);
-//                 }
-//             }));
-
-//         } catch (ex) {
-//             reject(ex);
-//         }
-//     });
-// }
