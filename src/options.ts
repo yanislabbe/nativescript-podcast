@@ -12,6 +12,11 @@ export interface AudioPlayerOptions {
    */
   completeCallback?: Function;
 
+   /**
+   * Looping playback?
+   */
+  doLoop: boolean;
+  
   /**
    * Gets or sets the callback when an error occurs with the audio player.
    */
