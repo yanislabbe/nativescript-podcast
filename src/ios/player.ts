@@ -3,6 +3,7 @@ import {isString} from 'utils/types';
 import {knownFolders, path} from 'file-system';
 import {TNSPlayerI} from '../common';
 import {AudioPlayerOptions} from '../options';
+var utils = require('utils/utils');
 
 declare var NSURLSession, AVAudioPlayer, NSURL, AVAudioPlayerDelegate;
 
@@ -51,7 +52,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   public playFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this._task = NSURLSession.sharedSession().dataTaskWithURLCompletionHandler(NSURL.URLWithString(options.audioFile), (data, response, error) => {
+        let sharedSession = utils.ios.getter(NSURLSession, NSURLSession.sharedSession);
+
+        this._task = sharedSession.dataTaskWithURLCompletionHandler(NSURL.URLWithString(options.audioFile), (data, response, error) => {
           if (error !== null) {
 
             if (this._errorCallback) {
