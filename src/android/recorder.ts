@@ -24,7 +24,11 @@ export class TNSRecorder implements TNSRecordI {
       try {
         this.recorder = new MediaRecorder();
 
-        this.recorder.setAudioSource(0);
+        if (options.source) {
+          this.recorder.setAudioSource(options.source);
+        } else {
+          this.recorder.setAudioSource(0);
+        }
         if (options.format) {
           this.recorder.setOutputFormat(options.format);
         } else {
