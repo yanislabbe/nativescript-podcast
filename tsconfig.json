@@ -5,7 +5,7 @@
         "removeComments": true,
         "experimentalDecorators": true,
         "sourceMap": true,
-        "declaration": true,
+        "declaration": false,
         "noEmitOnError": false,
         "noEmitHelpers": true,
         "noImplicitUseStrict": true,
