@@ -58,14 +58,14 @@ export class TNSRecorder implements TNSRecordI {
         // On Error
         this.recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
           onError: (mr: any, what: number, extra: number) => {
-            options.errorCallback({ msg: what, extra: extra });
+            options.errorCallback({ mr, what, extra });
           }
         }));
 
         // On Info
         this.recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
           onInfo: (mr: any, what: number, extra: number) => {
-            options.infoCallback({ msg: what, extra: extra });
+            options.infoCallback({ mr, what, extra });
           }
         }));
 

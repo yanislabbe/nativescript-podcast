@@ -42,7 +42,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -58,7 +58,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           if (error !== null) {
 
             if (this._errorCallback) {
-              this._errorCallback();
+              this._errorCallback({ error });
             }
 
             reject();
@@ -79,7 +79,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -95,7 +95,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         }
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -111,7 +111,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         }
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -145,7 +145,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         resolve();
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -163,7 +163,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         resolve(duration.toString());
       } catch (ex) {
         if (this._errorCallback) {
-          this._errorCallback();
+          this._errorCallback({ ex });
         }
         reject(ex);
       }
@@ -172,10 +172,10 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
   public audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean) {
     if (flag && this._completeCallback) {
-      this._completeCallback();
+      this._completeCallback({ player, flag });
     }
     else if (!flag && this._errorCallback) {
-      this._errorCallback();
+      this._errorCallback({ player, flag });
     }
     this.reset();
   }

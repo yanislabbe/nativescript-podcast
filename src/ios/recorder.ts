@@ -1,10 +1,10 @@
 import * as app from 'application';
-import {isString} from 'utils/types';
-import {knownFolders, path} from 'file-system';
-import {TNSRecordI} from '../common';
-import {AudioRecorderOptions} from '../options';
+import { isString } from 'utils/types';
+import { knownFolders, path } from 'file-system';
+import { TNSRecordI } from '../common';
+import { AudioRecorderOptions } from '../options';
 
-declare var interop, kAudioFormatMPEG4AAC, AVAudioQuality;
+declare var interop, kAudioFormatMPEG4AAC, AVAudioQuality, AVAudioRecorderDelegate, AVAudioSession, AVAudioSessionCategoryRecord, NSMutableDictionary, NSNumber, AVAudioRecorder, NSURL;
 
 export class TNSRecorder extends NSObject implements TNSRecordI {
   public static ObjCProtocols = [AVAudioRecorderDelegate];
@@ -31,7 +31,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
 
             // var recordSetting = new NSMutableDictionary((<any>[NSNumber.numberWithInt(kAudioFormatMPEG4AAC), NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue), NSNumber.numberWithFloat(16000.0), NSNumber.numberWithInt(1)]),
             //   (<any>["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]));
-            
+
             let recordSetting = NSMutableDictionary.alloc().init();
             recordSetting.setValueForKey(NSNumber.numberWithInt(kAudioFormatMPEG4AAC), 'AVFormatIDKey');
             recordSetting.setValueForKey(NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue), 'AVEncoderAudioQualityKey');
@@ -97,7 +97,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
   }
 
   public getMeters(channel: number) {
-    if(!this._recorder.meteringEnabled) {
+    if (!this._recorder.meteringEnabled) {
       this._recorder.meteringEnabled = true;
     }
     this._recorder.updateMeters();

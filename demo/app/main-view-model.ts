@@ -1,11 +1,11 @@
-import {Observable} from 'data/observable';
+import { Observable } from 'data/observable';
 import * as fs from 'file-system';
 import * as app from 'application';
 import * as color from 'color';
 import * as platform from 'platform';
 import * as dialogs from 'ui/dialogs';
 import { SnackBar } from 'nativescript-snackbar';
-import {TNSRecorder, TNSPlayer, AudioPlayerOptions, AudioRecorderOptions} from 'nativescript-audio';
+import { TNSRecorder, TNSPlayer, AudioPlayerOptions, AudioRecorderOptions } from 'nativescript-audio';
 
 declare var android;
 
@@ -61,13 +61,12 @@ export class AudioDemo extends Observable {
 
         metering: true,
 
-        infoCallback: () => {
-          
+        infoCallback: (infoObject) => {
+          console.log(JSON.stringify(infoObject));
         },
 
-        errorCallback: () => {
-          
-          // snackbar.simple('Error recording.');
+        errorCallback: (errorObject) => {
+          console.log(JSON.stringify(errorObject));
         }
       };
 
@@ -125,7 +124,7 @@ export class AudioDemo extends Observable {
       console.log(ex);
     }
   }
- 
+
 
   public playRecordedFile(args) {
 
@@ -149,12 +148,16 @@ export class AudioDemo extends Observable {
 
       },
 
-      errorCallback: () => {
+      errorCallback: (errorObject) => {
+        console.log(JSON.stringify(errorObject));
+
         dialogs.alert('Error callback');
         this.set("isPlaying", false);
       },
 
-      infoCallback: () => {
+      infoCallback: (infoObject) => {
+        console.log(JSON.stringify(infoObject));
+
         dialogs.alert('Info callback');
       }
     };
@@ -190,13 +193,15 @@ export class AudioDemo extends Observable {
           });
         },
 
-        errorCallback: (err) => {
+        errorCallback: (errorObject) => {
           this._SnackBar.simple('Error occurred during playback.');
-          console.log(err);
+          console.log(JSON.stringify(errorObject));
           this.set("isPlaying", false);
         },
 
-        infoCallback: (info) => {
+        infoCallback: (infoObject) => {
+          console.log(JSON.stringify(infoObject));
+
           dialogs.alert('Info callback: ' + info.msg);
           console.log("what: " + info);
         }
@@ -239,7 +244,7 @@ export class AudioDemo extends Observable {
 
 
   public resumePlayer() {
-    console.log(this.player);
+    console.log(JSON.stringify(this.player));
     this.player.resume();
   }
 

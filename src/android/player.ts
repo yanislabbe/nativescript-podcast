@@ -50,7 +50,7 @@ export class TNSPlayer implements TNSPlayerI {
                 mp.start();
               }
 
-              options.completeCallback();
+              options.completeCallback({ mp });
 
             }
           }));
@@ -60,7 +60,7 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.errorCallback) {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
             onError: (mp: any, what: number, extra: number) => {
-              options.errorCallback();
+              options.errorCallback({ mp, what, extra });
               return true;
             }
           }));
@@ -70,7 +70,7 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.infoCallback) {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
             onInfo: (mp: any, what: number, extra: number) => {
-              options.infoCallback();
+              options.infoCallback({ mp, what, extra });
               return true;
             }
           }))
@@ -111,7 +111,7 @@ export class TNSPlayer implements TNSPlayerI {
                 mp.start();
               }
 
-              options.completeCallback();
+              options.completeCallback({ mp });
 
             }
           }));
@@ -121,7 +121,7 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.errorCallback) {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
             onError: (mp: any, what: number, extra: number) => {
-              options.errorCallback();
+              options.errorCallback({ mp, what, extra });
               return true;
             }
           }));
@@ -131,7 +131,7 @@ export class TNSPlayer implements TNSPlayerI {
         if (options.infoCallback) {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
             onInfo: (mp: any, what: number, extra: number) => {
-              options.infoCallback();
+              options.infoCallback({ mp, what, extra });
               return true;
             }
           }))

@@ -12,16 +12,19 @@ export interface AudioPlayerOptions {
 
     /**
      * Callback to execute when playback has completed.
+     * @returns {Object} An object containing the native values for the callback.
      */
     completeCallback?: Function;
 
     /**
      * Callback to execute when playback has an error.
+     * @returns {Object} An object containing the native values for the error callback.
      */
     errorCallback?: Function;
 
     /**
      * Callback to execute when info is emitted from the player.
+     * @returns {Object} An object containing the native values for the info callback.
      */
     infoCallback?: Function;
 }
@@ -57,7 +60,17 @@ export interface AudioRecorderOptions {
     sampleRate?: any;
     bitRate?: any;
     encoder?: any;
+
+    /**
+     * Callback to execute when playback has an error.
+     * @returns {Object} An object containing the native values for the error callback.
+     */
     errorCallback?: Function;
+
+    /**
+     * Callback to execute when info is emitted from the player.
+     * @returns {Object} An object containing the native values for the info callback.
+     */
     infoCallback?: Function;
 }
 export interface TNSPlayerI {

@@ -9,6 +9,7 @@ export interface AudioPlayerOptions {
 
   /**
    * Gets or sets the callback when the currently playing audio file completes.
+   * @returns {Object} An object containing the native values for the callback.
    */
   completeCallback?: Function;
 
@@ -19,11 +20,13 @@ export interface AudioPlayerOptions {
 
   /**
    * Gets or sets the callback when an error occurs with the audio player.
+   * @returns {Object} An object containing the native values for the error callback.
    */
   errorCallback?: Function;
 
   /**
    * Gets or sets the callback to be invoked to communicate some info and/or warning about the media or its playback.
+   * @returns {Object} An object containing the native values for the info callback.
    */
   infoCallback?: Function;
 }
@@ -75,12 +78,14 @@ export interface AudioRecorderOptions {
   encoder?: any;
 
   /**
-  * Gets or sets the callback when an error occurs with the media recorder.
-  */
+   * Gets or sets the callback when an error occurs with the media recorder.
+   * @returns {Object} An object containing the native values for the error callback.
+   */
   errorCallback?: Function;
 
   /**
-  * Gets or sets the callback to be invoked to communicate some info and/or warning about the media or its playback.
-  */
+   * Gets or sets the callback to be invoked to communicate some info and/or warning about the media or its playback.
+   * @returns {Object} An object containing the native values for the info callback.
+   */
   infoCallback?: Function;
 }
