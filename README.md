@@ -30,7 +30,7 @@ Uses the following native classes:
 Method |  Description
 -------- | ---------
 `TNSRecorder.CAN_RECORD()`: `boolean` | Determine if ready to record.
-`start({ filename: string, errorCallback?: Function, infoCallback?: Function })`: `Promise` | Start recording file.
+`start(options: AudioRecorderOptions)`: `Promise` | Start recording file.
 `stop()`: `void` | Stop recording.
 `dispose()`: `void` | Free up system resources when done with recorder.
 
