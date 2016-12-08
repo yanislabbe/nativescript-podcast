@@ -35,6 +35,11 @@ export interface AudioRecorderOptions {
   filename: string;
 
   /**
+   * Sets the source for recording ***ANDROID ONLY for now ***
+   */
+  source?: any;
+
+  /**
    * Gets or set the max duration of the recording session.
    */
   maxDuration?: number;

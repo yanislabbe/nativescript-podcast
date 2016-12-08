@@ -1,6 +1,6 @@
 import * as app from 'application';
-import {TNSRecordI} from '../common';
-import {AudioRecorderOptions} from '../options';
+import { TNSRecordI } from '../common';
+import { AudioRecorderOptions } from '../options';
 
 declare var android: any;
 
@@ -41,7 +41,7 @@ export class TNSRecorder implements TNSRecordI {
         }
         if (options.channels) {
           this.recorder.setAudioChannels(options.channels);
-        } 
+        }
         if (options.sampleRate) {
           this.recorder.setAudioSamplingRate(options.sampleRate);
         }
@@ -51,7 +51,7 @@ export class TNSRecorder implements TNSRecordI {
 
         // recorder.setOutputFile("/sdcard/example.mp4");
         this.recorder.setOutputFile(options.filename);
-        
+
 
         // Is there any benefit to calling start() before setting listener?
 
@@ -70,7 +70,7 @@ export class TNSRecorder implements TNSRecordI {
         }));
 
         this.recorder.prepare();
-        this.recorder.start();        
+        this.recorder.start();
 
         resolve();
 

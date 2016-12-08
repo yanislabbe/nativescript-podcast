@@ -34,6 +34,12 @@ export interface AudioRecorderOptions {
     filename: string;
 
     /**
+     * The audio source to record *** ANDROID ONLY for now ***
+     * https://developer.android.com/reference/android/media/MediaRecorder.AudioSource.html
+     */
+    source?: any;
+
+    /**
      * The max duration of the audio recording.
      */
     maxDuration?: number;
