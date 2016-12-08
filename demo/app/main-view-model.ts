@@ -1,5 +1,6 @@
 import { Observable } from 'data/observable';
-import * as fs from 'file-system';
+import { knownFolders, File } from 'file-system';
+// import * as fs from 'file-system';
 import * as app from 'application';
 import * as color from 'color';
 import * as platform from 'platform';
@@ -36,7 +37,7 @@ export class AudioDemo extends Observable {
   public startRecord(args) {
     if (TNSRecorder.CAN_RECORD()) {
 
-      var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
+      var audioFolder = knownFolders.currentApp().getFolder("audio");
       console.log(JSON.stringify(audioFolder));
 
       let androidFormat;
@@ -115,10 +116,10 @@ export class AudioDemo extends Observable {
 
   public getFile(args) {
     try {
-      var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
+      var audioFolder = knownFolders.currentApp().getFolder("audio");
       var recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
       console.log(JSON.stringify(recordedFile));
-      console.log('recording exists: ' + fs.File.exists(recordedFile.path));
+      console.log('recording exists: ' + File.exists(recordedFile.path));
       this.set("recordedAudioFile", recordedFile.path);
     } catch (ex) {
       console.log(ex);
@@ -128,7 +129,7 @@ export class AudioDemo extends Observable {
 
   public playRecordedFile(args) {
 
-    var audioFolder = fs.knownFolders.currentApp().getFolder("audio");
+    var audioFolder = knownFolders.currentApp().getFolder("audio");
     var recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
     console.log("RECORDED FILE : " + JSON.stringify(recordedFile));
 
@@ -199,11 +200,11 @@ export class AudioDemo extends Observable {
           this.set("isPlaying", false);
         },
 
-        infoCallback: (infoObject) => {
-          console.log(JSON.stringify(infoObject));
+        infoCallback: (info) => {
+          console.log(JSON.stringify(info));
 
           dialogs.alert('Info callback: ' + info.msg);
-          console.log("what: " + info);
+          console.log(JSON.stringify(info));
         }
       };
 
@@ -252,7 +253,7 @@ export class AudioDemo extends Observable {
    * PLAY LOCAL AUDIO FILE from app folder
    */
   public playLocalFile(args) {
-    var filepath = '~/audio/angel.mp3';
+    let filepath = '~/audio/angel.mp3';
 
     this.playAudio(filepath, 'localFile');
 

@@ -1,11 +1,9 @@
 <Page 
-  xmlns="http://schemas.nativescript.org/tns.xsd" 
-  xmlns:sb="nativescript-statusbar" loaded="pageLoaded">
-  <sb:StatusBar ios:barStyle="light" android:barStyle="#303F9F" />
+  xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded">
   <Page.actionBar>
     <ActionBar title="NativeScript Audio" backgroundColor="#3F51B5" color="#fff" />
   </Page.actionBar>
-  <TabView color="#f1f1f1" tabsBackgroundColor="#3F51B5" selectedColor="#FF4081">
+  <TabView tabsBackgroundColor="#3F51B5" selectedColor="#FF4081">
     <TabView.items>
       <TabViewItem title="RECORDER">
         <TabViewItem.view>
@@ -28,7 +26,7 @@
             <StackLayout>
               <button class="btn btn-primary btn-rounded-sm" text="Play Remote Audio" tap="{{ playRemoteFile }}" />
               <label class="blue center" text="Welcome To Fight Club!" textWrap="true" />
-              <label text="REMINDER: Remote files can have a lag before playing due to processing and network speeds." class="h3 body" textWrap="true" />
+              <label text="REMINDER: Remote files can have a lag before playing due to processing and network speeds." class="h3" textWrap="true" />
               <button class="btn btn-primary btn-rounded-sm" text="Play Local File" tap="{{ playLocalFile }}" />
               <label class="blue h3 text-center" text="Angel - Theory of a Deadman" textWrap="true" />
               <Button class="btn btn-primary btn-rounded-sm" text="Pause" tap="{{ pauseAudio }}" />
