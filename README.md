@@ -16,6 +16,13 @@ Uses the following native classes:
 * [Player](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
 * [Recorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
 
+Note: You will need to grant permissions on iOS to allow the device to access the microphone if you are using the recording function. If you don't, your app may crash on device and/or your app might be rejected during Apple's review routine. To do this, add this key to your `app/App_Resources/iOS/Info.plist` file:
+
+```
+<key>NSMicrophoneUsageDescription</key>
+	<string>Recording Practice Sessions</string>
+```
+
 ## Installation
 `npm install nativescript-audio`
 
