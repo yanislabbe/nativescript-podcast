@@ -36,7 +36,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player.numberOfLoops = -1;
         }
 
-        this._player.play();
+        if (!options.initOnly) this._player.play();   
 
         resolve();
 
@@ -71,7 +71,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
           this._player.delegate = this;
           this._player.numberOfLoops = options.loop ? -1 : 0;
-          this._player.play();
+
+          if (!options.initOnly) this._player.play();
+
           resolve();
         });
 
@@ -120,6 +122,12 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
   public resume(): void {
     this._player.play();
+  }
+
+  public playAtTime(time: number): void {
+    if (this._player) {
+      this._player.playAtTime(time);
+    }
   }
 
   public seekTo(time: number): Promise<any> {
@@ -182,7 +190,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
   private reset() {
     if (this._player) {
-      this._player.release();
+      if (this._player.release) this._player.release();
       this._player = undefined;
     }
     if (this._task) {
@@ -193,5 +201,12 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
   public get currentTime(): number {
     return this._player ? this._player.currentTime : 0;
+  }
+
+  /**
+   * Access actual native player instance
+   */
+  public get instance(): AVAudioPlayer {
+    return this._player;
   }
 }
