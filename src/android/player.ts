@@ -79,7 +79,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Prepared
         this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
-            mp.start();
+            if (!options.initOnly) mp.start();
             resolve();
           }
         }));
@@ -140,7 +140,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Prepared
         this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
-            mp.start();
+            if (!options.initOnly) mp.start();
             resolve();
           }
         }));
@@ -223,5 +223,9 @@ export class TNSPlayer implements TNSPlayerI {
 
   public get currentTime(): number {
     return this.player ? this.player.getCurrentPosition() : 0;
+  }
+
+  public get instance(): android.media.MediaPlayer {
+    return this.player;
   }
 }

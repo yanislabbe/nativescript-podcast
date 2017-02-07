@@ -54,6 +54,16 @@ Method |  Description
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
 `getAudioTrackDuration()`: `Promise` | duration of media file assigned to mediaPlayer
 
+Access the underlying native object instance via:
+
+* `instance`: `AVAudioPlayer` on iOS and `MediaPlayer` on Android
+
+Platform specific:
+
+**iOS**:
+
+`playAtTime(time: number)`: Play at a specific time.
+
 ## Why the TNS prefixed name?
 
 `TNS` stands for **T**elerik **N**ative**S**cript

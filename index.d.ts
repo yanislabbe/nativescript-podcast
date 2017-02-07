@@ -11,6 +11,11 @@ export interface AudioPlayerOptions {
     loop: boolean;
 
     /**
+     * Instead of auto-playing, just init the player instance
+     */
+    initOnly?: boolean;
+
+    /**
      * Callback to execute when playback has completed.
      * @returns {Object} An object containing the native values for the callback.
      */
