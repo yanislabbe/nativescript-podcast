@@ -24,7 +24,7 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 ```
 
 ## Installation
-`npm install nativescript-audio`
+`tns plugin add nativescript-audio`
 
 ## Sample Screen
 
