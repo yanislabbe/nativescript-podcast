@@ -47,12 +47,12 @@ Method |  Description
 -------- | ---------
 `playFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a file.
 `playFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a url.
-`pause()`: `void` | Pause playback.
+`pause()`: `Promise<boolean>` | Pause playback.
 `resume()`: `void` | Resume playback.
 `seekTo(time:number)`: `Promise<boolean>` | Seek to position.
-`dispose()`: `void` | Free up resources when done playing audio.
+`dispose()`: `Promise<boolean>` | Free up resources when done playing audio.
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
-`getAudioTrackDuration()`: `Promise` | duration of media file assigned to mediaPlayer
+`getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer
 
 Access the underlying native object instance via:
 
@@ -76,4 +76,3 @@ To avoid confusion with iOS native classes, `TNS` is used instead.
 # License
 
 [MIT](/LICENSE)
-
