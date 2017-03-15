@@ -45,8 +45,10 @@ Method |  Description
 
 Method |  Description
 -------- | ---------
-`playFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a file.
-`playFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Play from a url.
+`initFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Initialize player instance with a file without auto-playing.
+`playFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Auto-play from a file.
+`initFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Initialize player instance from a url without auto-playing.
+`playFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Auto-play from a url.
 `pause()`: `Promise<boolean>` | Pause playback.
 `resume()`: `void` | Resume playback.
 `seekTo(time:number)`: `Promise<boolean>` | Seek to position.
@@ -54,9 +56,10 @@ Method |  Description
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
 `getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer
 
-Access the underlying native object instance via:
+You can access the underlying native class instance via `ios` and `android` getters on the respective platforms which will return you:
 
-* `instance`: `AVAudioPlayer` on iOS and `MediaPlayer` on Android
+* `AVAudioPlayer` on iOS
+* `MediaPlayer` on Android
 
 Platform specific:
 

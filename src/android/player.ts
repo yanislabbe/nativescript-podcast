@@ -15,12 +15,18 @@ export class TNSPlayer implements TNSPlayerI {
     return this.player;
   }
 
-  constructor() {
-    this.player = new android.media.MediaPlayer();
+  public initFromFile(options: AudioPlayerOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // init only
+      options.autoPlay = false;
+      this.playFromFile(options).then(resolve, reject);
+    });
   }
 
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (options.autoPlay !== false) options.autoPlay = true;
+
       try {
         let MediaPlayer = android.media.MediaPlayer;
         let audioPath;
@@ -79,7 +85,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Prepared
         this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
-            if (!options.initOnly) mp.start();
+            if (options.autoPlay) mp.start();
             resolve();
           }
         }));
@@ -90,8 +96,17 @@ export class TNSPlayer implements TNSPlayerI {
     });
   }
 
+  public initFromUrl(options: AudioPlayerOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+      options.autoPlay = false;
+      this.playFromUrl(options).then(resolve, reject);
+    });
+  }
+
   public playFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (options.autoPlay !== false) options.autoPlay = true;
+
       try {
         let MediaPlayer = android.media.MediaPlayer;
 
@@ -140,7 +155,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Prepared
         this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
           onPrepared: (mp) => {
-            if (!options.initOnly) mp.start();
+            if (options.autoPlay) mp.start();
             resolve();
           }
         }));
@@ -223,9 +238,5 @@ export class TNSPlayer implements TNSPlayerI {
 
   public get currentTime(): number {
     return this.player ? this.player.getCurrentPosition() : 0;
-  }
-
-  public get instance(): android.media.MediaPlayer {
-    return this.player;
   }
 }

@@ -19,9 +19,9 @@ export interface AudioPlayerOptions {
   loop: boolean;
 
   /**
-   * Instead of auto-playing, just init the player instance
+   * Prevent autoplay if desired as player autoplays be default
    */
-  initOnly?: boolean;
+  autoPlay?: boolean;
 
   /**
    * Gets or sets the callback when an error occurs with the audio player.

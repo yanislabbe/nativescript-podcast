@@ -15,6 +15,10 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     return true;
   }
 
+  get ios() {
+    return this._recorder;
+  } 
+
   public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {

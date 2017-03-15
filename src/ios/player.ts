@@ -15,8 +15,23 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   private _errorCallback: any;
   private _infoCallback: any;
 
+  get ios(): any {
+    return this._player;
+  }
+  
+  public initFromFile(options: AudioPlayerOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // init only
+      options.autoPlay = false;
+      this.playFromFile(options).then(resolve, reject);
+    });
+  }
+
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
+      // only if not explicitly set, default to true
+      if (options.autoPlay !== false) options.autoPlay = true;
+
       try {
         let audioPath;
 
@@ -36,7 +51,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player.numberOfLoops = -1;
         }
 
-        if (!options.initOnly) this._player.play();   
+        if (options.autoPlay) this._player.play();   
 
         resolve();
 
@@ -49,8 +64,19 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     });
   }
 
+  public initFromUrl(options: AudioPlayerOptions): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // init only
+      options.autoPlay = false;
+      this.playFromUrl(options).then(resolve, reject);
+    });
+  }
+
   public playFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
+      // only if not explicitly set, default to true
+      if (options.autoPlay !== false) options.autoPlay = true;
+
       try {
         let sharedSession = utils.ios.getter(NSURLSession, NSURLSession.sharedSession);
 
@@ -72,7 +98,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player.delegate = this;
           this._player.numberOfLoops = options.loop ? -1 : 0;
 
-          if (!options.initOnly) this._player.play();
+          if (options.autoPlay) this._player.play();
 
           resolve();
         });
@@ -121,7 +147,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   }
 
   public resume(): void {
-    this._player.play();
+    if (this._player) this._player.play();
   }
 
   public playAtTime(time: number): void {
@@ -185,12 +211,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     else if (!flag && this._errorCallback) {
       this._errorCallback({ player, flag });
     }
-    this.reset();
+  }
+
+  public audioPlayerDecodeErrorDidOccurError(player: any, error: NSError) {
+    if (this._errorCallback) {
+      this._errorCallback({ player, error });
+    }
   }
 
   private reset() {
     if (this._player) {
-      if (this._player.release) this._player.release();
       this._player = undefined;
     }
     if (this._task) {
@@ -201,12 +231,5 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
   public get currentTime(): number {
     return this._player ? this._player.currentTime : 0;
-  }
-
-  /**
-   * Access actual native player instance
-   */
-  public get instance(): AVAudioPlayer {
-    return this._player;
   }
 }

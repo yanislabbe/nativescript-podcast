@@ -9,6 +9,10 @@ let MediaRecorder = android.media.MediaRecorder;
 export class TNSRecorder implements TNSRecordI {
   private recorder: any;
 
+  get android() {
+    return this.recorder;
+  }  
+  
   public static CAN_RECORD(): boolean {
     var pManager = app.android.context.getPackageManager();
     var canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
