@@ -24,6 +24,11 @@ export interface AudioPlayerOptions {
   autoPlay?: boolean;
 
   /**
+   * Enable metering. Off by default.
+   */
+  metering?: boolean;
+
+  /**
    * Gets or sets the callback when an error occurs with the audio player.
    * @returns {Object} An object containing the native values for the error callback.
    */

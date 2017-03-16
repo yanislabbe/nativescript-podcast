@@ -2,6 +2,12 @@ import {AudioPlayerOptions, AudioRecorderOptions} from './options';
 
 export interface TNSPlayerI {
   /**
+   * native instance getters
+   */
+  readonly ios?: any;
+  readonly android?: any;
+
+  /**
    * Starts playing audio file from local app files.
    */
   playFromFile(options: AudioPlayerOptions): Promise<any>;
@@ -40,6 +46,11 @@ export interface TNSPlayerI {
    * Get the duration of the audio file playing.
    */
   getAudioTrackDuration(): Promise<string>;
+
+  /**
+   * current time
+   */
+  readonly currentTime: number;
 }
 
 export interface TNSRecordI {
