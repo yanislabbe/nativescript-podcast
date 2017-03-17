@@ -30,6 +30,64 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 
 ![AudioExample](screens/audiosample.gif)
 
+## Sample Usage
+
+Just a simple example of how you could reuse player instances for a given file:
+
+```
+import { TNSPlayer } from 'nativescript-audio';
+
+export class YourClass {
+	private _player: TNSPlayer;
+	
+	constructor() {
+		this._player = new TNSPlayer();
+		this._player.initWithFile({
+			audioFile: '~/audio/song.mp3', // ~ = app directory
+			loop: false,
+			completeCallback: this._trackComplete.bind(this),
+			errorCallback: this._trackError.bind(this)
+		}).then(() => {
+
+			this._player.getAudioTrackDuration().then((duration) => {
+				// iOS: duration is in seconds
+				// Android: duration is in milliseconds
+				console.log(`song duration:`, duration);
+			});
+		});
+	}
+
+	public togglePlay() {
+		if (this._player.isAudioPlaying()) {
+			this._player.pause();
+		} else {
+			this._player.play();
+		}
+	}
+
+	private _trackComplete(info: any) {
+		// Android: mp for MediaPlayer
+		console.log('reference back to player:', info.mp);
+
+		// iOS: player and flag
+		console.log('reference back to player:', info.player);
+		console.log('whether song play completed successfully:', info.flag);
+	}
+
+	private _trackError(info: any) {
+		// Android:
+		console.log('reference back to player:', info.mp);
+		console.log('what happened:', info.what);
+		console.log('extra info on the error:', info.extra);
+
+		// iOS:
+		console.log('reference back to player:', info.player);
+		console.log('the error:', info.error);
+	}
+}
+
+```
+
 ## API
 
 #### TNSRecorder
