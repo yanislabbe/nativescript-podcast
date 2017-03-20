@@ -34,7 +34,7 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 
 Just a simple example of how you could reuse player instances for a given file:
 
-```
+``` typescript
 import { TNSPlayer } from 'nativescript-audio';
 
 export class YourClass {
@@ -107,7 +107,8 @@ Method |  Description
 `seekTo(time:number)`: `Promise<boolean>` | Seek to position.
 `dispose()`: `Promise<boolean>` | Free up resources when done playing audio.
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
-`getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer
+`getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer.
+`currentTime`: `number` | Get the current time in the media file's duration.
 `volume`: `void` | Get/Set the player volume. Value range from 0 to 1.
 
 You can access the underlying native class instance via `ios` and `android` getters on the respective platforms which will return you:
