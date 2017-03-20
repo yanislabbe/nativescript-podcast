@@ -20,7 +20,7 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 
 ```
 <key>NSMicrophoneUsageDescription</key>
-	<string>Recording Practice Sessions</string>
+<string>Recording Practice Sessions</string>
 ```
 
 ## Installation
@@ -65,19 +65,19 @@ export class YourClass {
 		}
 	}
 
-	private _trackComplete(info: any) {
-		console.log('reference back to player:', info.player);
+	private _trackComplete(args: any) {
+		console.log('reference back to player:', args.player);
 
 		// iOS only: flag indicating if completed succesfully
-		console.log('whether song play completed successfully:', info.flag);
+		console.log('whether song play completed successfully:', args.flag);
 	}
 
-	private _trackError(info: any) {
-		console.log('reference back to player:', info.player);
-		console.log('the error:', info.error);
+	private _trackError(args: any) {
+		console.log('reference back to player:', args.player);
+		console.log('the error:', args.error);
 
-		// Android only:
-		console.log('extra info on the error:', info.extra);
+		// Android only: extra detail on error
+		console.log('extra info on the error:', args.extra);
 	}
 }
 
