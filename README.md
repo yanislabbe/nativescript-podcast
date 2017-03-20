@@ -34,7 +34,7 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 
 Just a simple example of how you could reuse player instances for a given file:
 
-```
+``` typescript
 import { TNSPlayer } from 'nativescript-audio';
 
 export class YourClass {
