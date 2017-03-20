@@ -110,10 +110,10 @@ Method |  Description
 `pause()`: `Promise<boolean>` | Pause playback.
 `resume()`: `void` | Resume playback.
 `seekTo(time:number)`: `Promise<boolean>` | Seek to position.
-`volume(value:number)`: `void` | Set the player volume. Value range from 0 to 1.
 `dispose()`: `Promise<boolean>` | Free up resources when done playing audio.
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
 `getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer
+`volume`: `void` | Get/Set the player volume. Value range from 0 to 1.
 
 You can access the underlying native class instance via `ios` and `android` getters on the respective platforms which will return you:
 
