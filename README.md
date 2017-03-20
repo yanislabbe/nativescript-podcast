@@ -113,7 +113,7 @@ Method |  Description
 `dispose()`: `Promise<boolean>` | Free up resources when done playing audio.
 `isAudioPlaying()`: `boolean` | Determine if player is playing.
 `getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer.
-`currentTime()`: `number` | Get the current time in the media file's duration.
+`currentTime`: `number` | Get the current time in the media file's duration.
 `volume`: `void` | Get/Set the player volume. Value range from 0 to 1.
 
 You can access the underlying native class instance via `ios` and `android` getters on the respective platforms which will return you:
