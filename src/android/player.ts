@@ -6,10 +6,11 @@ import * as utils from 'utils/utils';
 import * as fs from 'file-system';
 import * as enums from 'ui/enums';
 
-declare var android: any
+declare var android: any;
+const MediaPlayer = android.media.MediaPlayer;
 
 export class TNSPlayer implements TNSPlayerI {
-  private player: any;
+  private player: android.media.MediaPlayer;
 
   get android(): any {
     return this.player;
@@ -28,7 +29,6 @@ export class TNSPlayer implements TNSPlayerI {
       if (options.autoPlay !== false) options.autoPlay = true;
 
       try {
-        let MediaPlayer = android.media.MediaPlayer;
         let audioPath;
 
         let fileName = isString(options.audioFile) ? options.audioFile.trim() : "";
@@ -208,6 +208,18 @@ export class TNSPlayer implements TNSPlayerI {
         reject(ex);
       }
     });
+  }
+
+  public get volume(): number {
+    // TODO: find better way to get individual player volume
+    let mgr = <android.media.AudioManager>app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
+    return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
+  }
+
+  public set volume(value: number) {
+    if (this.player) {
+      this.player.setVolume(value, value);
+    }
   }
 
   public dispose(): Promise<any> {

@@ -5,7 +5,7 @@ import {AudioDemo} from "./main-view-model";
 
 function pageLoaded(args) {
   var page = args.object;
-  page.bindingContext = new AudioDemo();
+  page.bindingContext = new AudioDemo(page);
   
   if (app.android && platform.device.sdkVersion >= "21") {
       var window = app.android.startActivity.getWindow();

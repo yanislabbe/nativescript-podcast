@@ -8,6 +8,11 @@ export interface TNSPlayerI {
   readonly android?: any;
 
   /**
+   * Volume getter/setter
+   */
+  volume: any;
+  
+  /**
    * Starts playing audio file from local app files.
    */
   playFromFile(options: AudioPlayerOptions): Promise<any>;

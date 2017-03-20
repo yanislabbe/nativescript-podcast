@@ -101,7 +101,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
           this._player.delegate = this;
           this._player.numberOfLoops = options.loop ? -1 : 0;
-          
+
           if (options.metering) {
             this._player.meteringEnabled = true;
           }
@@ -175,6 +175,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         reject(ex);
       }
     });
+  }
+
+  public get volume(): number {
+    return this._player ? this._player.volume : 0;
+  }
+
+  public set volume(value: number) {
+    if (this._player) {
+      this._player.volume = value;
+    }
   }
 
   public dispose(): Promise<any> {

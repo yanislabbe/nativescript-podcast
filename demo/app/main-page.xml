@@ -32,6 +32,8 @@
               <Button class="btn btn-primary btn-rounded-sm" text="Pause" tap="{{ pauseAudio }}" />
               <Button class="btn btn-primary btn-rounded-sm" text="Resume" tap="{{ resumePlayer }}" />
               <button class="btn btn-primary btn-rounded-sm" text="Stop" tap="{{ stopPlaying }}" />
+              <Slider id="slider" minValue="0" maxValue="100" value="100" />
+              
             </StackLayout>
           </ScrollView>
         </TabViewItem.view>

@@ -5,6 +5,8 @@ import * as app from 'application';
 import * as color from 'color';
 import * as platform from 'platform';
 import * as dialogs from 'ui/dialogs';
+import { Page } from 'ui/page';
+import { Slider } from 'ui/slider';
 import { SnackBar } from 'nativescript-snackbar';
 import { TNSRecorder, TNSPlayer, AudioPlayerOptions, AudioRecorderOptions } from 'nativescript-audio';
 
@@ -25,13 +27,22 @@ export class AudioDemo extends Observable {
   ];
   private meterInterval: any;
   private _SnackBar: SnackBar;
+  private _slider: Slider;
 
-  constructor() {
+  constructor(page: Page) {
     super();
 
     this.player = new TNSPlayer();
     this.recorder = new TNSRecorder();
     this._SnackBar = new SnackBar();
+    this.set('currentVolume', 1);
+    this._slider = <Slider>page.getViewById('slider');
+    console.log("slider:", this._slider);
+    if (this._slider) {
+      this._slider.on(Observable.propertyChangeEvent, (data: any) => {
+        this.player.volume = this._slider.value/100;
+      });
+    }
   }
 
   public startRecord(args) {
