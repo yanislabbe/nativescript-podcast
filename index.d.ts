@@ -86,6 +86,7 @@ export interface AudioRecorderOptions {
 export interface TNSPlayerI {
     readonly ios?: any;
     readonly android?: any;
+    volume: any;
     initFromFile(options: AudioPlayerOptions): Promise<any>;
     playFromFile(options: AudioPlayerOptions): Promise<any>;
     initFromUrl(options: AudioPlayerOptions): Promise<any>;
@@ -112,6 +113,7 @@ export declare class TNSPlayer {
     private _infoCallback;
     readonly ios: any;
     readonly android: any;
+    volume: any;
     initFromFile(options: AudioPlayerOptions): Promise<any>;
     playFromFile(options: AudioPlayerOptions): Promise<any>;
     initFromUrl(options: AudioPlayerOptions): Promise<any>;

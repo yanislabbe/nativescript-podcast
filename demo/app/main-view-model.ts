@@ -37,7 +37,8 @@ export class AudioDemo extends Observable {
     this._SnackBar = new SnackBar();
     this.set('currentVolume', 1);
     this._slider = <Slider>page.getViewById('slider');
-    console.log("slider:", this._slider);
+    
+    // Set player volume
     if (this._slider) {
       this._slider.on(Observable.propertyChangeEvent, (data: any) => {
         this.player.volume = this._slider.value/100;
