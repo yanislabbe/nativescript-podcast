@@ -212,11 +212,11 @@ export class AudioDemo extends Observable {
           this.set("isPlaying", false);
         },
 
-        infoCallback: (info) => {
-          console.log(JSON.stringify(info));
+        infoCallback: (args) => {
+          console.log(JSON.stringify(args));
 
-          dialogs.alert('Info callback: ' + info.msg);
-          console.log(JSON.stringify(info));
+          dialogs.alert('Info callback: ' + args.info);
+          console.log(JSON.stringify(args));
         }
       };
 

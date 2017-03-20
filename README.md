@@ -66,23 +66,18 @@ export class YourClass {
 	}
 
 	private _trackComplete(info: any) {
-		// Android: mp for MediaPlayer
-		console.log('reference back to player:', info.mp);
-
-		// iOS: player and flag
 		console.log('reference back to player:', info.player);
+
+		// iOS only: flag indicating if completed succesfully
 		console.log('whether song play completed successfully:', info.flag);
 	}
 
 	private _trackError(info: any) {
-		// Android:
-		console.log('reference back to player:', info.mp);
-		console.log('what happened:', info.what);
-		console.log('extra info on the error:', info.extra);
-
-		// iOS:
 		console.log('reference back to player:', info.player);
 		console.log('the error:', info.error);
+
+		// Android only:
+		console.log('extra info on the error:', info.extra);
 	}
 }
 

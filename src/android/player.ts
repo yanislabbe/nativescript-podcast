@@ -56,7 +56,7 @@ export class TNSPlayer implements TNSPlayerI {
                 mp.start();
               }
 
-              options.completeCallback({ mp });
+              options.completeCallback({ player: mp });
 
             }
           }));
@@ -65,8 +65,8 @@ export class TNSPlayer implements TNSPlayerI {
         // On Error
         if (options.errorCallback) {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
-            onError: (mp: any, what: number, extra: number) => {
-              options.errorCallback({ mp, what, extra });
+            onError: (player: any, error: number, extra: number) => {
+              options.errorCallback({ player, error, extra });
               return true;
             }
           }));
@@ -75,8 +75,8 @@ export class TNSPlayer implements TNSPlayerI {
         // On Info
         if (options.infoCallback) {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
-            onInfo: (mp: any, what: number, extra: number) => {
-              options.infoCallback({ mp, what, extra });
+            onInfo: (player: any, info: number, extra: number) => {
+              options.infoCallback({ player, info, extra });
               return true;
             }
           }))
@@ -126,7 +126,7 @@ export class TNSPlayer implements TNSPlayerI {
                 mp.start();
               }
 
-              options.completeCallback({ mp });
+              options.completeCallback({ player: mp });
 
             }
           }));
@@ -135,8 +135,8 @@ export class TNSPlayer implements TNSPlayerI {
         // On Error
         if (options.errorCallback) {
           this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
-            onError: (mp: any, what: number, extra: number) => {
-              options.errorCallback({ mp, what, extra });
+            onError: (player: any, error: number, extra: number) => {
+              options.errorCallback({ player, error, extra });
               return true;
             }
           }));
@@ -145,8 +145,8 @@ export class TNSPlayer implements TNSPlayerI {
         // On Info
         if (options.infoCallback) {
           this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
-            onInfo: (mp: any, what: number, extra: number) => {
-              options.infoCallback({ mp, what, extra });
+            onInfo: (player: any, info: number, extra: number) => {
+              options.infoCallback({ player, info, extra });
               return true;
             }
           }))
