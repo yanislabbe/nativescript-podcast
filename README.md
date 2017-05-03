@@ -24,7 +24,10 @@ Note: You will need to grant permissions on iOS to allow the device to access th
 ```
 
 ## Installation
+The plugin is compatible with both Nativescript 3.x and 2.x versions. Install with:
+
 `tns plugin add nativescript-audio`
+
 
 ## Sample Screen
 
