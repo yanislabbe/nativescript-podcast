@@ -52,8 +52,8 @@
   "homepage": "https://github.com/bradmartin/nativescript-audio",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "tns-core-modules": "^2.5.1",
-    "tns-platform-declarations": "^2.5.0",
+    "tns-core-modules": ">=3.0.0",
+    "tns-platform-declarations": ">=3.0.0",
     "typescript": "^2.1.0"
   }
 }
