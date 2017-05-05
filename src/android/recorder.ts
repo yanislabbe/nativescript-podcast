@@ -26,7 +26,15 @@ export class TNSRecorder implements TNSRecordI {
   public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this.recorder = new MediaRecorder();
+        let initializing = true;
+
+        if (this.recorder) {
+          // reset for reuse
+          this.recorder.reset();
+          initializing = false;
+        } else {
+          this.recorder = new MediaRecorder();
+        }
 
         if (options.source) {
           this.recorder.setAudioSource(options.source);
@@ -59,19 +67,21 @@ export class TNSRecorder implements TNSRecordI {
 
         // Is there any benefit to calling start() before setting listener?
 
-        // On Error
-        this.recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
-          onError: (recorder: any, error: number, extra: number) => {
-            options.errorCallback({ recorder, error, extra });
-          }
-        }));
+        if (initializing) {
+          // On Error
+          this.recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
+            onError: (recorder: any, error: number, extra: number) => {
+              options.errorCallback({ recorder, error, extra });
+            }
+          }));
 
-        // On Info
-        this.recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
-          onInfo: (recorder: any, info: number, extra: number) => {
-            options.infoCallback({ recorder, info, extra });
-          }
-        }));
+          // On Info
+          this.recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
+            onInfo: (recorder: any, info: number, extra: number) => {
+              options.infoCallback({ recorder, info, extra });
+            }
+          }));
+        }        
 
         this.recorder.prepare();
         this.recorder.start();

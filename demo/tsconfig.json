@@ -18,7 +18,8 @@
         "noFallthroughCasesInSwitch": true,
         "lib": [
             "es6",
-            "dom"
+            "dom",
+            "es2015.iterable"
         ],
         "typeRoots": [
             "./node_modules/@types",
