@@ -51,7 +51,7 @@
   "license": "MIT",
   "homepage": "https://github.com/bradmartin/nativescript-audio",
   "readmeFilename": "README.md",
-  "devDependencies": {
+  "dependencies": {
     "tns-core-modules": ">=3.0.0",
     "tns-platform-declarations": ">=3.0.0",
     "typescript": "^2.1.0"
