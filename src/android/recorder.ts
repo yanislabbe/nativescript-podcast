@@ -100,7 +100,9 @@ export class TNSRecorder implements TNSRecordI {
   public stop(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this.recorder.stop();
+        if (this.recorder) {
+          this.recorder.stop();
+        }
         resolve();
       } catch (ex) {
         reject(ex);
@@ -111,7 +113,9 @@ export class TNSRecorder implements TNSRecordI {
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this.recorder.release();
+        if (this.recorder) {
+          this.recorder.release();
+        }
         this.recorder = undefined;
         resolve();
       } catch (ex) {
