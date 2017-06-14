@@ -169,10 +169,10 @@ export class TNSPlayer implements TNSPlayerI {
   public pause(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        if (this.player.isPlaying()) {
+        if (this.player && this.player.isPlaying()) {
           this.player.pause();
-          resolve(true);
         }
+        resolve(true);
       } catch (ex) {
         reject(ex);
       }
@@ -182,10 +182,10 @@ export class TNSPlayer implements TNSPlayerI {
   public play(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        if (!this.player.isPlaying()) {
+        if (this.player && !this.player.isPlaying()) {
           this.player.start();
-          resolve(true);
         }
+        resolve(true);
       } catch (ex) {
         reject(ex);
       }
@@ -193,7 +193,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   public resume(): void {
-    this.player.start();
+    this.player && this.player.start();
   }
 
 
@@ -202,8 +202,8 @@ export class TNSPlayer implements TNSPlayerI {
       try {
         if (this.player) {
           this.player.seekTo(time);
-          resolve(true);
         }
+        resolve(true);
       } catch (ex) {
         reject(ex);
       }
@@ -225,7 +225,9 @@ export class TNSPlayer implements TNSPlayerI {
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this.player.release();
+        if (this.player) {
+          this.player.release();
+        }
         resolve();
       } catch (ex) {
         reject(ex);
@@ -234,13 +236,13 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   public isAudioPlaying(): boolean {
-    return this.player.isPlaying();
+    return this.player && this.player.isPlaying();
   }
 
   public getAudioTrackDuration(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        var duration = this.player.getDuration();
+        var duration = this.player ? this.player.getDuration() : 0;
         resolve(duration.toString());
       } catch (ex) {
         reject(ex);
