@@ -101,6 +101,8 @@ export interface TNSPlayerI {
 }
 export interface TNSRecordI {
     start(options: AudioRecorderOptions): Promise<any>;
+    pause(): Promise<any>;
+    resume(): Promise<any>;
     stop(): Promise<any>;
     dispose(): Promise<any>;
 }
@@ -135,6 +137,8 @@ export declare class TNSRecorder {
     private _recordingSession;
     static CAN_RECORD(): boolean;
     start(options: AudioRecorderOptions): Promise<any>;
+    pause(): Promise<any>;
+    resume(): Promise<any>;
     stop(): Promise<any>;
     dispose(): Promise<any>;
     isRecording(): any;

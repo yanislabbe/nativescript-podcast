@@ -11,8 +11,8 @@ export class TNSRecorder implements TNSRecordI {
 
   get android() {
     return this.recorder;
-  }  
-  
+  }
+
   public static CAN_RECORD(): boolean {
     var pManager = app.android.context.getPackageManager();
     var canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
@@ -76,7 +76,7 @@ export class TNSRecorder implements TNSRecordI {
           onInfo: (recorder: any, info: number, extra: number) => {
             options.infoCallback({ recorder, info, extra });
           }
-        }));       
+        }));
 
         this.recorder.prepare();
         this.recorder.start();
@@ -95,6 +95,32 @@ export class TNSRecorder implements TNSRecordI {
     else
       return 0;
 
+  }
+
+  public pause(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.recorder) {
+          this.recorder.pause();
+        }
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
+  public resume(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this.recorder) {
+          this.recorder.resume();
+        }
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
+    });
   }
 
   public stop(): Promise<any> {
