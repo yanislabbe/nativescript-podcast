@@ -95,6 +95,8 @@ Method |  Description
 `TNSRecorder.CAN_RECORD()`: `boolean` | Determine if ready to record.
 `start(options: AudioRecorderOptions)`: `Promise` | Start recording file.
 `stop()`: `void` | Stop recording.
+`pause()`: `Promise<any>` | Pause recording
+`resume()`: `Promise<any>` | Resume recording.
 `dispose()`: `void` | Free up system resources when done with recorder.
 
 #### TNSPlayer
