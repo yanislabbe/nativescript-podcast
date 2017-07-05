@@ -17,7 +17,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
 
   get ios() {
     return this._recorder;
-  } 
+  }
 
   public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -67,10 +67,38 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
+  public pause(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this._recorder) {
+          this._recorder.pause();
+        }
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
+  public resume(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (this._recorder) {
+          this._recorder.record();
+        }
+        resolve();
+      } catch (ex) {
+        reject(ex);
+      }
+    });
+  }
+
   public stop(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this._recorder.stop();
+        if (this._recorder) {
+          this._recorder.stop();
+        }
         // may need this in future
         // this._recordingSession.setActiveError(false, null);
         this._recorder.meteringEnabled = false;
@@ -84,11 +112,13 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        this._recorder.stop();
-        this._recorder.meteringEnabled = false;
-        this._recordingSession.setActiveError(false, null);
-        this._recorder.release();
-        this._recorder = undefined;
+        if (this._recorder) {
+          this._recorder.stop();
+          this._recorder.meteringEnabled = false;
+          this._recordingSession.setActiveError(false, null);
+          this._recorder.release();
+          this._recorder = undefined;
+        }
         resolve();
       } catch (ex) {
         reject(ex);
@@ -97,15 +127,17 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
   }
 
   public isRecording() {
-    return this._recorder.recording;
+    return this._recorder && this._recorder.recording;
   }
 
   public getMeters(channel: number) {
-    if (!this._recorder.meteringEnabled) {
-      this._recorder.meteringEnabled = true;
+    if (this._recorder) {
+      if (!this._recorder.meteringEnabled) {
+        this._recorder.meteringEnabled = true;
+      }
+      this._recorder.updateMeters();
+      return this._recorder.averagePowerForChannel(channel);
     }
-    this._recorder.updateMeters();
-    return this._recorder.averagePowerForChannel(channel);
   }
 
 

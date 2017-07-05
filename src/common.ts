@@ -11,7 +11,7 @@ export interface TNSPlayerI {
    * Volume getter/setter
    */
   volume: any;
-  
+
   /**
    * Starts playing audio file from local app files.
    */
@@ -31,7 +31,7 @@ export interface TNSPlayerI {
    * Pauses playing audio file.
    */
   pause(): Promise<boolean>;
-  
+
   /**
    * Seeks to specific time.
    */
@@ -63,6 +63,16 @@ export interface TNSRecordI {
    * Starts the native audio recording control.
    */
   start(options: AudioRecorderOptions): Promise<any>;
+
+  /**
+   * Pauses the native audio recording control.
+   */
+  pause(): Promise<any>;
+
+  /**
+   * Resumes the native audio recording control.
+   */
+  resume(): Promise<any>;
 
   /**
   * Stops the native audio recording control.
