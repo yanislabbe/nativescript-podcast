@@ -5,7 +5,7 @@ import { TNSPlayerI } from '../common';
 import { AudioPlayerOptions } from '../options';
 var utils = require('utils/utils');
 
-declare var NSURLSession, AVAudioPlayer, NSURL, AVAudioPlayerDelegate;
+declare var NSURLSession, AVAudioPlayer, NSURL, AVAudioPlayerDelegate, AVAudioSession, AVAudioSessionPortOverrideSpeaker, AVAudioSessionCategoryPlayAndRecord;
 
 export class TNSPlayer extends NSObject implements TNSPlayerI {
   public static ObjCProtocols = [AVAudioPlayerDelegate];
@@ -43,6 +43,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._completeCallback = options.completeCallback;
         this._errorCallback = options.errorCallback;
         this._infoCallback = options.infoCallback;
+        
+        var audioSession = AVAudioSession.sharedInstance();
+        try {
+          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
+          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
+          audioSession.setActiveError(true);
+          //console.log("audioSession category set and active");
+        } catch (err) {
+          //console.log("setting audioSession category failed");
+        }
 
         this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(NSURL.fileURLWithPath(fileName));
         this._player.delegate = this;
@@ -97,6 +107,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._completeCallback = options.completeCallback;
           this._errorCallback = options.errorCallback;
           this._infoCallback = options.infoCallback;
+          
+          var audioSession = AVAudioSession.sharedInstance();
+          try {
+            audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
+            audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
+            audioSession.setActiveError(true);
+            //console.log("audioSession category set and active");
+          } catch (err) {
+            //console.log("setting audioSession category failed");
+          }
 
           this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
           this._player.delegate = this;

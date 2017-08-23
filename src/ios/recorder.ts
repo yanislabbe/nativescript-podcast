@@ -4,7 +4,7 @@ import { knownFolders, path } from 'file-system';
 import { TNSRecordI } from '../common';
 import { AudioRecorderOptions } from '../options';
 
-declare var interop, kAudioFormatMPEG4AAC, AVAudioQuality, AVAudioRecorderDelegate, AVAudioSession, AVAudioSessionCategoryRecord, NSMutableDictionary, NSNumber, AVAudioRecorder, NSURL;
+declare var interop, kAudioFormatMPEG4AAC, AVAudioQuality, AVAudioRecorderDelegate, AVAudioSession, AVAudioSessionCategoryRecord, AVAudioSessionCategoryPlayAndRecord, NSMutableDictionary, NSNumber, AVAudioRecorder, NSURL;
 
 export class TNSRecorder extends NSObject implements TNSRecordI {
   public static ObjCProtocols = [AVAudioRecorderDelegate];
@@ -24,7 +24,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
       try {
         this._recordingSession = AVAudioSession.sharedInstance();
         let errorRef = new interop.Reference();
-        this._recordingSession.setCategoryError(AVAudioSessionCategoryRecord, errorRef);
+        this._recordingSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord, errorRef);
         if (errorRef) {
           console.log(`setCategoryError: ${errorRef.value}`);
         }
