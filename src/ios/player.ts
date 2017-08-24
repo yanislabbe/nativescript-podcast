@@ -45,18 +45,18 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._infoCallback = options.infoCallback;
         
         var audioSession = AVAudioSession.sharedInstance();
-		let output = audioSession.currentRoute.outputs.lastObject.portType;
+	let output = audioSession.currentRoute.outputs.lastObject.portType;
 		
-		if (output.match(/Receiver/)) {
-	        try {
+	if (output.match(/Receiver/)) {
+	   try {
 	          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
 	          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
 	          audioSession.setActiveError(true);
 	          //console.log("audioSession category set and active");
-	        } catch (err) {
+	    } catch (err) {
 	          //console.log("setting audioSession category failed");
-	        }
-		}
+	    }
+	}
 
         this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(NSURL.fileURLWithPath(fileName));
         this._player.delegate = this;
@@ -113,18 +113,18 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._infoCallback = options.infoCallback;
           
           var audioSession = AVAudioSession.sharedInstance();
-  		  let output = audioSession.currentRoute.outputs.lastObject.portType;
+	  let output = audioSession.currentRoute.outputs.lastObject.portType;
 		
-  		  if (output.match(/Receiver/)) {
-  	        try {
-  	          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
-  	          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
-  	          audioSession.setActiveError(true);
-  	          //console.log("audioSession category set and active");
-  	        } catch (err) {
-  	          //console.log("setting audioSession category failed");
-  	        }
-  		  }
+	  if (output.match(/Receiver/)) {
+	    try {
+	          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
+	          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
+	          audioSession.setActiveError(true);
+	          //console.log("audioSession category set and active");
+	    } catch (err) {
+	          //console.log("setting audioSession category failed");
+	    }
+	  }
 
           this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
           this._player.delegate = this;
