@@ -1,6 +1,6 @@
 {
   "name": "nativescript-audio",
-  "version": "3.5.0",
+  "version": "4.0.0",
   "description": "NativeScript plugin to record and play audio.",
   "main": "audio",
   "typings": "index.d.ts",
@@ -43,6 +43,58 @@
       "name": "Nathan Walker",
       "email": " walkerrunpdx@gmail.com",
       "url": "https://github.com/NathanWalker"
+    },
+    {
+      "name": "Jibon Lawrence Costa",
+      "url": "https://github.com/jibon57"
+    },
+    {
+      "name": "Dylan Ryan",
+      "url": "https://github.com/dylanryan"
+    },
+    {
+      "name": "Alexander Vakrilov",
+      "url": "https://github.com/vakrilov"
+    },
+    {
+      "name": "GT Nunes",
+      "url": "https://github.com/gtnunes1956"
+    },
+    {
+      "name": "Andrea Sotto",
+      "url": "https://github.com/andreasotto"
+    },
+    {
+      "name": "August Heegaard",
+      "url": "https://github.com/agisboye"
+    },
+    {
+      "name": "Akmal Sultonov",
+      "url": "https://github.com/asultonov"
+    },
+    {
+      "name": "Amit Gharat",
+      "url": "https://github.com/codef0rmer"
+    },
+    {
+      "name": "Jen Looper",
+      "url": "https://github.com/jlooper"
+    },
+    {
+      "name": "Stanimira Vlaeva",
+      "url": "https://github.com/sis0k0"
+    },
+    {
+      "name": "Osei Fortune",
+      "url": "https://github.com/triniwiz"
+    },
+    {
+      "name": "RedPandaTronics",
+      "url": "https://github.com/redpandatronicsuk"
+    },
+    {
+      "name": "Chris Flannagan",
+      "url": "https://github.com/ChrisFlannagan"
     }
   ],
   "bugs": {
