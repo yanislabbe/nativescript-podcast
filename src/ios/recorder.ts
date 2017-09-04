@@ -1,10 +1,20 @@
-import * as app from 'application';
-import { isString } from 'utils/types';
-import { knownFolders, path } from 'file-system';
-import { TNSRecordI } from '../common';
-import { AudioRecorderOptions } from '../options';
+import * as app from "tns-core-modules/application";
+import { isString } from "tns-core-modules/utils/types";
+import { knownFolders, path } from "tns-core-modules/file-system";
+import { TNSRecordI } from "../common";
+import { AudioRecorderOptions } from "../options";
 
-declare var interop, kAudioFormatMPEG4AAC, AVAudioQuality, AVAudioRecorderDelegate, AVAudioSession, AVAudioSessionCategoryRecord, AVAudioSessionCategoryPlayAndRecord, NSMutableDictionary, NSNumber, AVAudioRecorder, NSURL;
+declare var interop,
+  kAudioFormatMPEG4AAC,
+  AVAudioQuality,
+  AVAudioRecorderDelegate,
+  AVAudioSession,
+  AVAudioSessionCategoryRecord,
+  AVAudioSessionCategoryPlayAndRecord,
+  NSMutableDictionary,
+  NSNumber,
+  AVAudioRecorder,
+  NSURL;
 
 export class TNSRecorder extends NSObject implements TNSRecordI {
   public static ObjCProtocols = [AVAudioRecorderDelegate];
@@ -24,7 +34,10 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
       try {
         this._recordingSession = AVAudioSession.sharedInstance();
         let errorRef = new interop.Reference();
-        this._recordingSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord, errorRef);
+        this._recordingSession.setCategoryError(
+          AVAudioSessionCategoryPlayAndRecord,
+          errorRef
+        );
         if (errorRef) {
           console.log(`setCategoryError: ${errorRef.value}`);
         }
@@ -32,21 +45,36 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
         this._recordingSession.setActiveError(true, null);
         this._recordingSession.requestRecordPermission((allowed: boolean) => {
           if (allowed) {
-
             // var recordSetting = new NSMutableDictionary((<any>[NSNumber.numberWithInt(kAudioFormatMPEG4AAC), NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue), NSNumber.numberWithFloat(16000.0), NSNumber.numberWithInt(1)]),
             //   (<any>["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]));
 
             let recordSetting = NSMutableDictionary.alloc().init();
-            recordSetting.setValueForKey(NSNumber.numberWithInt(kAudioFormatMPEG4AAC), 'AVFormatIDKey');
-            recordSetting.setValueForKey(NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue), 'AVEncoderAudioQualityKey');
-            recordSetting.setValueForKey(NSNumber.numberWithFloat(16000.0), 'AVSampleRateKey');
-            recordSetting.setValueForKey(NSNumber.numberWithInt(1), 'AVNumberOfChannelsKey');
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt(kAudioFormatMPEG4AAC),
+              "AVFormatIDKey"
+            );
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue),
+              "AVEncoderAudioQualityKey"
+            );
+            recordSetting.setValueForKey(
+              NSNumber.numberWithFloat(16000.0),
+              "AVSampleRateKey"
+            );
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt(1),
+              "AVNumberOfChannelsKey"
+            );
 
             errorRef = new interop.Reference();
 
             let url = NSURL.fileURLWithPath(options.filename);
 
-            this._recorder = (<any>AVAudioRecorder.alloc()).initWithURLSettingsError(url, recordSetting, errorRef);
+            this._recorder = (<any>AVAudioRecorder.alloc()).initWithURLSettingsError(
+              url,
+              recordSetting,
+              errorRef
+            );
             if (errorRef && errorRef.value) {
               console.log(errorRef.value);
             } else {
@@ -60,7 +88,6 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
             }
           }
         });
-
       } catch (ex) {
         reject(ex);
       }
@@ -139,7 +166,6 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
       return this._recorder.averagePowerForChannel(channel);
     }
   }
-
 
   public audioRecorderDidFinishRecording(recorder: any, success: boolean) {
     console.log(`audioRecorderDidFinishRecording: ${success}`);

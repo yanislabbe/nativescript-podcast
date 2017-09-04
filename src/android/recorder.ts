@@ -1,10 +1,10 @@
-import * as app from 'application';
-import { TNSRecordI } from '../common';
-import { AudioRecorderOptions } from '../options';
+import * as app from "tns-core-modules/application";
+import { TNSRecordI } from "../common";
+import { AudioRecorderOptions } from "../options";
 
 declare var android: any;
 
-let MediaRecorder = android.media.MediaRecorder;
+const MediaRecorder = android.media.MediaRecorder;
 
 export class TNSRecorder implements TNSRecordI {
   private recorder: any;
@@ -15,7 +15,9 @@ export class TNSRecorder implements TNSRecordI {
 
   public static CAN_RECORD(): boolean {
     var pManager = app.android.context.getPackageManager();
-    var canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
+    var canRecord = pManager.hasSystemFeature(
+      android.content.pm.PackageManager.FEATURE_MICROPHONE
+    );
     if (canRecord) {
       return true;
     } else {
@@ -61,28 +63,30 @@ export class TNSRecorder implements TNSRecordI {
         // recorder.setOutputFile("/sdcard/example.mp4");
         this.recorder.setOutputFile(options.filename);
 
-
         // Is there any benefit to calling start() before setting listener?
 
         // On Error
-        this.recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
-          onError: (recorder: any, error: number, extra: number) => {
-            options.errorCallback({ recorder, error, extra });
-          }
-        }));
+        this.recorder.setOnErrorListener(
+          new android.media.MediaRecorder.OnErrorListener({
+            onError: (recorder: any, error: number, extra: number) => {
+              options.errorCallback({ recorder, error, extra });
+            }
+          })
+        );
 
         // On Info
-        this.recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
-          onInfo: (recorder: any, info: number, extra: number) => {
-            options.infoCallback({ recorder, info, extra });
-          }
-        }));
+        this.recorder.setOnInfoListener(
+          new android.media.MediaRecorder.OnInfoListener({
+            onInfo: (recorder: any, info: number, extra: number) => {
+              options.infoCallback({ recorder, info, extra });
+            }
+          })
+        );
 
         this.recorder.prepare();
         this.recorder.start();
 
         resolve();
-
       } catch (ex) {
         reject(ex);
       }
@@ -90,11 +94,8 @@ export class TNSRecorder implements TNSRecordI {
   }
 
   public getMeters(): number {
-    if (this.recorder != null)
-      return this.recorder.getMaxAmplitude();
-    else
-      return 0;
-
+    if (this.recorder != null) return this.recorder.getMaxAmplitude();
+    else return 0;
   }
 
   public pause(): Promise<any> {

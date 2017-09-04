@@ -1,4 +1,4 @@
-import {AudioPlayerOptions, AudioRecorderOptions} from './options';
+import { AudioPlayerOptions, AudioRecorderOptions } from "./options";
 
 export interface TNSPlayerI {
   /**

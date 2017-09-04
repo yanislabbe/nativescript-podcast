@@ -1,10 +1,10 @@
-import { isString } from 'utils/types';
-import { TNSPlayerI } from '../common';
-import { AudioPlayerOptions } from '../options';
-import * as app from 'application';
-import * as utils from 'utils/utils';
-import * as fs from 'file-system';
-import * as enums from 'ui/enums';
+import * as app from "tns-core-modules/application";
+import * as utils from "tns-core-modules/utils/utils";
+import * as fs from "tns-core-modules/file-system";
+import * as enums from "tns-core-modules/ui/enums";
+import { isString } from "tns-core-modules/utils/types";
+import { TNSPlayerI } from "../common";
+import { AudioPlayerOptions } from "../options";
 
 declare var android: any;
 const MediaPlayer = android.media.MediaPlayer;
@@ -31,12 +31,16 @@ export class TNSPlayer implements TNSPlayerI {
       try {
         let audioPath;
 
-        let fileName = isString(options.audioFile) ? options.audioFile.trim() : "";
+        let fileName = isString(options.audioFile)
+          ? options.audioFile.trim()
+          : "";
         if (fileName.indexOf("~/") === 0) {
-          fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
+          fileName = fs.path.join(
+            fs.knownFolders.currentApp().path,
+            fileName.replace("~/", "")
+          );
           audioPath = fileName;
-        }
-        else {
+        } else {
           audioPath = fileName;
         }
 
@@ -48,48 +52,53 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Complete
         if (options.completeCallback) {
-          this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
-            onCompletion: (mp) => {
+          this.player.setOnCompletionListener(
+            new MediaPlayer.OnCompletionListener({
+              onCompletion: mp => {
+                if (options.loop === true) {
+                  mp.seekTo(5);
+                  mp.start();
+                }
 
-              if (options.loop === true) {
-                mp.seekTo(5);
-                mp.start();
+                options.completeCallback({ player: mp });
               }
-
-              options.completeCallback({ player: mp });
-
-            }
-          }));
+            })
+          );
         }
 
         // On Error
         if (options.errorCallback) {
-          this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
-            onError: (player: any, error: number, extra: number) => {
-              options.errorCallback({ player, error, extra });
-              return true;
-            }
-          }));
+          this.player.setOnErrorListener(
+            new MediaPlayer.OnErrorListener({
+              onError: (player: any, error: number, extra: number) => {
+                options.errorCallback({ player, error, extra });
+                return true;
+              }
+            })
+          );
         }
 
         // On Info
         if (options.infoCallback) {
-          this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
-            onInfo: (player: any, info: number, extra: number) => {
-              options.infoCallback({ player, info, extra });
-              return true;
-            }
-          }))
+          this.player.setOnInfoListener(
+            new MediaPlayer.OnInfoListener({
+              onInfo: (player: any, info: number, extra: number) => {
+                options.infoCallback({ player, info, extra });
+                return true;
+              }
+            })
+          );
         }
 
         // On Prepared
-        this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
-          onPrepared: (mp) => {
-            if (options.autoPlay) mp.start();
-            resolve();
-          }
-        }));
-
+        this.player.setOnPreparedListener(
+          new MediaPlayer.OnPreparedListener({
+            onPrepared: mp => {
+              if (options.autoPlay) mp.start();
+              resolve();
+            }
+          })
+        );
       } catch (ex) {
         reject(ex);
       }
@@ -118,48 +127,53 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Complete
         if (options.completeCallback) {
-          this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener({
-            onCompletion: (mp) => {
+          this.player.setOnCompletionListener(
+            new MediaPlayer.OnCompletionListener({
+              onCompletion: mp => {
+                if (options.loop === true) {
+                  mp.seekTo(5);
+                  mp.start();
+                }
 
-              if (options.loop === true) {
-                mp.seekTo(5);
-                mp.start();
+                options.completeCallback({ player: mp });
               }
-
-              options.completeCallback({ player: mp });
-
-            }
-          }));
+            })
+          );
         }
 
         // On Error
         if (options.errorCallback) {
-          this.player.setOnErrorListener(new MediaPlayer.OnErrorListener({
-            onError: (player: any, error: number, extra: number) => {
-              options.errorCallback({ player, error, extra });
-              return true;
-            }
-          }));
+          this.player.setOnErrorListener(
+            new MediaPlayer.OnErrorListener({
+              onError: (player: any, error: number, extra: number) => {
+                options.errorCallback({ player, error, extra });
+                return true;
+              }
+            })
+          );
         }
 
         // On Info
         if (options.infoCallback) {
-          this.player.setOnInfoListener(new MediaPlayer.OnInfoListener({
-            onInfo: (player: any, info: number, extra: number) => {
-              options.infoCallback({ player, info, extra });
-              return true;
-            }
-          }))
+          this.player.setOnInfoListener(
+            new MediaPlayer.OnInfoListener({
+              onInfo: (player: any, info: number, extra: number) => {
+                options.infoCallback({ player, info, extra });
+                return true;
+              }
+            })
+          );
         }
 
         // On Prepared
-        this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener({
-          onPrepared: (mp) => {
-            if (options.autoPlay) mp.start();
-            resolve();
-          }
-        }));
-
+        this.player.setOnPreparedListener(
+          new MediaPlayer.OnPreparedListener({
+            onPrepared: mp => {
+              if (options.autoPlay) mp.start();
+              resolve();
+            }
+          })
+        );
       } catch (ex) {
         reject(ex);
       }
@@ -196,7 +210,6 @@ export class TNSPlayer implements TNSPlayerI {
     this.player && this.player.start();
   }
 
-
   public seekTo(time: number): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
@@ -212,7 +225,9 @@ export class TNSPlayer implements TNSPlayerI {
 
   public get volume(): number {
     // TODO: find better way to get individual player volume
-    let mgr = <android.media.AudioManager>app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
+    let mgr = <android.media.AudioManager>app.android.context.getSystemService(
+      android.content.Context.AUDIO_SERVICE
+    );
     return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
   }
 

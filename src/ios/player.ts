@@ -1,11 +1,19 @@
-import * as app from 'application';
-import { isString } from 'utils/types';
-import { knownFolders, path } from 'file-system';
-import { TNSPlayerI } from '../common';
-import { AudioPlayerOptions } from '../options';
-var utils = require('utils/utils');
+import { TNSPlayerI } from "../common";
+import { AudioPlayerOptions } from "../options";
+import { isString } from "tns-core-modules/utils/types";
+import { knownFolders, path } from "tns-core-modules/file-system";
+import * as app from "tns-core-modules/application";
+import * as utils from "tns-core-modules/utils/utils";
 
-declare var NSURLSession, AVAudioPlayer, NSURL, AVAudioPlayerDelegate, AVAudioSession, AVAudioSessionPortOverrideSpeaker, AVAudioSessionCategoryPlayAndRecord;
+// var utils = require('utils/utils');
+
+declare var NSURLSession,
+  AVAudioPlayer,
+  NSURL,
+  AVAudioPlayerDelegate,
+  AVAudioSession,
+  AVAudioSessionPortOverrideSpeaker,
+  AVAudioSessionCategoryPlayAndRecord;
 
 export class TNSPlayer extends NSObject implements TNSPlayerI {
   public static ObjCProtocols = [AVAudioPlayerDelegate];
@@ -18,7 +26,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   get ios(): any {
     return this._player;
   }
-  
+
   public initFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       // init only
@@ -35,30 +43,39 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
       try {
         let audioPath;
 
-        let fileName = isString(options.audioFile) ? options.audioFile.trim() : "";
+        let fileName = isString(options.audioFile)
+          ? options.audioFile.trim()
+          : "";
         if (fileName.indexOf("~/") === 0) {
-          fileName = path.join(knownFolders.currentApp().path, fileName.replace("~/", ""))
+          fileName = path.join(
+            knownFolders.currentApp().path,
+            fileName.replace("~/", "")
+          );
         }
 
         this._completeCallback = options.completeCallback;
         this._errorCallback = options.errorCallback;
         this._infoCallback = options.infoCallback;
-        
-        var audioSession = AVAudioSession.sharedInstance();
-	let output = audioSession.currentRoute.outputs.lastObject.portType;
-		
-	if (output.match(/Receiver/)) {
-	   try {
-	          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
-	          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
-	          audioSession.setActiveError(true);
-	          //console.log("audioSession category set and active");
-	    } catch (err) {
-	          //console.log("setting audioSession category failed");
-	    }
-	}
 
-        this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(NSURL.fileURLWithPath(fileName));
+        var audioSession = AVAudioSession.sharedInstance();
+        let output = audioSession.currentRoute.outputs.lastObject.portType;
+
+        if (output.match(/Receiver/)) {
+          try {
+            audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
+            audioSession.overrideOutputAudioPortError(
+              AVAudioSessionPortOverrideSpeaker
+            );
+            audioSession.setActiveError(true);
+            //console.log("audioSession category set and active");
+          } catch (err) {
+            //console.log("setting audioSession category failed");
+          }
+        }
+
+        this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(
+          NSURL.fileURLWithPath(fileName)
+        );
         this._player.delegate = this;
 
         if (options.metering) {
@@ -69,10 +86,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player.numberOfLoops = -1;
         }
 
-        if (options.autoPlay) this._player.play();   
+        if (options.autoPlay) this._player.play();
 
         resolve();
-
       } catch (ex) {
         if (this._errorCallback) {
           this._errorCallback({ ex });
@@ -96,51 +112,62 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
       if (options.autoPlay !== false) options.autoPlay = true;
 
       try {
-        let sharedSession = utils.ios.getter(NSURLSession, NSURLSession.sharedSession);
+        let sharedSession = utils.ios.getter(
+          NSURLSession,
+          NSURLSession.sharedSession
+        );
 
-        this._task = sharedSession.dataTaskWithURLCompletionHandler(NSURL.URLWithString(options.audioFile), (data, response, error) => {
-          if (error !== null) {
+        this._task = sharedSession.dataTaskWithURLCompletionHandler(
+          NSURL.URLWithString(options.audioFile),
+          (data, response, error) => {
+            if (error !== null) {
+              if (this._errorCallback) {
+                this._errorCallback({ error });
+              }
 
-            if (this._errorCallback) {
-              this._errorCallback({ error });
+              reject();
             }
 
-            reject();
+            this._completeCallback = options.completeCallback;
+            this._errorCallback = options.errorCallback;
+            this._infoCallback = options.infoCallback;
+
+            var audioSession = AVAudioSession.sharedInstance();
+            let output = audioSession.currentRoute.outputs.lastObject.portType;
+
+            if (output.match(/Receiver/)) {
+              try {
+                audioSession.setCategoryError(
+                  AVAudioSessionCategoryPlayAndRecord
+                );
+                audioSession.overrideOutputAudioPortError(
+                  AVAudioSessionPortOverrideSpeaker
+                );
+                audioSession.setActiveError(true);
+                //console.log("audioSession category set and active");
+              } catch (err) {
+                //console.log("setting audioSession category failed");
+              }
+            }
+
+            this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(
+              data,
+              null
+            );
+            this._player.delegate = this;
+            this._player.numberOfLoops = options.loop ? -1 : 0;
+
+            if (options.metering) {
+              this._player.meteringEnabled = true;
+            }
+
+            if (options.autoPlay) this._player.play();
+
+            resolve();
           }
-
-          this._completeCallback = options.completeCallback;
-          this._errorCallback = options.errorCallback;
-          this._infoCallback = options.infoCallback;
-          
-          var audioSession = AVAudioSession.sharedInstance();
-	  let output = audioSession.currentRoute.outputs.lastObject.portType;
-		
-	  if (output.match(/Receiver/)) {
-	    try {
-	          audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
-	          audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverrideSpeaker);
-	          audioSession.setActiveError(true);
-	          //console.log("audioSession category set and active");
-	    } catch (err) {
-	          //console.log("setting audioSession category failed");
-	    }
-	  }
-
-          this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(data, null);
-          this._player.delegate = this;
-          this._player.numberOfLoops = options.loop ? -1 : 0;
-
-          if (options.metering) {
-            this._player.meteringEnabled = true;
-          }
-
-          if (options.autoPlay) this._player.play();
-
-          resolve();
-        });
+        );
 
         this._task.resume();
-
       } catch (ex) {
         if (this._errorCallback) {
           this._errorCallback({ ex });
@@ -253,8 +280,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   public audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean) {
     if (flag && this._completeCallback) {
       this._completeCallback({ player, flag });
-    }
-    else if (!flag && this._errorCallback) {
+    } else if (!flag && this._errorCallback) {
       this._errorCallback({ player, flag });
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "nativescript-audio",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "NativeScript plugin to record and play audio.",
   "main": "audio",
   "typings": "index.d.ts",
@@ -14,8 +14,14 @@
     "build": "tsc",
     "demo.ios": "npm run preparedemo; cd demo; tns run ios --emulator",
     "demo.android": "npm run preparedemo; cd demo; tns run android --emulator",
-    "preparedemo": "npm run build; cd demo; tns plugin remove nativescript-audio; tns plugin add ..;",
-    "setup": "cd demo; npm i; cd ..; npm i; npm run build; cd demo; tns plugin add ..; cd .."
+    "preparedemo":
+      "npm run build; cd demo; tns plugin remove nativescript-audio; tns plugin add ..;",
+    "setup":
+      "cd demo; npm i; cd ..; npm i; npm run build; cd demo; tns plugin add ..; cd ..",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": ["prettier --write", "git add"]
   },
   "repository": {
     "type": "git",
@@ -31,6 +37,7 @@
     "microphone",
     "recorder",
     "audio",
+    "nStudio",
     "bradmartin",
     "nathanwalker"
   ],
@@ -108,6 +115,9 @@
   },
   "devDependencies": {
     "tns-platform-declarations": ">=3.0.0",
-    "typescript": "^2.1.0"
+    "typescript": "^2.3.0",
+    "husky": "^0.13.4",
+    "lint-staged": "^3.6.1",
+    "prettier": "^1.4.4"
   }
 }
