@@ -85,7 +85,34 @@ export class YourClass {
 }
 
 ```
+And a simple javascript example:
 
+``` javascript
+var audio = require("nativescript-audio");
+
+var player = new audio.TNSPlayer();
+var playerOptions = {
+    audioFile: "http://some/audio/file.mp3",
+    loop: false,
+    completeCallback: function () {
+        console.log('finished playing')
+    },
+    errorCallback: function (errorObject) {
+        console.log(JSON.stringify(errorObject));
+    },
+    infoCallback: function (args) {
+        console.log(JSON.stringify(args));
+    }
+};
+
+player.playFromUrl(playerOptions)
+    .then(function (res) {
+        console.log(res);
+    })
+    .catch(function () {
+        console.log("something went wrong...");
+    })
+```
 ## API
 
 #### TNSRecorder
