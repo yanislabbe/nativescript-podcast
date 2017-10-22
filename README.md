@@ -1,5 +1,11 @@
 [![npm](https://img.shields.io/npm/v/nativescript-audio.svg)](https://www.npmjs.com/package/nativescript-audio)
 [![npm](https://img.shields.io/npm/dt/nativescript-audio.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-audio)
+[![Build Status](https://travis-ci.org/bradmartin/nativescript-audio.svg?branch=master)](https://travis-ci.org/bradmartin/nativescript-audio)
+[![nStudio Plugin](https://img.shields.io/badge/nStudio-Plugin-blue.svg)](http://nstudio.io)
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[twitter-image]:https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/bradwaynemartin
 
 # NativeScript-Audio
 NativeScript plugin to play and record audio files for Android and iOS.
