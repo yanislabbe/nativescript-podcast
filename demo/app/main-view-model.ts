@@ -16,7 +16,7 @@ import {
   AudioRecorderOptions
 } from "nativescript-audio";
 
-declare var android;
+declare const android;
 
 export class AudioDemo extends Observable {
   public isPlaying: boolean;
@@ -69,7 +69,7 @@ export class AudioDemo extends Observable {
 
   public startRecord(args) {
     if (TNSRecorder.CAN_RECORD()) {
-      var audioFolder = knownFolders.currentApp().getFolder("audio");
+      const audioFolder = knownFolders.currentApp().getFolder("audio");
       console.log(JSON.stringify(audioFolder));
 
       let androidFormat;
@@ -152,8 +152,8 @@ export class AudioDemo extends Observable {
 
   public getFile(args) {
     try {
-      var audioFolder = knownFolders.currentApp().getFolder("audio");
-      var recordedFile = audioFolder.getFile(
+      const audioFolder = knownFolders.currentApp().getFolder("audio");
+      const recordedFile = audioFolder.getFile(
         `recording.${this.platformExtension()}`
       );
       console.log(JSON.stringify(recordedFile));
@@ -165,13 +165,13 @@ export class AudioDemo extends Observable {
   }
 
   public playRecordedFile(args) {
-    var audioFolder = knownFolders.currentApp().getFolder("audio");
-    var recordedFile = audioFolder.getFile(
+    const audioFolder = knownFolders.currentApp().getFolder("audio");
+    const recordedFile = audioFolder.getFile(
       `recording.${this.platformExtension()}`
     );
     console.log("RECORDED FILE : " + JSON.stringify(recordedFile));
 
-    var playerOptions: AudioPlayerOptions = {
+    const playerOptions: AudioPlayerOptions = {
       audioFile: `~/audio/recording.${this.platformExtension()}`,
       loop: false,
       completeCallback: () => {
@@ -282,7 +282,7 @@ export class AudioDemo extends Observable {
    */
   public playRemoteFile(args) {
     console.log("playRemoteFile");
-    var filepath = "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3";
+    const filepath = "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3";
 
     this.playAudio(filepath, "remoteFile");
   }
@@ -337,7 +337,7 @@ export class AudioDemo extends Observable {
   }
 
   private platformExtension() {
-    //'mp3'
+    // 'mp3'
     return `${app.android ? "m4a" : "caf"}`;
   }
 
