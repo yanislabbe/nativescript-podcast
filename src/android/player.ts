@@ -7,10 +7,9 @@ import { TNSPlayerI } from "../common";
 import { AudioPlayerOptions } from "../options";
 
 declare var android: any;
-const MediaPlayer = android.media.MediaPlayer;
 
 export class TNSPlayer implements TNSPlayerI {
-  private player: android.media.MediaPlayer;
+  private player: any;
 
   get android(): any {
     return this.player;
@@ -44,7 +43,7 @@ export class TNSPlayer implements TNSPlayerI {
           audioPath = fileName;
         }
 
-        this.player = new MediaPlayer();
+        this.player = new android.media.MediaPlayer();
 
         this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
         this.player.setDataSource(audioPath);
@@ -53,7 +52,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Complete
         if (options.completeCallback) {
           this.player.setOnCompletionListener(
-            new MediaPlayer.OnCompletionListener({
+            new android.media.MediaPlayer.OnCompletionListener({
               onCompletion: mp => {
                 if (options.loop === true) {
                   mp.seekTo(5);
@@ -69,7 +68,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Error
         if (options.errorCallback) {
           this.player.setOnErrorListener(
-            new MediaPlayer.OnErrorListener({
+            new android.media.MediaPlayer.OnErrorListener({
               onError: (player: any, error: number, extra: number) => {
                 options.errorCallback({ player, error, extra });
                 return true;
@@ -81,7 +80,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Info
         if (options.infoCallback) {
           this.player.setOnInfoListener(
-            new MediaPlayer.OnInfoListener({
+            new android.media.MediaPlayer.OnInfoListener({
               onInfo: (player: any, info: number, extra: number) => {
                 options.infoCallback({ player, info, extra });
                 return true;
@@ -92,7 +91,7 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Prepared
         this.player.setOnPreparedListener(
-          new MediaPlayer.OnPreparedListener({
+          new android.media.MediaPlayer.OnPreparedListener({
             onPrepared: mp => {
               if (options.autoPlay) mp.start();
               resolve();
@@ -117,9 +116,8 @@ export class TNSPlayer implements TNSPlayerI {
       if (options.autoPlay !== false) options.autoPlay = true;
 
       try {
-        let MediaPlayer = android.media.MediaPlayer;
 
-        this.player = new MediaPlayer();
+        this.player = new android.media.MediaPlayer();
 
         this.player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
         this.player.setDataSource(options.audioFile);
@@ -128,7 +126,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Complete
         if (options.completeCallback) {
           this.player.setOnCompletionListener(
-            new MediaPlayer.OnCompletionListener({
+            new android.media.MediaPlayer.OnCompletionListener({
               onCompletion: mp => {
                 if (options.loop === true) {
                   mp.seekTo(5);
@@ -144,7 +142,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Error
         if (options.errorCallback) {
           this.player.setOnErrorListener(
-            new MediaPlayer.OnErrorListener({
+            new android.media.MediaPlayer.OnErrorListener({
               onError: (player: any, error: number, extra: number) => {
                 options.errorCallback({ player, error, extra });
                 return true;
@@ -156,7 +154,7 @@ export class TNSPlayer implements TNSPlayerI {
         // On Info
         if (options.infoCallback) {
           this.player.setOnInfoListener(
-            new MediaPlayer.OnInfoListener({
+            new android.media.MediaPlayer.OnInfoListener({
               onInfo: (player: any, info: number, extra: number) => {
                 options.infoCallback({ player, info, extra });
                 return true;
@@ -167,7 +165,7 @@ export class TNSPlayer implements TNSPlayerI {
 
         // On Prepared
         this.player.setOnPreparedListener(
-          new MediaPlayer.OnPreparedListener({
+          new android.media.MediaPlayer.OnPreparedListener({
             onPrepared: mp => {
               if (options.autoPlay) mp.start();
               resolve();

@@ -4,8 +4,6 @@ import { AudioRecorderOptions } from "../options";
 
 declare var android: any;
 
-const MediaRecorder = android.media.MediaRecorder;
-
 export class TNSRecorder implements TNSRecordI {
   private recorder: any;
 
@@ -32,7 +30,7 @@ export class TNSRecorder implements TNSRecordI {
           // reset for reuse
           this.recorder.reset();
         } else {
-          this.recorder = new MediaRecorder();
+          this.recorder = new android.media.MediaRecorder();
         }
 
         if (options.source) {
