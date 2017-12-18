@@ -1,11 +1,9 @@
-import { TNSPlayerI } from "../common";
-import { AudioPlayerOptions } from "../options";
+import { TNSPlayerI, TNSPlayerUtil, TNS_Player_Log } from "../common";
+import { AudioPlayerOptions, AudioPlayerEvents } from "../options";
 import { isString } from "tns-core-modules/utils/types";
 import { knownFolders, path } from "tns-core-modules/file-system";
 import * as app from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
-
-// var utils = require('utils/utils');
 
 declare var NSURLSession,
   AVAudioPlayer,
@@ -27,6 +25,24 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     return this._player;
   }
 
+  set debug(value: boolean) {
+    TNSPlayerUtil.debug = value;
+  }
+
+  public get volume(): number {
+    return this._player ? this._player.volume : 0;
+  }
+
+  public set volume(value: number) {
+    if (this._player) {
+      this._player.volume = value;
+    }
+  }
+
+  get currentTime(): number {
+    return this._player ? this._player.currentTime : 0;
+  }
+
   public initFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       // init only
@@ -38,7 +54,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       // only if not explicitly set, default to true
-      if (options.autoPlay !== false) options.autoPlay = true;
+      if (options.autoPlay !== false) {
+        options.autoPlay = true;
+      }
 
       try {
         let audioPath;
@@ -52,13 +70,15 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             fileName.replace("~/", "")
           );
         }
+        TNS_Player_Log("fileName", fileName);
 
         this._completeCallback = options.completeCallback;
         this._errorCallback = options.errorCallback;
         this._infoCallback = options.infoCallback;
 
-        var audioSession = AVAudioSession.sharedInstance();
+        let audioSession = AVAudioSession.sharedInstance();
         let output = audioSession.currentRoute.outputs.lastObject.portType;
+        TNS_Player_Log("output", output);
 
         if (output.match(/Receiver/)) {
           try {
@@ -67,9 +87,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
               AVAudioSessionPortOverrideSpeaker
             );
             audioSession.setActiveError(true);
-            //console.log("audioSession category set and active");
+            TNS_Player_Log("audioSession category set and active");
           } catch (err) {
-            //console.log("setting audioSession category failed");
+            TNS_Player_Log("setting audioSession category failed");
           }
         }
 
@@ -78,7 +98,10 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         );
         this._player.delegate = this;
 
+        TNS_Player_Log("this._player", this._player);
+
         if (options.metering) {
+          TNS_Player_Log("enabling metering...");
           this._player.meteringEnabled = true;
         }
 
@@ -86,7 +109,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           this._player.numberOfLoops = -1;
         }
 
-        if (options.autoPlay) this._player.play();
+        if (options.autoPlay) {
+          this._player.play();
+        }
 
         resolve();
       } catch (ex) {
@@ -109,7 +134,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   public playFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       // only if not explicitly set, default to true
-      if (options.autoPlay !== false) options.autoPlay = true;
+      if (options.autoPlay !== false) {
+        options.autoPlay = true;
+      }
 
       try {
         let sharedSession = utils.ios.getter(
@@ -132,7 +159,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             this._errorCallback = options.errorCallback;
             this._infoCallback = options.infoCallback;
 
-            var audioSession = AVAudioSession.sharedInstance();
+            let audioSession = AVAudioSession.sharedInstance();
             let output = audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {
@@ -144,9 +171,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
                   AVAudioSessionPortOverrideSpeaker
                 );
                 audioSession.setActiveError(true);
-                //console.log("audioSession category set and active");
+                TNS_Player_Log("audioSession category set and active");
               } catch (err) {
-                //console.log("setting audioSession category failed");
+                TNS_Player_Log("setting audioSession category failed");
               }
             }
 
@@ -155,13 +182,18 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
               null
             );
             this._player.delegate = this;
+            TNS_Player_Log("this._player", this._player);
+
             this._player.numberOfLoops = options.loop ? -1 : 0;
 
             if (options.metering) {
+              TNS_Player_Log("enabling metering...");
               this._player.meteringEnabled = true;
             }
 
-            if (options.autoPlay) this._player.play();
+            if (options.autoPlay) {
+              this._player.play();
+            }
 
             resolve();
           }
@@ -181,6 +213,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player && this._player.playing) {
+          TNS_Player_Log("pausing player...");
           this._player.pause();
           resolve(true);
         }
@@ -188,6 +221,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         if (this._errorCallback) {
           this._errorCallback({ ex });
         }
+        TNS_Player_Log("pause error", ex);
         reject(ex);
       }
     });
@@ -197,6 +231,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (!this.isAudioPlaying()) {
+          TNS_Player_Log("player play...");
           this._player.play();
           resolve(true);
         }
@@ -204,17 +239,22 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         if (this._errorCallback) {
           this._errorCallback({ ex });
         }
+        TNS_Player_Log("play error", ex);
         reject(ex);
       }
     });
   }
 
   public resume(): void {
-    if (this._player) this._player.play();
+    if (this._player) {
+      TNS_Player_Log("resuming player...");
+      this._player.play();
+    }
   }
 
   public playAtTime(time: number): void {
     if (this._player) {
+      TNS_Player_Log("playAtTime", time);
       this._player.playAtTime(time);
     }
   }
@@ -223,37 +263,31 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player) {
+          TNS_Player_Log("seekTo", time);
           this._player.currentTime = time;
           resolve(true);
         }
       } catch (ex) {
+        TNS_Player_Log("seekTo error", ex);
         reject(ex);
       }
     });
   }
 
-  public get volume(): number {
-    return this._player ? this._player.volume : 0;
-  }
-
-  public set volume(value: number) {
-    if (this._player) {
-      this._player.volume = value;
-    }
-  }
-
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
+        TNS_Player_Log("disposing TNSPlayer...");
         if (this._player && this.isAudioPlaying()) {
           this._player.stop();
         }
-        this.reset();
+        this._reset();
         resolve();
       } catch (ex) {
         if (this._errorCallback) {
           this._errorCallback({ ex });
         }
+        TNS_Player_Log("dispose error", ex);
         reject(ex);
       }
     });
@@ -266,12 +300,14 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   public getAudioTrackDuration(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        var duration = this._player ? this._player.duration : 0;
+        const duration = this._player ? this._player.duration : 0;
+        TNS_Player_Log("audio track duration", duration);
         resolve(duration.toString());
       } catch (ex) {
         if (this._errorCallback) {
           this._errorCallback({ ex });
         }
+        TNS_Player_Log("getAudioTrackDuration error", ex);
         reject(ex);
       }
     });
@@ -291,7 +327,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     }
   }
 
-  private reset() {
+  private _reset() {
     if (this._player) {
       this._player = undefined;
     }
@@ -299,9 +335,5 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
       this._task.cancel();
       this._task = undefined;
     }
-  }
-
-  public get currentTime(): number {
-    return this._player ? this._player.currentTime : 0;
   }
 }
