@@ -4,171 +4,174 @@
 [![nStudio Plugin](https://img.shields.io/badge/nStudio-Plugin-blue.svg)](http://nstudio.io)
 [![Twitter Follow][twitter-image]][twitter-url]
 
-[twitter-image]:https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20me
-[twitter-url]:https://twitter.com/bradwaynemartin
+[twitter-image]: https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20me
+[twitter-url]: https://twitter.com/bradwaynemartin
 
 # NativeScript-Audio
+
 NativeScript plugin to play and record audio files for Android and iOS.
 
-Uses the following native classes:
-
-#### Android
-
-* [Player](http://developer.android.com/reference/android/media/MediaPlayer.html)
-* [Recorder](http://developer.android.com/reference/android/media/MediaRecorder.html)
-
-#### iOS
-
-* [Player](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
-* [Recorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
-
-Note: You will need to grant permissions on iOS to allow the device to access the microphone if you are using the recording function. If you don't, your app may crash on device and/or your app might be rejected during Apple's review routine. To do this, add this key to your `app/App_Resources/iOS/Info.plist` file:
-
-```
-<key>NSMicrophoneUsageDescription</key>
-<string>Recording Practice Sessions</string>
-```
-
 ## Installation
+
 The plugin is compatible with both Nativescript 3.x and 2.x versions. Install with:
 
 `tns plugin add nativescript-audio`
 
+---
 
-## Sample Screen
+### Android Native Classes
 
-![AudioExample](screens/audiosample.gif)
+* [Player - android.media.MediaPlayer](http://developer.android.com/reference/android/media/MediaPlayer.html)
+* [Recorder - android.media.MediaRecorder](http://developer.android.com/reference/android/media/MediaRecorder.html)
 
-## Sample Usage
+#### iOS Native Classes
 
-Just a simple example of how you could reuse player instances for a given file:
+* [Player - AVAudioPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
+* [Recorder - AVAudioRecorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
 
-``` typescript
-import { TNSPlayer } from 'nativescript-audio';
+Note: You will need to grant permissions on iOS to allow the device to access the microphone if you are using the recording function. If you don't, your app may crash on device and/or your app might be rejected during Apple's review routine. To do this, add this key to your `app/App_Resources/iOS/Info.plist` file:
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Recording Practice Sessions</string>
+```
+
+## Usage
+
+### TypeScript Example
+
+```typescript
+import { TNSPlayer } from "nativescript-audio";
 
 export class YourClass {
-	private _player: TNSPlayer;
-	
-	constructor() {
-		this._player = new TNSPlayer();
-		this._player.initFromFile({
-			audioFile: '~/audio/song.mp3', // ~ = app directory
-			loop: false,
-			completeCallback: this._trackComplete.bind(this),
-			errorCallback: this._trackError.bind(this)
-		}).then(() => {
+  private _player: TNSPlayer;
 
-			this._player.getAudioTrackDuration().then((duration) => {
-				// iOS: duration is in seconds
-				// Android: duration is in milliseconds
-				console.log(`song duration:`, duration);
-			});
-		});
-	}
+  constructor() {
+    this._player = new TNSPlayer();
+    this._player.debug = true; // set true to enable TNSPlayer console logs for debugging.
+    this._player
+      .initFromFile({
+        audioFile: "~/audio/song.mp3", // ~ = app directory
+        loop: false,
+        completeCallback: this._trackComplete.bind(this),
+        errorCallback: this._trackError.bind(this)
+      })
+      .then(() => {
+        this._player.getAudioTrackDuration().then(duration => {
+          // iOS: duration is in seconds
+          // Android: duration is in milliseconds
+          console.log(`song duration:`, duration);
+        });
+      });
+  }
 
-	public togglePlay() {
-		if (this._player.isAudioPlaying()) {
-			this._player.pause();
-		} else {
-			this._player.play();
-		}
-	}
-
-	private _trackComplete(args: any) {
-		console.log('reference back to player:', args.player);
-
-		// iOS only: flag indicating if completed succesfully
-		console.log('whether song play completed successfully:', args.flag);
-	}
-
-	private _trackError(args: any) {
-		console.log('reference back to player:', args.player);
-		console.log('the error:', args.error);
-
-		// Android only: extra detail on error
-		console.log('extra info on the error:', args.extra);
-	}
-}
-
-```
-And a simple javascript example:
-
-``` javascript
-var audio = require("nativescript-audio");
-
-var player = new audio.TNSPlayer();
-var playerOptions = {
-    audioFile: "http://some/audio/file.mp3",
-    loop: false,
-    completeCallback: function () {
-        console.log('finished playing')
-    },
-    errorCallback: function (errorObject) {
-        console.log(JSON.stringify(errorObject));
-    },
-    infoCallback: function (args) {
-        console.log(JSON.stringify(args));
+  public togglePlay() {
+    if (this._player.isAudioPlaying()) {
+      this._player.pause();
+    } else {
+      this._player.play();
     }
+  }
+
+  private _trackComplete(args: any) {
+    console.log("reference back to player:", args.player);
+    // iOS only: flag indicating if completed succesfully
+    console.log("whether song play completed successfully:", args.flag);
+  }
+
+  private _trackError(args: any) {
+    console.log("reference back to player:", args.player);
+    console.log("the error:", args.error);
+    // Android only: extra detail on error
+    console.log("extra info on the error:", args.extra);
+  }
+}
+```
+
+### Javascript Example:
+
+```javascript
+const audio = require("nativescript-audio");
+
+const player = new audio.TNSPlayer();
+const playerOptions = {
+  audioFile: "http://some/audio/file.mp3",
+  loop: false,
+  completeCallback: function() {
+    console.log("finished playing");
+  },
+  errorCallback: function(errorObject) {
+    console.log(JSON.stringify(errorObject));
+  },
+  infoCallback: function(args) {
+    console.log(JSON.stringify(args));
+  }
 };
 
-player.playFromUrl(playerOptions)
-    .then(function (res) {
-        console.log(res);
-    })
-    .catch(function () {
-        console.log("something went wrong...");
-    })
+player
+  .playFromUrl(playerOptions)
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(function(err) {
+    console.log("something went wrong...", err);
+  });
 ```
+
 ## API
 
-#### TNSRecorder
+### Recorder
 
-Method |  Description
--------- | ---------
-`TNSRecorder.CAN_RECORD()`: `boolean` | Determine if ready to record.
-`start(options: AudioRecorderOptions)`: `Promise` | Start recording file.
-`stop()`: `void` | Stop recording.
-`pause()`: `Promise<any>` | Pause recording
-`resume()`: `Promise<any>` | Resume recording.
-`dispose()`: `void` | Free up system resources when done with recorder.
+#### TNSRecorder Methods
 
-#### TNSPlayer
+| Method                                                      | Description                                       |
+| ----------------------------------------------------------- | ------------------------------------------------- |
+| _TNSRecorder.CAN_RECORD()_: `boolean` - **_static method_** | Determine if ready to record.                     |
+| _start(options: AudioRecorderOptions)_: `Promise<void>`     | Start recording to file.                          |
+| _stop()_: `Promise<void>`                                   | Stop recording.                                   |
+| _pause()_: `Promise<void>`                                  | Pause recording.                                  |
+| _resume()_: `Promise<void>`                                 | Resume recording.                                 |
+| _dispose()_: `Promise<void>`                                | Free up system resources when done with recorder. |
+| _getMeters(channel?: number)_: `number`                     | Returns the amplitude of the input.               |
+| _isRecording()_: `boolean` - **_iOS Only_**                 | Returns true if recorder is actively recording.   |
 
-Method |  Description
--------- | ---------
-`initFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Initialize player instance with a file without auto-playing.
-`playFromFile( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Auto-play from a file.
-`initFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Initialize player instance from a url without auto-playing.
-`playFromUrl( { audioFile: string, loop: boolean, completeCallback?: Function, errorCallback?: Function, infoCallback?: Function; } )`: `Promise` | Auto-play from a url.
-`pause()`: `Promise<boolean>` | Pause playback.
-`resume()`: `void` | Resume playback.
-`seekTo(time:number)`: `Promise<boolean>` | Seek to position.
-`dispose()`: `Promise<boolean>` | Free up resources when done playing audio.
-`isAudioPlaying()`: `boolean` | Determine if player is playing.
-`getAudioTrackDuration()`: `Promise<string>` | duration of media file assigned to mediaPlayer.
-`currentTime`: `number` | Get the current time in the media file's duration.
-`volume`: `void` | Get/Set the player volume. Value range from 0 to 1.
+#### TNSRecorder Instance Properties
 
-You can access the underlying native class instance via `ios` and `android` getters on the respective platforms which will return you:
+| Property | Description                                                |
+| -------- | ---------------------------------------------------------- |
+| ios      | Get the native AVAudioRecorder class instance.             |
+| android  | Get the native MediaRecorder class instance.               |
+| debug    | Set true to enable debugging console logs (default false). |
 
-* `AVAudioPlayer` on iOS
-* `MediaPlayer` on Android
+### Player
 
-Platform specific:
+#### TNSPlayer Methods
 
-**iOS**:
+| Method                                                            | Description                                                  |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| _initFromFile(options: AudioPlayerOptions)_: `Promise`            | Initialize player instance with a file without auto-playing. |
+| _playFromFile(options: AudioPlayerOptions)_: `Promise`            | Auto-play from a file.                                       |
+| _initFromUrl(options: AudioPlayerOptions)_: `Promise`             | Initialize player instance from a url without auto-playing.  |
+| _playFromUrl(options: AudioPlayerOptions)_: `Promise`             | Auto-play from a url.                                        |
+| _pause()_: `Promise<boolean>`                                     | Pause playback.                                              |
+| _resume()_: `void`                                                | Resume playback.                                             |
+| _seekTo(time:number)_: `Promise<boolean>`                         | Seek to position.                                            |
+| _dispose()_: `Promise<boolean>`                                   | Free up resources when done playing audio.                   |
+| _isAudioPlaying()_: `boolean`                                     | Determine if player is playing.                              |
+| _getAudioTrackDuration()_: `Promise<string>`                      | Duration of media file assigned to the player.               |
+| _playAtTime(time: number)_: void - **_iOS Only_**                 | Play audio track at specific time of duration.               |
+| _changeplayerSpeed(speed: number)_: void - **_Android 23+ Only_** | Change the playback speed of the media player.               |
 
-`playAtTime(time: number)`: Play at a specific time.
+#### TNSPlayer Instance Properties
 
-## Why the TNS prefixed name?
+| Property                | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| _ios_                   | Get the native ios AVAudioPlayer instance.                 |
+| _android_               | Get the native android MediaPlayer instance.               |
+| _debug_: `boolean`      | Set true to enable debugging console logs (default false). |
+| _currentTime_: `number` | Get the current time in the media file's duration.         |
+| _volume_: `number`      | Get/Set the player volume. Value range from 0 to 1.        |
 
-`TNS` stands for **T**elerik **N**ative**S**cript
-
-iOS uses classes prefixed with `NS` (stemming from the [NeXTSTEP](https://en.wikipedia.org/wiki/NeXTSTEP) days of old):
-https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/
-
-To avoid confusion with iOS native classes, `TNS` is used instead.
-
-# License
+## License
 
 [MIT](/LICENSE)
