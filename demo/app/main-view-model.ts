@@ -298,6 +298,18 @@ export class AudioDemo extends Observable {
     this._player.play();
   }
 
+  public playSpeed1() {
+    this._player.changePlayerSpeed(1);
+  }
+
+  public playSpeed15() {
+    this._player.changePlayerSpeed(1.5);
+  }
+
+  public playSpeed2() {
+    this._player.changePlayerSpeed(2);
+  }
+
   private platformExtension() {
     // 'mp3'
     return `${app.android ? "m4a" : "caf"}`;
@@ -307,7 +319,7 @@ export class AudioDemo extends Observable {
     if (this._player && this._player.isAudioPlaying()) {
       const timerId = timer.setInterval(() => {
         this.remainingDuration = duration - this._player.currentTime;
-        console.log(`this.remainingDuration = ${this.remainingDuration}`);
+        // console.log(`this.remainingDuration = ${this.remainingDuration}`);
       }, 1000);
     }
   }
