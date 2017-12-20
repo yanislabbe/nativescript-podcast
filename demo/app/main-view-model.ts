@@ -186,7 +186,6 @@ export class AudioDemo extends Observable {
 
       errorCallback: errorObject => {
         console.log(JSON.stringify(errorObject));
-        dialogs.alert("Error callback");
         this.isPlaying = false;
       },
 
@@ -218,7 +217,6 @@ export class AudioDemo extends Observable {
           console.log("player disposed");
         },
         errorCallback: errorObject => {
-          alert(`Error occurred during playback.`);
           console.log(JSON.stringify(errorObject));
           this.isPlaying = false;
         },
