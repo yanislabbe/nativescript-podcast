@@ -150,7 +150,7 @@ export interface TNSPlayerI {
    * Will set the playback speed for Android 23+, this is not available on lower Android APIs.
    * @param speed [number] - The speed of the playback.
    */
-  changeplayerSpeed(speed: number): void;
+  changePlayerSpeed(speed: number): void;
 }
 export interface TNSRecordI {
   start(options: AudioRecorderOptions): Promise<any>;
@@ -174,6 +174,11 @@ export declare class TNSPlayer {
    * Volume getter/setter
    */
   volume: any;
+
+  /**
+   * duration
+   */
+  duration: number;
 
   /**
    * current time
@@ -227,6 +232,13 @@ export declare class TNSPlayer {
    * Get the duration of the audio file playing.
    */
   getAudioTrackDuration(): Promise<string>;
+
+  /**
+   * Android Only
+   * Will set the playback speed for Android 23+, this is not available on lower Android APIs.
+   * @param speed [number] - The speed of the playback.
+   */
+  changePlayerSpeed(speed: number): void;
 
   audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean): void;
 }
