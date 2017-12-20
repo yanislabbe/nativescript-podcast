@@ -1,3 +1,5 @@
+import "../async-await";
+import * as permissions from "nativescript-permissions";
 import * as app from "tns-core-modules/application";
 import { TNSRecordI, TNSRecorderUtil, TNS_Recorder_Log } from "../common";
 import { AudioRecorderOptions } from "../options";
@@ -25,9 +27,39 @@ export class TNSRecorder implements TNSRecordI {
     }
   }
 
-  public start(options: AudioRecorderOptions): Promise<any> {
-    return new Promise((resolve, reject) => {
+  public requestRecordPermission(explanation = "") {
+    return new Promise(async (resolve, reject) => {
       try {
+        await permissions
+          .requestPermission((android as any).Manifest.permission.RECORD_AUDIO)
+          .catch(err => {
+            TNS_Recorder_Log("Error getting RECORD_AUDIO permission.", err);
+            reject(err);
+          });
+        resolve();
+      } catch (error) {
+        TNS_Recorder_Log("requestRecordPermission error", error);
+        reject(error);
+      }
+    });
+  }
+
+  public hasRecordPermission() {
+    const permission = permissions.hasPermission(
+      (android as any).Manifest.permission.RECORD_AUDIO
+    );
+    return !0 === permission ? !0 : !1;
+  }
+
+  public start(options: AudioRecorderOptions): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // bake the permission into this so the dev doesn't have to call it
+        await this.requestRecordPermission().catch(err => {
+          console.log(err);
+          reject("Permission to record audio is not granted.");
+        });
+
         if (this._recorder) {
           // reset for reuse
           this._recorder.reset();
@@ -42,31 +74,13 @@ export class TNSRecorder implements TNSRecordI {
         TNS_Recorder_Log("setting audio source", audioSource);
         this._recorder.setAudioSource(audioSource);
 
-        // if (options.source) {
-        //   this._recorder.setAudioSource(options.source);
-        // } else {
-        //   this._recorder.setAudioSource(0);
-        // }
-
         const outFormat = options.format ? options.format : 0;
         TNS_Recorder_Log("setting output format", outFormat);
         this._recorder.setOutputFormat(outFormat);
 
-        // if (options.format) {
-        //   this._recorder.setOutputFormat(options.format);
-        // } else {
-        //   this._recorder.setOutputFormat(0);
-        // }
-
         const encoder = options.encoder ? options.encoder : 0;
         TNS_Recorder_Log("setting audio encoder", encoder);
         this._recorder.setAudioEncoder(encoder);
-
-        // if (options.encoder) {
-        //   this._recorder.setAudioEncoder(options.encoder);
-        // } else {
-        //   this._recorder.setAudioEncoder(0);
-        // }
 
         if (options.channels) {
           this._recorder.setAudioChannels(options.channels);
@@ -78,7 +92,6 @@ export class TNSRecorder implements TNSRecordI {
           this._recorder.setAudioEncodingBitRate(options.bitRate);
         }
 
-        // recorder.setOutputFile("/sdcard/example.mp4");
         this._recorder.setOutputFile(options.filename);
 
         // On Error
