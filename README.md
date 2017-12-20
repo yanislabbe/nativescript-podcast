@@ -124,16 +124,18 @@ player
 
 #### TNSRecorder Methods
 
-| Method                                                      | Description                                       |
-| ----------------------------------------------------------- | ------------------------------------------------- |
-| _TNSRecorder.CAN_RECORD()_: `boolean` - **_static method_** | Determine if ready to record.                     |
-| _start(options: AudioRecorderOptions)_: `Promise<void>`     | Start recording to file.                          |
-| _stop()_: `Promise<void>`                                   | Stop recording.                                   |
-| _pause()_: `Promise<void>`                                  | Pause recording.                                  |
-| _resume()_: `Promise<void>`                                 | Resume recording.                                 |
-| _dispose()_: `Promise<void>`                                | Free up system resources when done with recorder. |
-| _getMeters(channel?: number)_: `number`                     | Returns the amplitude of the input.               |
-| _isRecording()_: `boolean` - **_iOS Only_**                 | Returns true if recorder is actively recording.   |
+| Method                                                      | Description                                               |
+| ----------------------------------------------------------- | --------------------------------------------------------- |
+| _TNSRecorder.CAN_RECORD()_: `boolean` - **_static method_** | Determine if ready to record.                             |
+| _start(options: AudioRecorderOptions)_: `Promise<void>`     | Start recording to file.                                  |
+| _stop()_: `Promise<void>`                                   | Stop recording.                                           |
+| _pause()_: `Promise<void>`                                  | Pause recording.                                          |
+| _resume()_: `Promise<void>`                                 | Resume recording.                                         |
+| _dispose()_: `Promise<void>`                                | Free up system resources when done with recorder.         |
+| _getMeters(channel?: number)_: `number`                     | Returns the amplitude of the input.                       |
+| _isRecording()_: `boolean` - **_iOS Only_**                 | Returns true if recorder is actively recording.           |
+| _requestRecordPermission()_: `Promise<void>`                | Resolves the promise is user grants the permission.       |
+| _hasRecordPermission()_: `boolean`                          | Returns true if RECORD_AUDIO permission has been granted. |
 
 #### TNSRecorder Instance Properties
 
