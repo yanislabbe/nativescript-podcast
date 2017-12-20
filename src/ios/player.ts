@@ -39,6 +39,14 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
     }
   }
 
+  public get duration() {
+    if (this._player) {
+      return this._player.duration;
+    } else {
+      return 0;
+    }
+  }
+
   get currentTime(): number {
     return this._player ? this._player.currentTime : 0;
   }

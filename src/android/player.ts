@@ -51,6 +51,14 @@ export class TNSPlayer implements TNSPlayerI {
     }
   }
 
+  public get duration(): number {
+    if (this._player) {
+      return this._player.getDuration();
+    } else {
+      return 0;
+    }
+  }
+
   get currentTime(): number {
     return this._player ? this._player.getCurrentPosition() : 0;
   }
