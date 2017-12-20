@@ -147,20 +147,20 @@ player
 
 #### TNSPlayer Methods
 
-| Method                                                            | Description                                                  |
-| ----------------------------------------------------------------- | ------------------------------------------------------------ |
-| _initFromFile(options: AudioPlayerOptions)_: `Promise`            | Initialize player instance with a file without auto-playing. |
-| _playFromFile(options: AudioPlayerOptions)_: `Promise`            | Auto-play from a file.                                       |
-| _initFromUrl(options: AudioPlayerOptions)_: `Promise`             | Initialize player instance from a url without auto-playing.  |
-| _playFromUrl(options: AudioPlayerOptions)_: `Promise`             | Auto-play from a url.                                        |
-| _pause()_: `Promise<boolean>`                                     | Pause playback.                                              |
-| _resume()_: `void`                                                | Resume playback.                                             |
-| _seekTo(time:number)_: `Promise<boolean>`                         | Seek to position.                                            |
-| _dispose()_: `Promise<boolean>`                                   | Free up resources when done playing audio.                   |
-| _isAudioPlaying()_: `boolean`                                     | Determine if player is playing.                              |
-| _getAudioTrackDuration()_: `Promise<string>`                      | Duration of media file assigned to the player.               |
-| _playAtTime(time: number)_: void - **_iOS Only_**                 | Play audio track at specific time of duration.               |
-| _changeplayerSpeed(speed: number)_: void - **_Android 23+ Only_** | Change the playback speed of the media player.               |
+| Method                                                                 | Description                                                  |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------ |
+| _initFromFile(options: AudioPlayerOptions)_: `Promise`                 | Initialize player instance with a file without auto-playing. |
+| _playFromFile(options: AudioPlayerOptions)_: `Promise`                 | Auto-play from a file.                                       |
+| _initFromUrl(options: AudioPlayerOptions)_: `Promise`                  | Initialize player instance from a url without auto-playing.  |
+| _playFromUrl(options: AudioPlayerOptions)_: `Promise`                  | Auto-play from a url.                                        |
+| _pause()_: `Promise<boolean>`                                          | Pause playback.                                              |
+| _resume()_: `void`                                                     | Resume playback.                                             |
+| _seekTo(time:number)_: `Promise<boolean>`                              | Seek to position.                                            |
+| _dispose()_: `Promise<boolean>`                                        | Free up resources when done playing audio.                   |
+| _isAudioPlaying()_: `boolean`                                          | Determine if player is playing.                              |
+| _getAudioTrackDuration()_: `Promise<string>`                           | Duration of media file assigned to the player.               |
+| _playAtTime(time: number)_: void - **_iOS Only_**                      | Play audio track at specific time of duration.               |
+| _changePlayerSpeed(speed: number)_: void - **On Android Only API 23+** | Change the playback speed of the media player.               |
 
 #### TNSPlayer Instance Properties
 
