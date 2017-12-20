@@ -106,6 +106,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         );
         this._player.delegate = this;
 
+        // enableRate to change playback speed
+        this._player.enableRate = true;
+
         TNS_Player_Log("this._player", this._player);
 
         if (options.metering) {
@@ -191,6 +194,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             );
             this._player.delegate = this;
             TNS_Player_Log("this._player", this._player);
+
+            // enableRate to change playback speed
+            this._player.enableRate = true;
 
             this._player.numberOfLoops = options.loop ? -1 : 0;
 
@@ -319,6 +325,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         reject(ex);
       }
     });
+  }
+
+  public changePlayerSpeed(speed) {
+    if (this._player && speed) {
+      // make sure speed is a number/float
+      if (typeof speed === "string") {
+        speed = parseFloat(speed);
+      }
+      this._player.rate = speed;
+    }
   }
 
   public audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean) {
