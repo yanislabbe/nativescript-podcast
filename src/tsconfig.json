@@ -11,6 +11,14 @@
       "es6",
       "dom"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "./node_modules/tns-core-modules/*",
+        "./node_modules/*"
+      ]
+    },
+    "skipLibCheck": true,
     "sourceMap": true,
     "pretty": true,
     "allowUnreachableCode": false,
@@ -23,8 +31,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "exclude": [
-    "node_modules",
-    "./async-await"
+    "node_modules"
   ],
   "compileOnSave": false
 }

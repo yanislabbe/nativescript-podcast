@@ -6,6 +6,7 @@ tsconfig.json
 *.log
 *.ts
 !index.d.ts
+!async-await.js
 
 # generated files
 .vs

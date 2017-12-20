@@ -12,7 +12,7 @@
   },
   "scripts": {
     "tsc": "tsc -skipLibCheck",
-    "build": "npm i && tsc",
+    "build": "npm i && npm run tsc",
     "link": "npm i && cd ../demo && npm i && cd ../src && npm run plugin.link",
     "demo.reset": "cd ../demo && rimraf platforms",
     "demo.ios":

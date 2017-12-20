@@ -2,6 +2,7 @@
 *.js.map
 *.log
 *.d.ts
+!async-await.js
 !references.d.ts
 !index.d.ts
 !manual_typings/base.d.ts

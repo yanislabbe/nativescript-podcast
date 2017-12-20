@@ -261,6 +261,18 @@ export declare class TNSRecorder {
   static CAN_RECORD(): boolean;
 
   /**
+   * Android Only
+   * Returns true if the RECORD_AUDIO permission has been granted.
+   */
+  hasRecordPermission(): boolean;
+
+  /**
+   * Android Only
+   * Promise will resolve if the user grants the permission or if the permission has already been granted.
+   */
+  requestRecordPermission(): Promise<any>;
+
+  /**
    * Starts a recording session with the provided options.
    * @param options [AudioRecorderOptions]
    */
