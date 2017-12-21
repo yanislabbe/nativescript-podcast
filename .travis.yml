@@ -6,6 +6,7 @@ android:
     - android-26
     - android-23
     - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-21
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -44,7 +45,7 @@ matrix:
         - WebPackAndroid="26"
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
-      script:
+      script: >-
         cd demo && npm run build.plugin && npm i && npm run ns-bundle --android
         --build-app --uglify --snapshot
     - language: android
