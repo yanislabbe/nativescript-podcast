@@ -5,11 +5,11 @@
 [![Twitter Follow][brad-twitter-image]][twitter-url]
 [![Twitter Follow][nathan-twitter-image]][twitter-url]
 
-[twitter-image]: https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20BradMartin
+[brad-twitter-image]: https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20BradMartin
 [twitter-url]: https://twitter.com/bradwaynemartin
 
 
-[twitter-image]: https://img.shields.io/twitter/follow/wwwalkerrun.svg?style=social&label=Follow%20NathanWalker
+[nathan-twitter-image]: https://img.shields.io/twitter/follow/wwwalkerrun.svg?style=social&label=Follow%20NathanWalker
 [twitter-url]: https://twitter.com/wwwalkerrun
 
 
