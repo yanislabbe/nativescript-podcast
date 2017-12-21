@@ -20,9 +20,6 @@ install:
     - echo no | npm install -g nativescript
     - tns usage-reporting disable
     - tns error-reporting disable
-    - npm install
-    - cd src
-    - npm run setup
 
 script:
 
