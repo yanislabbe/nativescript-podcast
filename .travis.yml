@@ -21,9 +21,9 @@ install:
     - tns usage-reporting disable
     - tns error-reporting disable
 
-script:
-
-
+branches:
+  only: 
+    - master
 matrix:
   include:
     - stage: "Lint"
