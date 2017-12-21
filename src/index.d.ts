@@ -97,6 +97,11 @@ export interface TNSPlayerI {
    */
   volume: any;
 
+  /**
+   * Duration getter
+   */
+  duration: number;
+
   initFromFile(options: AudioPlayerOptions): Promise<any>;
   /**
    * Starts playing audio file from local app files.
@@ -146,8 +151,7 @@ export interface TNSPlayerI {
   getAudioTrackDuration(): Promise<string>;
 
   /**
-   * Android Only
-   * Will set the playback speed for Android 23+, this is not available on lower Android APIs.
+   * Sets the player playback speed rate. On Android this works on API 23+.
    * @param speed [number] - The speed of the playback.
    */
   changePlayerSpeed(speed: number): void;
