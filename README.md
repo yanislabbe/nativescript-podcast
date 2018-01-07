@@ -7,7 +7,7 @@
 [![Twitter Follow][brad-twitter-image]][twitter-url]
 [![Twitter Follow][nathan-twitter-image]][twitter-url]
 
-[![PayPal Donate][https://img.shields.io/badge/Donate-PayPal-ff4081.svg]][https://www.paypal.me/bradwayne88]
+[![PayPal Donate](https://img.shields.io/badge/Donate-PayPal-ff4081.svg)](https://www.paypal.me/bradwayne88)
 
 
 [brad-twitter-image]: https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20BradMartin
