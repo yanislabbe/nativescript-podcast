@@ -1,13 +1,17 @@
 [![npm](https://img.shields.io/npm/v/nativescript-audio.svg)](https://www.npmjs.com/package/nativescript-audio)
 [![npm](https://img.shields.io/npm/dt/nativescript-audio.svg?label=npm%20downloads)](https://www.npmjs.com/package/nativescript-audio)
 [![Build Status](https://travis-ci.org/bradmartin/nativescript-audio.svg?branch=master)](https://travis-ci.org/bradmartin/nativescript-audio)
+[![GitHub forks](https://img.shields.io/github/forks/bradmartin/nativescript-audio.svg)](https://github.com/bradmartin/nativescript-audio/network)
+[![GitHub stars](https://img.shields.io/github/stars/bradmartin/nativescript-audio.svg)](https://github.com/bradmartin/nativescript-audio/stargazers)
 [![nStudio Plugin](https://img.shields.io/badge/nStudio-Plugin-blue.svg)](http://nstudio.io)
 [![Twitter Follow][brad-twitter-image]][twitter-url]
 [![Twitter Follow][nathan-twitter-image]][twitter-url]
 
+[[![PayPal Donate][https://img.shields.io/badge/Donate-PayPal-ff4081.svg]][https://www.paypal.me/bradwayne88]
+
+
 [brad-twitter-image]: https://img.shields.io/twitter/follow/bradwaynemartin.svg?style=social&label=Follow%20BradMartin
 [twitter-url]: https://twitter.com/bradwaynemartin
-
 
 [nathan-twitter-image]: https://img.shields.io/twitter/follow/wwwalkerrun.svg?style=social&label=Follow%20NathanWalker
 [twitter-url]: https://twitter.com/wwwalkerrun
