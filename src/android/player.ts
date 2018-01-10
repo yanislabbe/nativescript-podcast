@@ -399,8 +399,6 @@ export class TNSPlayer implements TNSPlayerI {
   private _mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener(
     {
       onAudioFocusChange: (focusChange: number) => {
-        debugger;
-
         switch (focusChange) {
           case android.media.AudioManager.AUDIOFOCUS_GAIN:
             TNS_Player_Log("AUDIOFOCUS_GAIN");
