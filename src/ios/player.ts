@@ -101,30 +101,39 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           }
         }
 
+        const errorRef = new interop.Reference();
         this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(
-          NSURL.fileURLWithPath(fileName)
+          NSURL.fileURLWithPath(fileName), 
+          errorRef
         );
-        this._player.delegate = this;
-
-        // enableRate to change playback speed
-        this._player.enableRate = true;
-
-        TNS_Player_Log("this._player", this._player);
-
-        if (options.metering) {
-          TNS_Player_Log("enabling metering...");
-          this._player.meteringEnabled = true;
+        if (errorRef && errorRef.value) {
+          reject(errorRef.value);
+          return;
+        } else if (this._player) {
+          this._player.delegate = this;
+  
+          // enableRate to change playback speed
+          this._player.enableRate = true;
+  
+          TNS_Player_Log("this._player", this._player);
+  
+          if (options.metering) {
+            TNS_Player_Log("enabling metering...");
+            this._player.meteringEnabled = true;
+          }
+  
+          if (options.loop) {
+            this._player.numberOfLoops = -1;
+          }
+  
+          if (options.autoPlay) {
+            this._player.play();
+          }
+  
+          resolve();
+        } else {
+          reject();
         }
-
-        if (options.loop) {
-          this._player.numberOfLoops = -1;
-        }
-
-        if (options.autoPlay) {
-          this._player.play();
-        }
-
-        resolve();
       } catch (ex) {
         if (this._errorCallback) {
           this._errorCallback({ ex });
@@ -188,28 +197,36 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
               }
             }
 
-            this._player = (<any>AVAudioPlayer.alloc()).initWithDataError(
+            const errorRef = new interop.Reference();
+            this._player = AVAudioPlayer.alloc().initWithDataError(
               data,
-              null
+              errorRef
             );
-            this._player.delegate = this;
-            TNS_Player_Log("this._player", this._player);
-
-            // enableRate to change playback speed
-            this._player.enableRate = true;
-
-            this._player.numberOfLoops = options.loop ? -1 : 0;
-
-            if (options.metering) {
-              TNS_Player_Log("enabling metering...");
-              this._player.meteringEnabled = true;
+            if (errorRef && errorRef.value) {
+              reject(errorRef.value);
+              return;
+            } else if (this._player) {
+              this._player.delegate = this;
+              TNS_Player_Log("this._player", this._player);
+  
+              // enableRate to change playback speed
+              this._player.enableRate = true;
+  
+              this._player.numberOfLoops = options.loop ? -1 : 0;
+  
+              if (options.metering) {
+                TNS_Player_Log("enabling metering...");
+                this._player.meteringEnabled = true;
+              }
+  
+              if (options.autoPlay) {
+                this._player.play();
+              }
+  
+              resolve();
+            } else {
+              reject();
             }
-
-            if (options.autoPlay) {
-              this._player.play();
-            }
-
-            resolve();
           }
         );
 
