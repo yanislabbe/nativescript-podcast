@@ -406,12 +406,9 @@ export class TNSPlayer implements TNSPlayerI {
             TNS_Player_Log("this._lastPlayerVolume", this._lastPlayerVolume);
             // if last volume more than 10 just set to 1.0 float
             if (this._lastPlayerVolume && this._lastPlayerVolume >= 10) {
-              this._player.setVolume(1.0, 1.0);
+              this.volume = 1.0;
             } else if (this._lastPlayerVolume) {
-              this._player.setVolume(
-                parseFloat("0." + this._lastPlayerVolume.toString()),
-                parseFloat("0." + this._lastPlayerVolume.toString())
-              );
+              this.volume = parseFloat("0." + this._lastPlayerVolume.toString());
             }
 
             this.resume();
@@ -434,7 +431,7 @@ export class TNSPlayer implements TNSPlayerI {
             // Lower the volume, keep playing
             this._lastPlayerVolume = this.volume;
             TNS_Player_Log("this._lastPlayerVolume", this._lastPlayerVolume);
-            this._player.setVolume(0.2, 0.2);
+            this.volume = 0.2;
             break;
         }
       }
