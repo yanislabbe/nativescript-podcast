@@ -1,6 +1,6 @@
 {
   "name": "nativescript-audio",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "NativeScript plugin to record and play audio.",
   "main": "audio",
   "typings": "index.d.ts",
@@ -124,6 +124,10 @@
     {
       "name": "mfrro",
       "url": "https://github.com/mfrro"
+    },
+    {
+      "name": "Richard Smith",
+      "url": "https://github.com/DickSmith"
     }
   ],
   "bugs": {
