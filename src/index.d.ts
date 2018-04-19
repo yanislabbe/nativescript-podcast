@@ -1,4 +1,4 @@
-import { Observable } from "tns-core-modules/data/observable";
+import { Observable } from 'tns-core-modules/data/observable';
 
 export interface AudioPlayerOptions {
   /**
@@ -317,8 +317,8 @@ export declare class TNSRecorder {
 }
 
 export interface IAudioPlayerEvents {
-  seek: "seek";
-  paused: "paused";
-  started: "started";
+  seek: 'seek';
+  paused: 'paused';
+  started: 'started';
 }
 export const AudioPlayerEvents: IAudioPlayerEvents;

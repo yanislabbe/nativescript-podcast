@@ -1,14 +1,14 @@
 /**
  * Option interfaces
  */
-export * from "./options";
+export * from './options';
 
 /**
  * Player
  */
-export * from "./ios/player";
+export * from './ios/player';
 
 /**
  * Recorder
  */
-export * from "./ios/recorder";
+export * from './ios/recorder';

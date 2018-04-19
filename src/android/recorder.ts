@@ -1,8 +1,8 @@
-import "../async-await";
-import * as permissions from "nativescript-permissions";
-import * as app from "tns-core-modules/application";
-import { TNSRecordI, TNSRecorderUtil, TNS_Recorder_Log } from "../common";
-import { AudioRecorderOptions } from "../options";
+import '../async-await';
+import * as permissions from 'nativescript-permissions';
+import * as app from 'tns-core-modules/application';
+import { TNSRecordI, TNSRecorderUtil, TNS_Recorder_Log } from '../common';
+import { AudioRecorderOptions } from '../options';
 
 export class TNSRecorder implements TNSRecordI {
   private _recorder: any;
@@ -17,9 +17,7 @@ export class TNSRecorder implements TNSRecordI {
 
   public static CAN_RECORD(): boolean {
     const pManager = app.android.context.getPackageManager();
-    const canRecord = pManager.hasSystemFeature(
-      android.content.pm.PackageManager.FEATURE_MICROPHONE
-    );
+    const canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
     if (canRecord) {
       return true;
     } else {
@@ -27,27 +25,23 @@ export class TNSRecorder implements TNSRecordI {
     }
   }
 
-  public requestRecordPermission(explanation = "") {
+  public requestRecordPermission(explanation = '') {
     return new Promise(async (resolve, reject) => {
       try {
-        await permissions
-          .requestPermission((android as any).Manifest.permission.RECORD_AUDIO)
-          .catch(err => {
-            TNS_Recorder_Log("Error getting RECORD_AUDIO permission.", err);
-            reject(err);
-          });
+        await permissions.requestPermission((android as any).Manifest.permission.RECORD_AUDIO).catch(err => {
+          TNS_Recorder_Log('Error getting RECORD_AUDIO permission.', err);
+          reject(err);
+        });
         resolve();
       } catch (error) {
-        TNS_Recorder_Log("requestRecordPermission error", error);
+        TNS_Recorder_Log('requestRecordPermission error', error);
         reject(error);
       }
     });
   }
 
   public hasRecordPermission() {
-    const permission = permissions.hasPermission(
-      (android as any).Manifest.permission.RECORD_AUDIO
-    );
+    const permission = permissions.hasPermission((android as any).Manifest.permission.RECORD_AUDIO);
     return !0 === permission ? !0 : !1;
   }
 
@@ -57,29 +51,27 @@ export class TNSRecorder implements TNSRecordI {
         // bake the permission into this so the dev doesn't have to call it
         await this.requestRecordPermission().catch(err => {
           console.log(err);
-          reject("Permission to record audio is not granted.");
+          reject('Permission to record audio is not granted.');
         });
 
         if (this._recorder) {
           // reset for reuse
           this._recorder.reset();
         } else {
-          TNS_Recorder_Log(
-            "recorder is not initialized, creating new instance of android MediaRecorder."
-          );
+          TNS_Recorder_Log('recorder is not initialized, creating new instance of android MediaRecorder.');
           this._recorder = new android.media.MediaRecorder();
         }
 
         const audioSource = options.source ? options.source : 0;
-        TNS_Recorder_Log("setting audio source", audioSource);
+        TNS_Recorder_Log('setting audio source', audioSource);
         this._recorder.setAudioSource(audioSource);
 
         const outFormat = options.format ? options.format : 0;
-        TNS_Recorder_Log("setting output format", outFormat);
+        TNS_Recorder_Log('setting output format', outFormat);
         this._recorder.setOutputFormat(outFormat);
 
         const encoder = options.encoder ? options.encoder : 0;
-        TNS_Recorder_Log("setting audio encoder", encoder);
+        TNS_Recorder_Log('setting audio encoder', encoder);
         this._recorder.setAudioEncoder(encoder);
 
         if (options.channels) {
@@ -131,12 +123,12 @@ export class TNSRecorder implements TNSRecordI {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
-          TNS_Recorder_Log("pausing recorder...");
+          TNS_Recorder_Log('pausing recorder...');
           this._recorder.pause();
         }
         resolve();
       } catch (ex) {
-        TNS_Recorder_Log("pause error", ex);
+        TNS_Recorder_Log('pause error', ex);
         reject(ex);
       }
     });
@@ -146,12 +138,12 @@ export class TNSRecorder implements TNSRecordI {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
-          TNS_Recorder_Log("resuming recorder...");
+          TNS_Recorder_Log('resuming recorder...');
           this._recorder.resume();
         }
         resolve();
       } catch (ex) {
-        TNS_Recorder_Log("resume error", ex);
+        TNS_Recorder_Log('resume error', ex);
         reject(ex);
       }
     });
@@ -161,12 +153,12 @@ export class TNSRecorder implements TNSRecordI {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
-          TNS_Recorder_Log("stopping recorder...");
+          TNS_Recorder_Log('stopping recorder...');
           this._recorder.stop();
         }
         resolve();
       } catch (ex) {
-        TNS_Recorder_Log("stop error", ex);
+        TNS_Recorder_Log('stop error', ex);
         reject(ex);
       }
     });
@@ -175,14 +167,14 @@ export class TNSRecorder implements TNSRecordI {
   public dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-        TNS_Recorder_Log("disposing recorder...");
+        TNS_Recorder_Log('disposing recorder...');
         if (this._recorder) {
           this._recorder.release();
         }
         this._recorder = undefined;
         resolve();
       } catch (ex) {
-        TNS_Recorder_Log("dispose error", ex);
+        TNS_Recorder_Log('dispose error', ex);
         reject(ex);
       }
     });

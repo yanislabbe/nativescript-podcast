@@ -1,23 +1,15 @@
-import * as app from "tns-core-modules/application";
-import * as utils from "tns-core-modules/utils/utils";
-import * as fs from "tns-core-modules/file-system";
-import * as enums from "tns-core-modules/ui/enums";
-import { Observable } from "tns-core-modules/data/observable";
-import { isString } from "tns-core-modules/utils/types";
-import { isFileOrResourcePath } from "tns-core-modules/utils/utils";
-import {
-  TNSPlayerI,
-  TNS_Player_Log,
-  isStringUrl,
-  resolveAudioFilePath,
-  TNSPlayerUtil
-} from "../common";
-import { AudioPlayerOptions, AudioPlayerEvents } from "../options";
-
-declare var android: any;
+import * as app from 'tns-core-modules/application';
+import * as utils from 'tns-core-modules/utils/utils';
+import * as fs from 'tns-core-modules/file-system';
+import * as enums from 'tns-core-modules/ui/enums';
+import { Observable } from 'tns-core-modules/data/observable';
+import { isString } from 'tns-core-modules/utils/types';
+import { isFileOrResourcePath } from 'tns-core-modules/utils/utils';
+import { TNSPlayerI, TNS_Player_Log, isStringUrl, resolveAudioFilePath, TNSPlayerUtil } from '../common';
+import { AudioPlayerOptions, AudioPlayerEvents } from '../options';
 
 export class TNSPlayer implements TNSPlayerI {
-  private _player: any;
+  private _player: android.media.MediaPlayer;
   private _mAudioFocusGranted: boolean = false;
   private _lastPlayerVolume; // ref to the last volume setting so we can reset after ducking
   private _events: Observable;
@@ -25,7 +17,7 @@ export class TNSPlayer implements TNSPlayerI {
   constructor() {
     // request audio focus, this will setup the onAudioFocusChangeListener
     this._mAudioFocusGranted = this._requestAudioFocus();
-    TNS_Player_Log("_mAudioFocusGranted", this._mAudioFocusGranted);
+    TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
   }
 
   public get events() {
@@ -45,9 +37,7 @@ export class TNSPlayer implements TNSPlayerI {
 
   get volume(): number {
     // TODO: find better way to get individual player volume
-    const mgr = app.android.context.getSystemService(
-      android.content.Context.AUDIO_SERVICE
-    );
+    const mgr = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
     return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
   }
 
@@ -88,34 +78,30 @@ export class TNSPlayer implements TNSPlayerI {
         }
 
         const audioPath = resolveAudioFilePath(options.audioFile);
-        TNS_Player_Log("audioPath", audioPath);
+        TNS_Player_Log('audioPath', audioPath);
 
         if (!this._player) {
-          TNS_Player_Log(
-            "android mediaPlayer is not initialized, creating new instance"
-          );
+          TNS_Player_Log('android mediaPlayer is not initialized, creating new instance');
           this._player = new android.media.MediaPlayer();
         }
 
         // request audio focus, this will setup the onAudioFocusChangeListener
         this._mAudioFocusGranted = this._requestAudioFocus();
-        TNS_Player_Log("_mAudioFocusGranted", this._mAudioFocusGranted);
+        TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
 
-        this._player.setAudioStreamType(
-          android.media.AudioManager.STREAM_MUSIC
-        );
+        this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
 
-        TNS_Player_Log("resetting mediaPlayer...");
+        TNS_Player_Log('resetting mediaPlayer...');
         this._player.reset();
-        TNS_Player_Log("setting datasource", audioPath);
+        TNS_Player_Log('setting datasource', audioPath);
         this._player.setDataSource(audioPath);
 
         // check if local file or remote - local then `prepare` is okay https://developer.android.com/reference/android/media/MediaPlayer.html#prepare()
         if (isFileOrResourcePath(audioPath)) {
-          TNS_Player_Log("preparing mediaPlayer...");
+          TNS_Player_Log('preparing mediaPlayer...');
           this._player.prepare();
         } else {
-          TNS_Player_Log("preparing mediaPlayer async...");
+          TNS_Player_Log('preparing mediaPlayer async...');
           this._player.prepareAsync();
         }
 
@@ -141,7 +127,7 @@ export class TNSPlayer implements TNSPlayerI {
             new android.media.MediaPlayer.OnErrorListener({
               onError: (player: any, error: number, extra: number) => {
                 this._player.reset();
-                TNS_Player_Log("errorCallback", error);
+                TNS_Player_Log('errorCallback', error);
                 options.errorCallback({ player, error, extra });
                 return true;
               }
@@ -154,7 +140,7 @@ export class TNSPlayer implements TNSPlayerI {
           this._player.setOnInfoListener(
             new android.media.MediaPlayer.OnInfoListener({
               onInfo: (player: any, info: number, extra: number) => {
-                TNS_Player_Log("infoCallback", info);
+                TNS_Player_Log('infoCallback', info);
                 options.infoCallback({ player, info, extra });
                 return true;
               }
@@ -167,7 +153,7 @@ export class TNSPlayer implements TNSPlayerI {
           new android.media.MediaPlayer.OnPreparedListener({
             onPrepared: mp => {
               if (options.autoPlay) {
-                TNS_Player_Log("options.autoPlay", options.autoPlay);
+                TNS_Player_Log('options.autoPlay', options.autoPlay);
                 this.play();
               }
               resolve();
@@ -175,7 +161,7 @@ export class TNSPlayer implements TNSPlayerI {
           })
         );
       } catch (ex) {
-        TNS_Player_Log("playFromFile error", ex);
+        TNS_Player_Log('playFromFile error', ex);
         reject(ex);
       }
     });
@@ -202,13 +188,13 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player && this._player.isPlaying()) {
-          TNS_Player_Log("pausing player");
+          TNS_Player_Log('pausing player');
           this._player.pause();
           this._sendEvent(AudioPlayerEvents.paused);
         }
         resolve(true);
       } catch (ex) {
-        TNS_Player_Log("pause error", ex);
+        TNS_Player_Log('pause error', ex);
         reject(ex);
       }
     });
@@ -221,19 +207,14 @@ export class TNSPlayer implements TNSPlayerI {
           this._sendEvent(AudioPlayerEvents.started);
           // set volume controls
           // https://developer.android.com/reference/android/app/Activity.html#setVolumeControlStream(int)
-          app.android.foregroundActivity.setVolumeControlStream(
-            android.media.AudioManager.STREAM_MUSIC
-          );
+          app.android.foregroundActivity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
 
           // register the receiver so when calls or another app takes main audio focus the player pauses
           app.android.registerBroadcastReceiver(
             android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY,
-            (
-              context: android.content.Context,
-              intent: android.content.Intent
-            ) => {
-              TNS_Player_Log("ACTION_AUDIO_BECOMING_NOISY onReceiveCallback");
-              TNS_Player_Log("intent", intent);
+            (context: android.content.Context, intent: android.content.Intent) => {
+              TNS_Player_Log('ACTION_AUDIO_BECOMING_NOISY onReceiveCallback');
+              TNS_Player_Log('intent', intent);
               this.pause();
             }
           );
@@ -242,7 +223,7 @@ export class TNSPlayer implements TNSPlayerI {
         }
         resolve(true);
       } catch (ex) {
-        TNS_Player_Log("Error trying to play audio.", ex);
+        TNS_Player_Log('Error trying to play audio.', ex);
         reject(ex);
       }
     });
@@ -250,7 +231,7 @@ export class TNSPlayer implements TNSPlayerI {
 
   public resume(): void {
     if (this._player) {
-      TNS_Player_Log("resume");
+      TNS_Player_Log('resume');
       this._player.start();
       this._sendEvent(AudioPlayerEvents.started);
     }
@@ -260,13 +241,13 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player) {
-          TNS_Player_Log("seekTo", time);
+          TNS_Player_Log('seekTo', time);
           this._player.seekTo(time);
           this._sendEvent(AudioPlayerEvents.seek);
         }
         resolve(true);
       } catch (ex) {
-        TNS_Player_Log("seekTo error", ex);
+        TNS_Player_Log('seekTo error', ex);
         reject(ex);
       }
     });
@@ -275,21 +256,15 @@ export class TNSPlayer implements TNSPlayerI {
   public changePlayerSpeed(speed) {
     // this checks on API 23 and up
     if (android.os.Build.VERSION.SDK_INT >= 23 && this.play) {
-      TNS_Player_Log("setting the mediaPlayer playback speed", speed);
+      TNS_Player_Log('setting the mediaPlayer playback speed', speed);
       if (this._player.isPlaying()) {
-        (this._player as any).setPlaybackParams(
-          (this._player as any).getPlaybackParams().setSpeed(speed)
-        );
+        (this._player as any).setPlaybackParams((this._player as any).getPlaybackParams().setSpeed(speed));
       } else {
-        (this._player as any).setPlaybackParams(
-          (this._player as any).getPlaybackParams().setSpeed(speed)
-        );
+        (this._player as any).setPlaybackParams((this._player as any).getPlaybackParams().setSpeed(speed));
         this._player.pause();
       }
     } else {
-      TNS_Player_Log(
-        "Android device API is not 23+. Cannot set the playbackRate on lower Android APIs."
-      );
+      TNS_Player_Log('Android device API is not 23+. Cannot set the playbackRate on lower Android APIs.');
     }
   }
 
@@ -297,25 +272,21 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player) {
-          TNS_Player_Log("disposing of mediaPlayer instance", this._player);
+          TNS_Player_Log('disposing of mediaPlayer instance', this._player);
           this._player.stop();
           this._player.reset();
           // this._player.release();
 
-          TNS_Player_Log(
-            "unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY..."
-          );
+          TNS_Player_Log('unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY...');
           // unregister broadcast receiver
-          app.android.unregisterBroadcastReceiver(
-            android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY
-          );
+          app.android.unregisterBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 
-          TNS_Player_Log("abandoning audio focus...");
+          TNS_Player_Log('abandoning audio focus...');
           this._abandonAudioFocus();
         }
         resolve();
       } catch (ex) {
-        TNS_Player_Log("dispose error", ex);
+        TNS_Player_Log('dispose error', ex);
         reject(ex);
       }
     });
@@ -333,10 +304,10 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         const duration = this._player ? this._player.getDuration() : 0;
-        TNS_Player_Log("audio track duration", duration);
+        TNS_Player_Log('audio track duration', duration);
         resolve(duration.toString());
       } catch (ex) {
-        TNS_Player_Log("getAudioTrackDuration error", ex);
+        TNS_Player_Log('getAudioTrackDuration error', ex);
         reject(ex);
       }
     });
@@ -361,9 +332,7 @@ export class TNSPlayer implements TNSPlayerI {
   private _requestAudioFocus(): boolean {
     let result = false;
     if (!this._mAudioFocusGranted) {
-      const am = app.android.context.getSystemService(
-        android.content.Context.AUDIO_SERVICE
-      );
+      const am = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
       // Request audio focus for play back
       const focusResult = am.requestAudioFocus(
         this._mOnAudioFocusChangeListener,
@@ -371,12 +340,10 @@ export class TNSPlayer implements TNSPlayerI {
         android.media.AudioManager.AUDIOFOCUS_GAIN
       );
 
-      if (
-        focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-      ) {
+      if (focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
         result = true;
       } else {
-        TNS_Player_Log("Failed to get audio focus.");
+        TNS_Player_Log('Failed to get audio focus.');
         result = false;
       }
     }
@@ -384,57 +351,53 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _abandonAudioFocus(): void {
-    const am = app.android.context.getSystemService(
-      android.content.Context.AUDIO_SERVICE
-    );
+    const am = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
     const result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
     if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
       this._mAudioFocusGranted = false;
     } else {
-      TNS_Player_Log("Failed to abandon audio focus.");
+      TNS_Player_Log('Failed to abandon audio focus.');
     }
     this._mOnAudioFocusChangeListener = null;
   }
 
-  private _mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener(
-    {
-      onAudioFocusChange: (focusChange: number) => {
-        switch (focusChange) {
-          case android.media.AudioManager.AUDIOFOCUS_GAIN:
-            TNS_Player_Log("AUDIOFOCUS_GAIN");
-            // Set volume level to desired levels
-            TNS_Player_Log("this._lastPlayerVolume", this._lastPlayerVolume);
-            // if last volume more than 10 just set to 1.0 float
-            if (this._lastPlayerVolume && this._lastPlayerVolume >= 10) {
-              this.volume = 1.0;
-            } else if (this._lastPlayerVolume) {
-              this.volume = parseFloat("0." + this._lastPlayerVolume.toString());
-            }
+  private _mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
+    onAudioFocusChange: (focusChange: number) => {
+      switch (focusChange) {
+        case android.media.AudioManager.AUDIOFOCUS_GAIN:
+          TNS_Player_Log('AUDIOFOCUS_GAIN');
+          // Set volume level to desired levels
+          TNS_Player_Log('this._lastPlayerVolume', this._lastPlayerVolume);
+          // if last volume more than 10 just set to 1.0 float
+          if (this._lastPlayerVolume && this._lastPlayerVolume >= 10) {
+            this.volume = 1.0;
+          } else if (this._lastPlayerVolume) {
+            this.volume = parseFloat('0.' + this._lastPlayerVolume.toString());
+          }
 
-            this.resume();
-            break;
-          case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-            TNS_Player_Log("AUDIOFOCUS_GAIN_TRANSIENT");
-            // You have audio focus for a short time
-            break;
-          case android.media.AudioManager.AUDIOFOCUS_LOSS:
-            TNS_Player_Log("AUDIOFOCUS_LOSS");
-            this.pause();
-            break;
-          case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-            TNS_Player_Log("AUDIOFOCUS_LOSS_TRANSIENT");
-            // Temporary loss of audio focus - expect to get it back - you can keep your resources around
-            this.pause();
-            break;
-          case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-            TNS_Player_Log("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-            // Lower the volume, keep playing
-            this._lastPlayerVolume = this.volume;
-            TNS_Player_Log("this._lastPlayerVolume", this._lastPlayerVolume);
-            this.volume = 0.2;
-            break;
-        }
+          this.resume();
+          break;
+        case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+          TNS_Player_Log('AUDIOFOCUS_GAIN_TRANSIENT');
+          // You have audio focus for a short time
+          break;
+        case android.media.AudioManager.AUDIOFOCUS_LOSS:
+          TNS_Player_Log('AUDIOFOCUS_LOSS');
+          this.pause();
+          break;
+        case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+          TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT');
+          // Temporary loss of audio focus - expect to get it back - you can keep your resources around
+          this.pause();
+          break;
+        case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+          TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK');
+          // Lower the volume, keep playing
+          this._lastPlayerVolume = this.volume;
+          TNS_Player_Log('this._lastPlayerVolume', this._lastPlayerVolume);
+          this.volume = 0.2;
+          break;
       }
     }
-  );
+  });
 }

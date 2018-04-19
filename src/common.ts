@@ -1,6 +1,6 @@
-import * as fs from "tns-core-modules/file-system";
-import { isString } from "tns-core-modules/utils/types";
-import { AudioPlayerOptions, AudioRecorderOptions } from "./options";
+import * as fs from 'tns-core-modules/file-system';
+import { isString } from 'tns-core-modules/utils/types';
+import { AudioPlayerOptions, AudioRecorderOptions } from './options';
 
 export class TNSPlayerUtil {
   public static debug: boolean = false;
@@ -8,7 +8,7 @@ export class TNSPlayerUtil {
 
 export const TNS_Player_Log = (...args) => {
   if (TNSPlayerUtil.debug) {
-    console.log("TNSPlayer", args);
+    console.log('NativeScript-Audio - TNSPlayer', args);
   }
 };
 
@@ -18,7 +18,7 @@ export class TNSRecorderUtil {
 
 export const TNS_Recorder_Log = (...args) => {
   if (TNSRecorderUtil.debug) {
-    console.log("TNSRecorder", args);
+    console.log('NativeScript-Audio - TNSRecorder', args);
   }
 };
 
@@ -114,8 +114,8 @@ export interface TNSRecordI {
 export function isStringUrl(value: string): boolean {
   // check if artURL is a url or local file
   let isURL = false;
-  if (value.indexOf("://") !== -1) {
-    if (value.indexOf("res://") === -1) {
+  if (value.indexOf('://') !== -1) {
+    if (value.indexOf('res://') === -1) {
       isURL = true;
     }
   }
@@ -139,12 +139,9 @@ export function resolveAudioFilePath(path: string) {
       return path;
     } else {
       let audioPath;
-      let fileName = isString(path) ? path.trim() : "";
-      if (fileName.indexOf("~/") === 0) {
-        fileName = fs.path.join(
-          fs.knownFolders.currentApp().path,
-          fileName.replace("~/", "")
-        );
+      let fileName = isString(path) ? path.trim() : '';
+      if (fileName.indexOf('~/') === 0) {
+        fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace('~/', ''));
         audioPath = fileName;
       } else {
         audioPath = fileName;
