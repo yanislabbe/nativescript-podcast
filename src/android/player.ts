@@ -37,8 +37,7 @@ export class TNSPlayer implements TNSPlayerI {
 
   get volume(): number {
     // TODO: find better way to get individual player volume
-    const ctx = this._getAndroidContext();
-    const mgr = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+    const mgr = app.getNativeApplication().getApplicationContext().getSystemService(android.content.Context.AUDIO_SERVICE);
     return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
   }
 
@@ -333,8 +332,7 @@ export class TNSPlayer implements TNSPlayerI {
   private _requestAudioFocus(): boolean {
     let result = false;
     if (!this._mAudioFocusGranted) {
-      const ctx = this._getAndroidContext();
-      const am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+      const am = app.getNativeApplication().getApplicationContext().getSystemService(android.content.Context.AUDIO_SERVICE);
       // Request audio focus for play back
       const focusResult = am.requestAudioFocus(
         this._mOnAudioFocusChangeListener,
@@ -353,8 +351,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _abandonAudioFocus(): void {
-    const ctx = this._getAndroidContext();
-    const am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+    const am = app.getNativeApplication().getApplicationContext().getSystemService(android.content.Context.AUDIO_SERVICE);
     const result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
     if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
       this._mAudioFocusGranted = false;
@@ -362,18 +359,6 @@ export class TNSPlayer implements TNSPlayerI {
       TNS_Player_Log('Failed to abandon audio focus.');
     }
     this._mOnAudioFocusChangeListener = null;
-  }
-
-  private _getAndroidContext() {
-    const ctx = app.android.context
-    if (ctx === null) {
-      setTimeout(() => {
-        this._getAndroidContext();
-      }, 200);
-      return;
-    } else {
-      return ctx;
-    }
   }
 
   private _mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
