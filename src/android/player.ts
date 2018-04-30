@@ -365,7 +365,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _getAndroidContext() {
-    const ctx = app.android.context;
+    let ctx = app.android.context;
 
     if (!ctx) {
       ctx = app.getNativeApplication().getApplicationContext();
