@@ -1,5 +1,4 @@
-<Page 
-  xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded">
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded">
   <Page.actionBar>
     <ActionBar title="NativeScript Audio" backgroundColor="#3F51B5" color="#fff" />
   </Page.actionBar>
@@ -42,6 +41,7 @@
               <Label row="9" col="2" text="{{ 'Remaining: ' + remainingDuration }}" textWrap="true" />
               <Label row="10" col="0" text="Volume Slider: " textWrap="true" class="m-t-20" />
               <Slider row="10" col="1" colSpan="2" id="volumeSlider" minValue="0" maxValue="100" value="100" class="m-t-20" />
+              <Label text="{{ 'Current Volume for Player ' + currentVolume }}" textWrap="true" />
             </GridLayout>
           </ScrollView>
         </TabViewItem.view>
