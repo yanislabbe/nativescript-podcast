@@ -224,7 +224,8 @@ export declare class TNSPlayer {
   resume(): void;
 
   /**
-   * Seeks to specific time.
+   * Seeks to specific time in seconds.
+   * @param time [number] - The position of the track duration to seek to.
    */
   seekTo(time: number): Promise<any>;
 

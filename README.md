@@ -175,7 +175,7 @@ player
 | _playFromUrl(options: AudioPlayerOptions)_: `Promise`                  | Auto-play from a url.                                        |
 | _pause()_: `Promise<boolean>`                                          | Pause playback.                                              |
 | _resume()_: `void`                                                     | Resume playback.                                             |
-| _seekTo(time:number)_: `Promise<boolean>`                              | Seek to position.                                            |
+| _seekTo(time:number)_: `Promise<boolean>`                              | Seek to position of track (in seconds).                     |
 | _dispose()_: `Promise<boolean>`                                        | Free up resources when done playing audio.                   |
 | _isAudioPlaying()_: `boolean`                                          | Determine if player is playing.                              |
 | _getAudioTrackDuration()_: `Promise<string>`                           | Duration of media file assigned to the player.               |
