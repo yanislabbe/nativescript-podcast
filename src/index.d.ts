@@ -155,6 +155,12 @@ export interface TNSPlayerI {
    * @param speed [number] - The speed of the playback.
    */
   changePlayerSpeed(speed: number): void;
+
+  /**
+   * ** iOS ONLY ** - Begins playback at a certain delay, relative to the current playback time.
+   * @param time [number] - The time to start playing the audio track at.
+   */
+  playAtTime(time: number);
 }
 export interface TNSRecordI {
   start(options: AudioRecorderOptions): Promise<any>;
