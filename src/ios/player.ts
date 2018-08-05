@@ -28,7 +28,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
   }
 
   public set volume(value: number) {
-    if (this._player) {
+    if (this._player && value >= 0) {
       this._player.volume = value;
     }
   }
