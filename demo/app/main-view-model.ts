@@ -293,6 +293,10 @@ export class AudioDemo extends Observable {
     this._player.volume = 1;
   }
 
+  public skipTo8() {
+    this._player.seekTo(8);
+  }
+
   public playSpeed1() {
     this._player.changePlayerSpeed(1);
   }
