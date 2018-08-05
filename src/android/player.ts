@@ -43,7 +43,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   set volume(value: number) {
-    if (this._player && value) {
+    if (this._player && value >= 0) {
       this._player.setVolume(value, value);
     }
   }
@@ -365,7 +365,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _getAndroidContext() {
-    const ctx = app.android.context
+    const ctx = app.android.context;
     if (ctx === null) {
       setTimeout(() => {
         this._getAndroidContext();

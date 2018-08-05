@@ -5,6 +5,7 @@
 !references.d.ts
 !index.d.ts
 !manual_typings/base.d.ts
+demo/e2e/
 demo/lib
 demo/app/*.js
 demo/*.d.ts

@@ -3,6 +3,9 @@
     "id": "org.nativescript.audio",
     "tns-ios": {
       "version": "4.1.0"
+    },
+    "tns-android": {
+      "version": "4.1.3"
     }
   },
   "dependencies": {

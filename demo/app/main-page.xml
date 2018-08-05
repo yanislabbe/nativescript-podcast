@@ -23,7 +23,7 @@
       <TabViewItem title="Player">
         <TabViewItem.view>
           <ScrollView>
-            <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto" columns="*, *, *" class="p-10">
+            <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto" columns="*, *, *" class="p-10">
               <label row="0" colSpan="3" class="center text-primary h3" text="Welcome To Fight Club!" textWrap="true" />
               <button row="1" colSpan="3" class="btn btn-primary" text="Play Remote Audio" tap="{{ playRemoteFile }}" />
               <label row="2" colSpan="3" text="Note: Remote files can have a lag before playing due to processing and network speeds." class="h4" textWrap="true" />
@@ -42,6 +42,8 @@
               <Label row="10" col="0" text="Volume Slider: " textWrap="true" class="m-t-20" />
               <Slider row="10" col="1" colSpan="2" id="volumeSlider" minValue="0" maxValue="100" value="100" class="m-t-20" />
               <Label text="{{ 'Current Volume for Player ' + currentVolume }}" textWrap="true" />
+              <Button row="11" col="0" text="Mute" class="btn btn-primary" tap="{{ muteTap }}" />
+              <Button row="11" col="1" text="Unmute" class="btn btn-primary" tap="{{ unmuteTap }}" />
             </GridLayout>
           </ScrollView>
         </TabViewItem.view>

@@ -285,6 +285,14 @@ export class AudioDemo extends Observable {
     this._player.play();
   }
 
+  public muteTap() {
+    this._player.volume = 0;
+  }
+
+  public unmuteTap() {
+    this._player.volume = 1;
+  }
+
   public playSpeed1() {
     this._player.changePlayerSpeed(1);
   }
