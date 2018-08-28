@@ -43,7 +43,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   set volume(value: number) {
-    if (this._player && value) {
+    if (this._player && value >= 0) {
       this._player.setVolume(value, value);
     }
   }
@@ -242,7 +242,8 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player) {
-          TNS_Player_Log('seekTo', time);
+          time = time * 1000;
+          TNS_Player_Log('seekTo seconds', time);
           this._player.seekTo(time);
           this._sendEvent(AudioPlayerEvents.seek);
         }
@@ -365,13 +366,12 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _getAndroidContext() {
-    let ctx = app.android.context;
-
+   let ctx = app.android.context;
     if (!ctx) {
       ctx = app.getNativeApplication().getApplicationContext();
     }
 
-    if (!ctx) {
+    if (ctx === null) {
       setTimeout(() => {
         this._getAndroidContext();
       }, 200);

@@ -39,13 +39,13 @@
 
 ### Android Native Classes
 
-* [Player - android.media.MediaPlayer](http://developer.android.com/reference/android/media/MediaPlayer.html)
-* [Recorder - android.media.MediaRecorder](http://developer.android.com/reference/android/media/MediaRecorder.html)
+- [Player - android.media.MediaPlayer](http://developer.android.com/reference/android/media/MediaPlayer.html)
+- [Recorder - android.media.MediaRecorder](http://developer.android.com/reference/android/media/MediaRecorder.html)
 
 ### iOS Native Classes
 
-* [Player - AVAudioPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
-* [Recorder - AVAudioRecorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
+- [Player - AVAudioPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioPlayerClassReference/)
+- [Recorder - AVAudioRecorder](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVAudioRecorder_ClassReference/)
 
 Note: You will need to grant permissions on iOS to allow the device to access the microphone if you are using the recording function. If you don't, your app may crash on device and/or your app might be rejected during Apple's review routine. To do this, add this key to your `app/App_Resources/iOS/Info.plist` file:
 
@@ -175,7 +175,7 @@ player
 | _playFromUrl(options: AudioPlayerOptions)_: `Promise`                  | Auto-play from a url.                                        |
 | _pause()_: `Promise<boolean>`                                          | Pause playback.                                              |
 | _resume()_: `void`                                                     | Resume playback.                                             |
-| _seekTo(time:number)_: `Promise<boolean>`                              | Seek to position.                                            |
+| _seekTo(time:number)_: `Promise<boolean>`                              | Seek to position of track (in seconds).                     |
 | _dispose()_: `Promise<boolean>`                                        | Free up resources when done playing audio.                   |
 | _isAudioPlaying()_: `boolean`                                          | Determine if player is playing.                              |
 | _getAudioTrackDuration()_: `Promise<string>`                           | Duration of media file assigned to the player.               |
@@ -195,3 +195,9 @@ player
 ### License
 
 [MIT](/LICENSE)
+
+### Demo App
+
+- fork/clone the repository
+- cd into the `src` directory
+- execute `npm run demo.android` or `npm run demo.ios` (scripts are located in the `scripts` of the package.json in the `src` directory if you are curious)

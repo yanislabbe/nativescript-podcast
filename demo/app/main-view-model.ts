@@ -1,26 +1,20 @@
-import "./async-await";
-import * as app from "tns-core-modules/application";
-import * as color from "tns-core-modules/color";
-import * as platform from "tns-core-modules/platform";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import * as timer from "tns-core-modules/timer";
-import { Observable } from "tns-core-modules/data/observable";
-import { knownFolders, File } from "tns-core-modules/file-system";
-import { Page } from "tns-core-modules/ui/page";
-import { Slider } from "tns-core-modules/ui/slider";
-import {
-  TNSRecorder,
-  TNSPlayer,
-  AudioPlayerOptions,
-  AudioRecorderOptions
-} from "nativescript-audio";
+import { AudioPlayerOptions, AudioRecorderOptions, TNSPlayer, TNSRecorder } from 'nativescript-audio';
+import * as app from 'tns-core-modules/application';
+import { Observable } from 'tns-core-modules/data/observable';
+import { File, knownFolders } from 'tns-core-modules/file-system';
+import * as platform from 'tns-core-modules/platform';
+import * as timer from 'tns-core-modules/timer';
+import * as dialogs from 'tns-core-modules/ui/dialogs';
+import { Page } from 'tns-core-modules/ui/page';
+import { Slider } from 'tns-core-modules/ui/slider';
+import './async-await';
 
 declare const android;
 
 export class AudioDemo extends Observable {
   @ObservableProperty() public isPlaying: boolean;
   @ObservableProperty() public isRecording: boolean;
-  @ObservableProperty() public audioMeter = "0";
+  @ObservableProperty() public audioMeter = '0';
   @ObservableProperty() public recordedAudioFile: string;
   @ObservableProperty() public currentVolume;
   @ObservableProperty() public audioTrackDuration;
@@ -31,19 +25,19 @@ export class AudioDemo extends Observable {
   private _page;
   private _audioUrls: Array<any> = [
     {
-      name: "Fight Club",
-      pic: "~/pics/canoe_girl.jpeg",
-      url: "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3"
+      name: 'Fight Club',
+      pic: '~/pics/canoe_girl.jpeg',
+      url: 'http://www.noiseaddicts.com/samples_1w72b820/2514.mp3'
     },
     {
-      name: "To The Bat Cave!!!",
-      pic: "~/pics/bears.jpeg",
-      url: "http://www.noiseaddicts.com/samples_1w72b820/17.mp3"
+      name: 'To The Bat Cave!!!',
+      pic: '~/pics/bears.jpeg',
+      url: 'http://www.noiseaddicts.com/samples_1w72b820/17.mp3'
     },
     {
-      name: "Marlon Brando",
-      pic: "~/pics/northern_lights.jpeg",
-      url: "http://www.noiseaddicts.com/samples_1w72b820/47.mp3"
+      name: 'Marlon Brando',
+      pic: '~/pics/northern_lights.jpeg',
+      url: 'http://www.noiseaddicts.com/samples_1w72b820/47.mp3'
     }
   ];
   private _meterInterval: any;
@@ -58,11 +52,11 @@ export class AudioDemo extends Observable {
     this._recorder.debug = true; // set true for tns_recorder logs
 
     this.currentVolume = 1;
-    this._slider = page.getViewById("volumeSlider") as Slider;
+    this._slider = page.getViewById('volumeSlider') as Slider;
 
     // Set player volume
     if (this._slider) {
-      this._slider.on("valueChange", (data: any) => {
+      this._slider.on('valueChange', (data: any) => {
         this._player.volume = this._slider.value / 100;
       });
     }
@@ -71,10 +65,10 @@ export class AudioDemo extends Observable {
   public async startRecord(args) {
     try {
       if (!TNSRecorder.CAN_RECORD()) {
-        dialogs.alert("This device cannot record audio.");
+        dialogs.alert('This device cannot record audio.');
         return;
       }
-      const audioFolder = knownFolders.currentApp().getFolder("audio");
+      const audioFolder = knownFolders.currentApp().getFolder('audio');
       console.log(JSON.stringify(audioFolder));
 
       let androidFormat;
@@ -88,9 +82,7 @@ export class AudioDemo extends Observable {
         androidEncoder = 3;
       }
 
-      const recordingPath = `${
-        audioFolder.path
-      }/recording.${this.platformExtension()}`;
+      const recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;
 
       const recorderOptions: AudioRecorderOptions = {
         filename: recordingPath,
@@ -131,7 +123,7 @@ export class AudioDemo extends Observable {
     });
 
     this.isRecording = false;
-    alert("Recorder stopped.");
+    alert('Recorder stopped.');
     this._resetMeter();
   }
 
@@ -145,7 +137,7 @@ export class AudioDemo extends Observable {
 
   private _resetMeter() {
     if (this._meterInterval) {
-      this.audioMeter = "0";
+      this.audioMeter = '0';
       clearInterval(this._meterInterval);
       this._meterInterval = undefined;
     }
@@ -153,12 +145,10 @@ export class AudioDemo extends Observable {
 
   public getFile(args) {
     try {
-      const audioFolder = knownFolders.currentApp().getFolder("audio");
-      const recordedFile = audioFolder.getFile(
-        `recording.${this.platformExtension()}`
-      );
+      const audioFolder = knownFolders.currentApp().getFolder('audio');
+      const recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
       console.log(JSON.stringify(recordedFile));
-      console.log("recording exists: " + File.exists(recordedFile.path));
+      console.log('recording exists: ' + File.exists(recordedFile.path));
       this.recordedAudioFile = recordedFile.path;
     } catch (ex) {
       console.log(ex);
@@ -166,21 +156,19 @@ export class AudioDemo extends Observable {
   }
 
   public async playRecordedFile(args) {
-    const audioFolder = knownFolders.currentApp().getFolder("audio");
-    const recordedFile = audioFolder.getFile(
-      `recording.${this.platformExtension()}`
-    );
-    console.log("RECORDED FILE : " + JSON.stringify(recordedFile));
+    const audioFolder = knownFolders.currentApp().getFolder('audio');
+    const recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
+    console.log('RECORDED FILE : ' + JSON.stringify(recordedFile));
 
     const playerOptions: AudioPlayerOptions = {
       audioFile: `~/audio/recording.${this.platformExtension()}`,
       loop: false,
       completeCallback: async () => {
-        alert("Audio file complete.");
+        alert('Audio file complete.');
         this.isPlaying = false;
         if (!playerOptions.loop) {
           await this._player.dispose();
-          console.log("player disposed");
+          console.log('player disposed');
         }
       },
 
@@ -191,12 +179,12 @@ export class AudioDemo extends Observable {
 
       infoCallback: infoObject => {
         console.log(JSON.stringify(infoObject));
-        dialogs.alert("Info callback");
+        dialogs.alert('Info callback');
       }
     };
 
     await this._player.playFromFile(playerOptions).catch(err => {
-      console.log("error playFromFile");
+      console.log('error playFromFile');
       this.isPlaying = false;
     });
 
@@ -211,24 +199,24 @@ export class AudioDemo extends Observable {
         audioFile: filepath,
         loop: false,
         completeCallback: async () => {
-          alert("Audio file complete.");
+          alert('Audio file complete.');
           await this._player.dispose();
           this.isPlaying = false;
-          console.log("player disposed");
+          console.log('player disposed');
         },
         errorCallback: errorObject => {
           console.log(JSON.stringify(errorObject));
           this.isPlaying = false;
         },
         infoCallback: args => {
-          dialogs.alert("Info callback: " + args.info);
+          dialogs.alert('Info callback: ' + args.info);
           console.log(JSON.stringify(args));
         }
       };
 
       this.isPlaying = true;
 
-      if (fileType === "localFile") {
+      if (fileType === 'localFile') {
         await this._player.playFromFile(playerOptions).catch(() => {
           this.isPlaying = false;
         });
@@ -236,7 +224,8 @@ export class AudioDemo extends Observable {
         this.audioTrackDuration = await this._player.getAudioTrackDuration();
         // start audio duration tracking
         this._startDurationTracking(this.audioTrackDuration);
-      } else if (fileType === "remoteFile") {
+        this._startVolumeTracking();
+      } else if (fileType === 'remoteFile') {
         await this._player.playFromUrl(playerOptions).catch(() => {
           this.isPlaying = false;
         });
@@ -251,10 +240,10 @@ export class AudioDemo extends Observable {
    * PLAY REMOTE AUDIO FILE
    */
   public playRemoteFile(args) {
-    console.log("playRemoteFile");
-    const filepath = "http://www.noiseaddicts.com/samples_1w72b820/2514.mp3";
+    console.log('playRemoteFile');
+    const filepath = 'http://www.noiseaddicts.com/samples_1w72b820/2514.mp3';
 
-    this.playAudio(filepath, "remoteFile");
+    this.playAudio(filepath, 'remoteFile');
   }
 
   public resumePlayer() {
@@ -266,8 +255,8 @@ export class AudioDemo extends Observable {
    * PLAY LOCAL AUDIO FILE from app folder
    */
   public playLocalFile(args) {
-    let filepath = "~/audio/angel.mp3";
-    this.playAudio(filepath, "localFile");
+    let filepath = '~/audio/angel.mp3';
+    this.playAudio(filepath, 'localFile');
   }
 
   /**
@@ -285,15 +274,27 @@ export class AudioDemo extends Observable {
 
   public async stopPlaying(args) {
     await this._player.dispose();
-    alert("Media Player Disposed.");
+    alert('Media Player Disposed.');
   }
 
   /**
    * RESUME PLAYING
    */
   public resumePlaying(args) {
-    console.log("START");
+    console.log('START');
     this._player.play();
+  }
+
+  public muteTap() {
+    this._player.volume = 0;
+  }
+
+  public unmuteTap() {
+    this._player.volume = 1;
+  }
+
+  public skipTo8() {
+    this._player.seekTo(8);
   }
 
   public playSpeed1() {
@@ -310,7 +311,7 @@ export class AudioDemo extends Observable {
 
   private platformExtension() {
     // 'mp3'
-    return `${app.android ? "m4a" : "caf"}`;
+    return `${app.android ? 'm4a' : 'caf'}`;
   }
 
   private async _startDurationTracking(duration) {
@@ -319,6 +320,15 @@ export class AudioDemo extends Observable {
         this.remainingDuration = duration - this._player.currentTime;
         // console.log(`this.remainingDuration = ${this.remainingDuration}`);
       }, 1000);
+    }
+  }
+
+  private _startVolumeTracking() {
+    if (this._player) {
+      const timerId = timer.setInterval(() => {
+        console.log('volume tracking', this._player.volume);
+        this.currentVolume = this._player.volume;
+      }, 2000);
     }
   }
 }
