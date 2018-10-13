@@ -16,7 +16,7 @@
      <a href="https://github.com/nstudio/nativescript-audio/network">
         <img src="https://img.shields.io/github/forks/nstudio/nativescript-audio.svg" alt="forks">
     </a>
-    <a href="https://github.com/nstudio/nativescript-audio/blob/master/src/LICENSE.md">
+    <a href="https://github.com/nstudio/nativescript-audio/blob/master/LICENSE.md">
         <img src="https://img.shields.io/github/license/nstudio/nativescript-audio.svg" alt="license">
     </a>
     <a href="https://paypal.me/bradwayne88">
