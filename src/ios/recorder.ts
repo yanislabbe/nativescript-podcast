@@ -21,6 +21,18 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     TNSRecorderUtil.debug = value;
   }
 
+  public requestRecordPermission() {
+    return new Promise( (resolve, reject) => {
+      this._recordingSession.requestRecordPermission((allowed: boolean) => {
+        if (allowed) {
+          resolve(true);
+        } else {
+          reject("Record permissions denied");
+        }
+      });
+    });
+  }
+
   public start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
