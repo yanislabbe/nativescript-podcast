@@ -1,12 +1,8 @@
 import * as app from 'tns-core-modules/application';
-import * as utils from 'tns-core-modules/utils/utils';
-import * as fs from 'tns-core-modules/file-system';
-import * as enums from 'tns-core-modules/ui/enums';
 import { Observable } from 'tns-core-modules/data/observable';
-import { isString } from 'tns-core-modules/utils/types';
 import { isFileOrResourcePath } from 'tns-core-modules/utils/utils';
-import { TNSPlayerI, TNS_Player_Log, isStringUrl, resolveAudioFilePath, TNSPlayerUtil } from '../common';
-import { AudioPlayerOptions, AudioPlayerEvents } from '../options';
+import { resolveAudioFilePath, TNSPlayerI, TNSPlayerUtil, TNS_Player_Log } from '../common';
+import { AudioPlayerEvents, AudioPlayerOptions } from '../options';
 
 export class TNSPlayer implements TNSPlayerI {
   private _player: android.media.MediaPlayer;
@@ -366,7 +362,7 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _getAndroidContext() {
-   let ctx = app.android.context;
+    let ctx = app.android.context;
     if (!ctx) {
       ctx = app.getNativeApplication().getApplicationContext();
     }

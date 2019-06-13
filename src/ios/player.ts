@@ -1,5 +1,5 @@
-import { isString } from 'tns-core-modules/utils/types';
 import { knownFolders, path } from 'tns-core-modules/file-system';
+import { isString } from 'tns-core-modules/utils/types';
 import { TNSPlayerI, TNSPlayerUtil, TNS_Player_Log } from '../common';
 import { AudioPlayerOptions } from '../options';
 

@@ -1,4 +1,4 @@
-import { TNSRecordI, TNS_Recorder_Log, TNSRecorderUtil } from '../common';
+import { TNSRecorderUtil, TNSRecordI, TNS_Recorder_Log } from '../common';
 import { AudioRecorderOptions } from '../options';
 
 export class TNSRecorder extends NSObject implements TNSRecordI {
