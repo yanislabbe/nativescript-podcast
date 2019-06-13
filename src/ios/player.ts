@@ -1,9 +1,7 @@
-import * as app from 'tns-core-modules/application';
-import * as utils from 'tns-core-modules/utils/utils';
 import { isString } from 'tns-core-modules/utils/types';
 import { knownFolders, path } from 'tns-core-modules/file-system';
 import { TNSPlayerI, TNSPlayerUtil, TNS_Player_Log } from '../common';
-import { AudioPlayerOptions, AudioPlayerEvents } from '../options';
+import { AudioPlayerOptions } from '../options';
 
 declare var AVAudioPlayer;
 
@@ -143,9 +141,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
       }
 
       try {
-        let sharedSession = utils.ios.getter(NSURLSession, NSURLSession.sharedSession);
-
-        this._task = sharedSession.dataTaskWithURLCompletionHandler(
+        this._task = NSURLSession.sharedSession.dataTaskWithURLCompletionHandler(
           NSURL.URLWithString(options.audioFile),
           (data, response, error) => {
             if (error !== null) {
