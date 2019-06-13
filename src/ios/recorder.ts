@@ -1,6 +1,3 @@
-import * as app from 'tns-core-modules/application';
-import { isString } from 'tns-core-modules/utils/types';
-import { knownFolders, path } from 'tns-core-modules/file-system';
 import { TNSRecordI, TNS_Recorder_Log, TNSRecorderUtil } from '../common';
 import { AudioRecorderOptions } from '../options';
 
