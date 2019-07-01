@@ -72,6 +72,10 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._infoCallback = options.infoCallback;
 
         let audioSession = AVAudioSession.sharedInstance();
+        audioSession.setCategoryWithOptionsError(
+          AVAudioSessionCategoryAmbient,
+          AVAudioSessionCategoryOptions.DuckOthers
+        );
         let output = audioSession.currentRoute.outputs.lastObject.portType;
         TNS_Player_Log('output', output);
 
@@ -157,6 +161,10 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             this._infoCallback = options.infoCallback;
 
             let audioSession = AVAudioSession.sharedInstance();
+            audioSession.setCategoryWithOptionsError(
+              AVAudioSessionCategoryAmbient,
+              AVAudioSessionCategoryOptions.DuckOthers
+            );
             let output = audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {
@@ -282,6 +290,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         if (this._player && this.isAudioPlaying()) {
           this._player.stop();
         }
+        var audioSession = AVAudioSession.sharedInstance();
+        audioSession.setActiveError(false);
         this._reset();
         resolve();
       } catch (ex) {
