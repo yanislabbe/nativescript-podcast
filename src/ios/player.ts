@@ -72,12 +72,12 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._infoCallback = options.infoCallback;
 
         let audioSession = AVAudioSession.sharedInstance();
+        audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryPlayAndRecord, AVAudioSessionCategoryOptions.DuckOthers);
         let output = audioSession.currentRoute.outputs.lastObject.portType;
         TNS_Player_Log('output', output);
 
         if (output.match(/Receiver/)) {
           try {
-            audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
             audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverride.Speaker);
             audioSession.setActiveError(true);
             TNS_Player_Log('audioSession category set and active');
@@ -157,11 +157,11 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             this._infoCallback = options.infoCallback;
 
             let audioSession = AVAudioSession.sharedInstance();
+          audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryPlayAndRecord, AVAudioSessionCategoryOptions.DuckOthers);
             let output = audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {
               try {
-                audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
                 audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverride.Speaker);
                 audioSession.setActiveError(true);
                 TNS_Player_Log('audioSession category set and active');
@@ -282,6 +282,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         if (this._player && this.isAudioPlaying()) {
           this._player.stop();
         }
+        var audioSession = AVAudioSession.sharedInstance();
+        audioSession.setActiveError(false);
         this._reset();
         resolve();
       } catch (ex) {
