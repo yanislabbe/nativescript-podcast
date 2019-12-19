@@ -1,206 +1,302 @@
-const { resolve, join  } = require("path");
+const { join, relative, resolve, sep } = require('path');
 
-const webpack = require("webpack");
-const nsWebpack = require("nativescript-dev-webpack");
-const nativescriptTarget = require("nativescript-dev-webpack/nativescript-target");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-
-
-const mainSheet = `app.css`;
+const webpack = require('webpack');
+const nsWebpack = require('nativescript-dev-webpack');
+const nativescriptTarget = require('nativescript-dev-webpack/nativescript-target');
+const { getNoEmitOnErrorFromTSConfig } = require('nativescript-dev-webpack/utils/tsconfig-utils');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { NativeScriptWorkerPlugin } = require('nativescript-worker-loader/NativeScriptWorkerPlugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const hashSalt = Date.now().toString();
 
 module.exports = env => {
-    const platform = getPlatform(env);
+  // Add your custom Activities, Services and other Android app components here.
+  const appComponents = ['tns-core-modules/ui/frame', 'tns-core-modules/ui/frame/activity'];
 
-    // Default destination inside platforms/<platform>/...
-    const path = resolve(nsWebpack.getAppPath(platform));
+  const platform = env && ((env.android && 'android') || (env.ios && 'ios'));
+  if (!platform) {
+    throw new Error('You need to provide a target platform!');
+  }
 
-    const entry = {
-        // Discover entry module from package.json
-        bundle: `./${nsWebpack.getEntryModule()}`,
+  const platforms = ['ios', 'android'];
+  const projectRoot = __dirname;
 
-        // Vendor entry with third-party libraries
-        vendor: `./vendor`,
+  // Default destination inside platforms/<platform>/...
+  const dist = resolve(projectRoot, nsWebpack.getAppPath(platform, projectRoot));
 
-        // Entry for stylesheet with global application styles
-        [mainSheet]: `./${mainSheet}`,
-    };
+  const {
+    // The 'appPath' and 'appResourcesPath' values are fetched from
+    // the nsconfig.json configuration file.
+    appPath = 'app',
+    appResourcesPath = 'app/App_Resources',
 
-    const rules = getRules();
-    const plugins = getPlugins(platform, env);
-    const extensions = getExtensions(platform);
+    // You can provide the following flags when running 'tns run android|ios'
+    snapshot, // --env.snapshot
+    production, // --env.production
+    uglify, // --env.uglify
+    report, // --env.report
+    sourceMap, // --env.sourceMap
+    hiddenSourceMap, // --env.hiddenSourceMap
+    hmr, // --env.hmr,
+    unitTesting, // --env.unitTesting,
+    verbose, // --env.verbose
+    snapshotInDocker, // --env.snapshotInDocker
+    skipSnapshotTools, // --env.skipSnapshotTools
+    compileSnapshot // --env.compileSnapshot
+  } = env;
 
-    const config = {
-        context: resolve("./app"),
-        target: nativescriptTarget,
-        entry,
-        output: {
-            pathinfo: true,
-            path,
-            libraryTarget: "commonjs2",
-            filename: "[name].js",
-        },
-        resolve: {
-            extensions,
+  const useLibs = compileSnapshot;
+  const isAnySourceMapEnabled = !!sourceMap || !!hiddenSourceMap;
+  const externals = nsWebpack.getConvertedExternals(env.externals);
 
-            // Resolve {N} system modules from tns-core-modules
-            modules: [
-                "node_modules/tns-core-modules",
-                "node_modules",
-            ],
+  const appFullPath = resolve(projectRoot, appPath);
+  const appResourcesFullPath = resolve(projectRoot, appResourcesPath);
 
-            alias: {
-                '~': resolve("./app")
+  const entryModule = nsWebpack.getEntryModule(appFullPath, platform);
+  const entryPath = `.${sep}${entryModule}.ts`;
+  const entries = { bundle: entryPath };
+
+  const tsConfigPath = resolve(projectRoot, 'tsconfig.tns.json');
+
+  const areCoreModulesExternal =
+    Array.isArray(env.externals) && env.externals.some(e => e.indexOf('tns-core-modules') > -1);
+  if (platform === 'ios' && !areCoreModulesExternal) {
+    entries['tns_modules/tns-core-modules/inspector_modules'] = 'inspector_modules';
+  }
+
+  let sourceMapFilename = nsWebpack.getSourceMapFilename(hiddenSourceMap, __dirname, dist);
+
+  const itemsToClean = [`${dist}/**/*`];
+  if (platform === 'android') {
+    itemsToClean.push(`${join(projectRoot, 'platforms', 'android', 'app', 'src', 'main', 'assets', 'snapshots')}`);
+    itemsToClean.push(
+      `${join(projectRoot, 'platforms', 'android', 'app', 'build', 'configurations', 'nativescript-android-snapshot')}`
+    );
+  }
+
+  const noEmitOnErrorFromTSConfig = getNoEmitOnErrorFromTSConfig(tsConfigPath);
+
+  nsWebpack.processAppComponents(appComponents, platform);
+  const config = {
+    mode: production ? 'production' : 'development',
+    context: appFullPath,
+    externals,
+    watchOptions: {
+      ignored: [
+        appResourcesFullPath,
+        // Don't watch hidden files
+        '**/.*'
+      ]
+    },
+    target: nativescriptTarget,
+    entry: entries,
+    output: {
+      pathinfo: false,
+      path: dist,
+      sourceMapFilename,
+      libraryTarget: 'commonjs2',
+      filename: '[name].js',
+      globalObject: 'global',
+      hashSalt
+    },
+    resolve: {
+      extensions: ['.ts', '.js', '.scss', '.css'],
+      // Resolve {N} system modules from tns-core-modules
+      modules: [
+        resolve(__dirname, 'node_modules/tns-core-modules'),
+        resolve(__dirname, 'node_modules'),
+        'node_modules/tns-core-modules',
+        'node_modules'
+      ],
+      alias: {
+        '~': appFullPath
+      },
+      // resolve symlinks to symlinked modules
+      symlinks: true
+    },
+    resolveLoader: {
+      // don't resolve symlinks to symlinked loaders
+      symlinks: false
+    },
+    node: {
+      // Disable node shims that conflict with NativeScript
+      http: false,
+      timers: false,
+      setImmediate: false,
+      fs: 'empty',
+      __dirname: false
+    },
+    devtool: hiddenSourceMap ? 'hidden-source-map' : sourceMap ? 'inline-source-map' : 'none',
+    optimization: {
+      runtimeChunk: 'single',
+      noEmitOnErrors: noEmitOnErrorFromTSConfig,
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: (module, chunks) => {
+              const moduleName = module.nameForCondition ? module.nameForCondition() : '';
+              return /[\\/]node_modules[\\/]/.test(moduleName) || appComponents.some(comp => comp === moduleName);
             },
-        },
-        node: {
-            // Disable node shims that conflict with NativeScript
-            "http": false,
-            "timers": false,
-            "setImmediate": false,
-            "fs": "empty",
-        },
-        module: { rules },
-        plugins,
-    };
-
-    if (env.snapshot) {
-        plugins.push(new nsWebpack.NativeScriptSnapshotPlugin({
-            chunk: "vendor",
-            projectRoot: __dirname,
-            webpackConfig: config,
-            targetArchs: ["arm", "arm64", "ia32"],
-            tnsJavaClassesOptions: { packages: ["tns-core-modules" ] },
-            useLibs: false
-        }));
-    }
-
-    return config;
-};
-
-
-function getPlatform(env) {
-    return env.android ? "android" :
-        env.ios ? "ios" :
-        () => { throw new Error("You need to provide a target platform!") };
-}
-
-function getRules() {
-    return [
-        {
-            test: /\.html$|\.xml$/,
-            use: [
-                "raw-loader",
-            ]
-        },
-        // Root stylesheet gets extracted with bundled dependencies
-        {
-            test: new RegExp(mainSheet),
-            use: ExtractTextPlugin.extract([
-                {
-                    loader: "resolve-url-loader",
-                    options: { silent: true },
-                },
-                {
-                    loader: "nativescript-css-loader",
-                    options: { minimize: false }
-                },
-                "nativescript-dev-webpack/platform-css-loader",
-            ]),
-        },
-        // Other CSS files get bundled using the raw loader
-        {
-            test: /\.css$/,
-            exclude: new RegExp(mainSheet),
-            use: [
-                "raw-loader",
-            ]
-        },
-        // SASS support
-        {
-            test: /\.scss$/,
-            use: [
-                "raw-loader",
-                "resolve-url-loader",
-                "sass-loader",
-            ]
-        },
-
-
-        // Compile TypeScript files, replace templateUrl and styleUrls.
-        {
-            test: /\.ts$/,
-            loaders: [
-                "awesome-typescript-loader",
-            ]
+            enforce: true
+          }
         }
+      },
+      minimize: !!uglify,
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+          cache: true,
+          sourceMap: isAnySourceMapEnabled,
+          terserOptions: {
+            output: {
+              comments: false,
+              semicolons: !isAnySourceMapEnabled
+            },
+            compress: {
+              // The Android SBG has problems parsing the output
+              // when these options are enabled
+              collapse_vars: platform !== 'android',
+              sequences: platform !== 'android'
+            }
+          }
+        })
+      ]
+    },
+    module: {
+      rules: [
+        {
+          include: join(appFullPath, entryPath),
+          use: [
+            // Require all Android app components
+            platform === 'android' && {
+              loader: 'nativescript-dev-webpack/android-app-components-loader',
+              options: { modules: appComponents }
+            },
 
-    ];
-}
+            {
+              loader: 'nativescript-dev-webpack/bundle-config-loader',
+              options: {
+                loadCss: !snapshot, // load the application css if in debug mode
+                unitTesting,
+                appFullPath,
+                projectRoot,
+                ignoredFiles: nsWebpack.getUserDefinedEntries(entries, platform)
+              }
+            }
+          ].filter(loader => !!loader)
+        },
 
-function getPlugins(platform, env) {
-    let plugins = [
-        new ExtractTextPlugin(mainSheet),
+        {
+          test: /\.(ts|css|scss|html|xml)$/,
+          use: 'nativescript-dev-webpack/hmr/hot-loader'
+        },
 
-        // Vendor libs go to the vendor.js chunk
-        new webpack.optimize.CommonsChunkPlugin({
-            name: ["vendor"],
-        }),
+        { test: /\.(html|xml)$/, use: 'nativescript-dev-webpack/xml-namespace-loader' },
 
-        // Define useful constants like TNS_WEBPACK
-        new webpack.DefinePlugin({
-            "global.TNS_WEBPACK": "true",
-        }),
+        {
+          test: /\.css$/,
+          use: 'nativescript-dev-webpack/css2json-loader'
+        },
 
-        // Copy assets to out dir. Add your own globs as needed.
-        new CopyWebpackPlugin([
-            { from: mainSheet },
-            { from: "**/*.css" },
-            { from: "fonts/**" },
-            { from: "**/*.jpg" },
-            { from: "**/*.png" },
-            { from: "**/*.xml" },
-        ], { ignore: ["App_Resources/**"] }),
+        {
+          test: /\.scss$/,
+          use: ['nativescript-dev-webpack/css2json-loader', 'sass-loader']
+        },
 
-        // Generate a bundle starter script and activate it in package.json
-        new nsWebpack.GenerateBundleStarterPlugin([
-            "./vendor",
-            "./bundle",
-        ]),
+        {
+          test: /\.ts$/,
+          use: {
+            loader: 'ts-loader',
+            options: {
+              configFile: tsConfigPath,
+              // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#faster-builds
+              // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#hot-module-replacement
+              transpileOnly: true,
+              allowTsInNodeModules: true,
+              compilerOptions: {
+                sourceMap: isAnySourceMapEnabled,
+                declaration: false
+              }
+            }
+          }
+        }
+      ]
+    },
+    plugins: [
+      // Define useful constants like TNS_WEBPACK
+      new webpack.DefinePlugin({
+        'global.TNS_WEBPACK': 'true',
+        process: 'global.process'
+      }),
+      // Remove all files from the out dir.
+      new CleanWebpackPlugin(itemsToClean, { verbose: !!verbose }),
+      // Copy assets to out dir. Add your own globs as needed.
+      new CopyWebpackPlugin(
+        [
+          { from: { glob: 'fonts/**' } },
+          { from: { glob: 'audio/**' } },
+          { from: { glob: '**/*.jpg' } },
+          { from: { glob: '**/*.png' } }
+        ],
+        { ignore: [`${relative(appPath, appResourcesFullPath)}/**`] }
+      ),
+      new nsWebpack.GenerateNativeScriptEntryPointsPlugin('bundle'),
+      // For instructions on how to set up workers with webpack
+      // check out https://github.com/nativescript/worker-loader
+      new NativeScriptWorkerPlugin(),
+      new nsWebpack.PlatformFSPlugin({
+        platform,
+        platforms
+      }),
+      // Does IPC communication with the {N} CLI to notify events when running in watch mode.
+      new nsWebpack.WatchStateLoggerPlugin(),
+      // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#faster-builds
+      // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#hot-module-replacement
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: tsConfigPath,
+        async: false,
+        useTypescriptIncrementalApi: true,
+        checkSyntacticErrors: true,
+        memoryLimit: 4096
+      })
+    ]
+  };
 
-        // Generate report files for bundles content
-        new BundleAnalyzerPlugin({
-            analyzerMode: "static",
-            openAnalyzer: false,
-            generateStatsFile: true,
-            reportFilename: join(__dirname, "report", `report.html`),
-            statsFilename: join(__dirname, "report", `stats.json`),
-        }),
-    ];
+  if (report) {
+    // Generate report files for bundles content
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
+        generateStatsFile: true,
+        reportFilename: resolve(projectRoot, 'report', `report.html`),
+        statsFilename: resolve(projectRoot, 'report', `stats.json`)
+      })
+    );
+  }
 
-    if (env.uglify) {
-        plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
+  if (snapshot) {
+    config.plugins.push(
+      new nsWebpack.NativeScriptSnapshotPlugin({
+        chunk: 'vendor',
+        requireModules: ['tns-core-modules/bundle-entry-points'],
+        projectRoot,
+        webpackConfig: config,
+        snapshotInDocker,
+        skipSnapshotTools,
+        useLibs
+      })
+    );
+  }
 
-        // Work around an Android issue by setting compress = false
-        const compress = platform !== "android";
-        plugins.push(new webpack.optimize.UglifyJsPlugin({
-            mangle: { except: nsWebpack.uglifyMangleExcludes },
-            compress,
-        }));
-    }
+  if (hmr) {
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
 
-    return plugins;
-}
-
-// Resolve platform-specific modules like module.android.js
-function getExtensions(platform) {
-    return Object.freeze([
-        `.${platform}.ts`,
-        `.${platform}.js`,
-        ".ts",
-        ".js",
-        ".css",
-        `.${platform}.css`,
-    ]);
-}
+  return config;
+};

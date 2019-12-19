@@ -1,15 +1,12 @@
+import * as app from '@nativescript/core/application';
+import { Observable } from '@nativescript/core/data/observable';
+import { File, knownFolders } from '@nativescript/core/file-system';
+import * as platform from '@nativescript/core/platform';
+import * as timer from '@nativescript/core/timer';
+import * as dialogs from '@nativescript/core/ui/dialogs';
+import { Page } from '@nativescript/core/ui/page';
+import { Slider } from '@nativescript/core/ui/slider';
 import { AudioPlayerOptions, AudioRecorderOptions, TNSPlayer, TNSRecorder } from 'nativescript-audio';
-import * as app from 'tns-core-modules/application';
-import { Observable } from 'tns-core-modules/data/observable';
-import { File, knownFolders } from 'tns-core-modules/file-system';
-import * as platform from 'tns-core-modules/platform';
-import * as timer from 'tns-core-modules/timer';
-import * as dialogs from 'tns-core-modules/ui/dialogs';
-import { Page } from 'tns-core-modules/ui/page';
-import { Slider } from 'tns-core-modules/ui/slider';
-import './async-await';
-
-declare const android;
 
 export class AudioDemo extends Observable {
   @ObservableProperty() public isPlaying: boolean;

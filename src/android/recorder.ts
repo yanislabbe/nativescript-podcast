@@ -1,6 +1,5 @@
 import * as permissions from 'nativescript-permissions';
 import * as app from 'tns-core-modules/application';
-import '../async-await';
 import { TNSRecorderUtil, TNSRecordI, TNS_Recorder_Log } from '../common';
 import { AudioRecorderOptions } from '../options';
 

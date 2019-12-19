@@ -59,8 +59,6 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
       }
 
       try {
-        let audioPath;
-
         let fileName = isString(options.audioFile) ? options.audioFile.trim() : '';
         if (fileName.indexOf('~/') === 0) {
           fileName = path.join(knownFolders.currentApp().path, fileName.replace('~/', ''));
@@ -71,12 +69,12 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._errorCallback = options.errorCallback;
         this._infoCallback = options.infoCallback;
 
-        let audioSession = AVAudioSession.sharedInstance();
+        const audioSession = AVAudioSession.sharedInstance();
         audioSession.setCategoryWithOptionsError(
           AVAudioSessionCategoryAmbient,
           AVAudioSessionCategoryOptions.DuckOthers
         );
-        let output = audioSession.currentRoute.outputs.lastObject.portType;
+        const output = audioSession.currentRoute.outputs.lastObject.portType;
         TNS_Player_Log('output', output);
 
         if (output.match(/Receiver/)) {
@@ -160,12 +158,12 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
             this._errorCallback = options.errorCallback;
             this._infoCallback = options.infoCallback;
 
-            let audioSession = AVAudioSession.sharedInstance();
+            const audioSession = AVAudioSession.sharedInstance();
             audioSession.setCategoryWithOptionsError(
               AVAudioSessionCategoryAmbient,
               AVAudioSessionCategoryOptions.DuckOthers
             );
-            let output = audioSession.currentRoute.outputs.lastObject.portType;
+            const output = audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {
               try {
@@ -290,7 +288,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         if (this._player && this.isAudioPlaying()) {
           this._player.stop();
         }
-        var audioSession = AVAudioSession.sharedInstance();
+        const audioSession = AVAudioSession.sharedInstance();
         audioSession.setActiveError(false);
         this._reset();
         resolve();
