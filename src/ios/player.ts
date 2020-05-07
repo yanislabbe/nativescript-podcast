@@ -70,9 +70,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._infoCallback = options.infoCallback;
 
         const audioSession = AVAudioSession.sharedInstance();
-        audioSession.setCategoryWithOptionsError(
-          AVAudioSessionCategoryAmbient,
-          AVAudioSessionCategoryOptions.DuckOthers
+        audioSession.setCategoryError(
+          AVAudioSessionCategoryAmbient
         );
         const output = audioSession.currentRoute.outputs.lastObject.portType;
         TNS_Player_Log('output', output);
