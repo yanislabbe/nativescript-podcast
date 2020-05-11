@@ -83,8 +83,11 @@ export class TNSPlayer implements TNSPlayerI {
         }
 
         // request audio focus, this will setup the onAudioFocusChangeListener
-        this._mAudioFocusGranted = this._requestAudioFocus();
-        TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
+        if (!options.audioMixing) {
+          this._mAudioFocusGranted = this._requestAudioFocus();
+          TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
+        }
+
 
         this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
 
