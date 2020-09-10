@@ -1,27 +1,58 @@
-import { knownFolders, path as nsFilePath, Utils } from '@nativescript/core';
+import { knownFolders, path as nsFilePath, Utils, Observable } from '@nativescript/core';
 import { TNSPlayerI } from '../common';
 import { AudioPlayerOptions } from '../options';
 
 declare var AVAudioPlayer;
 
 @NativeClass()
-export class TNSPlayer extends NSObject implements TNSPlayerI {
-  public static ObjCProtocols = [AVAudioPlayerDelegate];
+export class TNSPlayerDelegate extends NSObject implements AVAudioPlayerDelegate {
+  static ObjCProtocols = [AVAudioPlayerDelegate];
+  private _owner: WeakRef<TNSPlayer>;
+
+  static initWithOwner(owner: TNSPlayer) {
+    const delegate = <TNSPlayerDelegate>TNSPlayerDelegate.new();
+    delegate._owner = new WeakRef(owner);
+    return delegate;
+  }
+
+  audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean) {
+    const owner = this._owner.get();
+    if (owner) {
+      if (flag && owner.completeCallback) {
+        owner.completeCallback({ player, flag });
+      } else if (!flag && owner.errorCallback) {
+        owner.errorCallback({ player, flag });
+      }
+    }
+  }
+
+  audioPlayerDecodeErrorDidOccurError(player: any, error: NSError) {
+    const owner = this._owner.get();
+    if (owner) {
+      if (owner.errorCallback) {
+        owner.errorCallback({ player, error });
+      }
+    }
+  }
+}
+
+export class TNSPlayer extends Observable implements TNSPlayerI {
+  completeCallback: any;
+  errorCallback: any;
+  infoCallback: any;
+
   private _player: AVAudioPlayer;
   private _task: NSURLSessionDataTask;
-  private _completeCallback: any;
-  private _errorCallback: any;
-  private _infoCallback: any;
 
   get ios(): any {
     return this._player;
   }
 
-  public get volume(): number {
+  get volume(): number {
     return this._player ? this._player.volume : 0;
   }
 
-  public set volume(value: number) {
+  set volume(value: number) {
     if (this._player && value >= 0) {
       this._player.volume = value;
     }
@@ -60,9 +91,9 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           fileName = nsFilePath.join(knownFolders.currentApp().path, fileName.replace('~/', ''));
         }
 
-        this._completeCallback = options.completeCallback;
-        this._errorCallback = options.errorCallback;
-        this._infoCallback = options.infoCallback;
+        this.completeCallback = options.completeCallback;
+        this.errorCallback = options.errorCallback;
+        this.infoCallback = options.infoCallback;
 
         const audioSession = AVAudioSession.sharedInstance();
         audioSession.setCategoryWithOptionsError(
@@ -87,7 +118,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           reject(errorRef.value);
           return;
         } else if (this._player) {
-          this._player.delegate = this;
+          this._player.delegate = TNSPlayerDelegate.initWithOwner(this);
 
           // enableRate to change playback speed
           this._player.enableRate = true;
@@ -109,8 +140,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           reject();
         }
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -137,16 +168,16 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           NSURL.URLWithString(options.audioFile),
           (data, response, error) => {
             if (error !== null) {
-              if (this._errorCallback) {
-                this._errorCallback({ error });
+              if (this.errorCallback) {
+                this.errorCallback({ error });
               }
 
               reject();
             }
 
-            this._completeCallback = options.completeCallback;
-            this._errorCallback = options.errorCallback;
-            this._infoCallback = options.infoCallback;
+            this.completeCallback = options.completeCallback;
+            this.errorCallback = options.errorCallback;
+            this.infoCallback = options.infoCallback;
 
             const audioSession = AVAudioSession.sharedInstance();
             audioSession.setCategoryWithOptionsError(
@@ -171,7 +202,7 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
               reject(errorRef.value);
               return;
             } else if (this._player) {
-              this._player.delegate = this;
+              this._player.delegate = TNSPlayerDelegate.initWithOwner(this);
 
               // enableRate to change playback speed
               this._player.enableRate = true;
@@ -195,8 +226,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
 
         this._task.resume();
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -211,8 +242,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           resolve(true);
         }
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -227,8 +258,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
           resolve(true);
         }
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -271,8 +302,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         this._reset();
         resolve();
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -289,8 +320,8 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         const duration = this._player ? this._player.duration : 0;
         resolve(duration.toString());
       } catch (ex) {
-        if (this._errorCallback) {
-          this._errorCallback({ ex });
+        if (this.errorCallback) {
+          this.errorCallback({ ex });
         }
         reject(ex);
       }
@@ -304,20 +335,6 @@ export class TNSPlayer extends NSObject implements TNSPlayerI {
         speed = parseFloat(speed);
       }
       this._player.rate = speed;
-    }
-  }
-
-  public audioPlayerDidFinishPlayingSuccessfully(player?: any, flag?: boolean) {
-    if (flag && this._completeCallback) {
-      this._completeCallback({ player, flag });
-    } else if (!flag && this._errorCallback) {
-      this._errorCallback({ player, flag });
-    }
-  }
-
-  public audioPlayerDecodeErrorDidOccurError(player: any, error: NSError) {
-    if (this._errorCallback) {
-      this._errorCallback({ player, error });
     }
   }
 
