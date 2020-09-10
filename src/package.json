@@ -12,7 +12,7 @@
   },
   "scripts": {
     "tsc": "tsc -skipLibCheck",
-    "build": "npm i && tsc",
+    "build": "npm i && ts-patch install && tsc",
     "tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/node_modules/**\" --exclude \"*demo*/platforms/**\"",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/typings/**'",
     "demo.ios": "npm run setup && cd ../demo && tns run ios",
@@ -68,6 +68,7 @@
   "devDependencies": {
     "@nativescript/core": "^7.0.0",
     "@nativescript/types": "^7.0.0",
+    "@nativescript/webpack": "~3.0.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
     "prettier": "^2.1.1",
