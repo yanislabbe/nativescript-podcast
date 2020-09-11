@@ -1,13 +1,44 @@
+import { Observable } from '@nativescript/core';
 import { TNSRecordI } from '../common';
 import { AudioRecorderOptions } from '../options';
 
 @NativeClass()
-export class TNSRecorder extends NSObject implements TNSRecordI {
-  public static ObjCProtocols = [AVAudioRecorderDelegate];
+export class TNS_RecorderDelegate extends NSObject implements AVAudioRecorderDelegate {
+  static ObjCProtocols = [AVAudioRecorderDelegate];
+  private _owner: WeakRef<TNSRecorder>;
+
+  static initWithOwner(owner: TNSRecorder) {
+    const delegate = <TNS_RecorderDelegate>TNS_RecorderDelegate.new();
+    delegate._owner = new WeakRef(owner);
+    return delegate;
+  }
+
+  audioRecorderDidFinishRecording(recorder: any, success: boolean) {
+    console.log(`audioRecorderDidFinishRecording: ${success}`);
+    const owner = this._owner.get();
+    if (owner) {
+      // owner.notify({
+      //   eventName: 'RecorderFinished',
+      // })
+    }
+  }
+
+  audioRecorderDidFinishRecordingSuccessfully(recorder: AVAudioRecorder, flag) {
+    console.log(`audioRecorderDidFinishRecordingSuccessfully: ${flag}`);
+    const owner = this._owner.get();
+    if (owner) {
+      // owner.notify({
+      //   eventName: 'RecorderFinishedSuccessfully',
+      // })
+    }
+  }
+}
+
+export class TNSRecorder extends Observable implements TNSRecordI {
   private _recorder: any;
   private _recordingSession: any;
 
-  public static CAN_RECORD(): boolean {
+  static CAN_RECORD(): boolean {
     return true;
   }
 
@@ -15,7 +46,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     return this._recorder;
   }
 
-  public requestRecordPermission() {
+  requestRecordPermission() {
     return new Promise((resolve, reject) => {
       this._recordingSession.requestRecordPermission((allowed: boolean) => {
         if (allowed) {
@@ -27,7 +58,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public start(options: AudioRecorderOptions): Promise<any> {
+  start(options: AudioRecorderOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         this._recordingSession = AVAudioSession.sharedInstance();
@@ -61,7 +92,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
             if (errorRef && errorRef.value) {
               console.error(`initWithURLSettingsError errorRef: ${errorRef.value}, ${errorRef}`);
             } else {
-              this._recorder.delegate = this;
+              this._recorder.delegate = TNS_RecorderDelegate.initWithOwner(this);
               if (options.metering) {
                 this._recorder.meteringEnabled = true;
               }
@@ -77,7 +108,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public pause(): Promise<any> {
+  pause(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
@@ -90,7 +121,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public resume(): Promise<any> {
+  resume(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
@@ -103,7 +134,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public stop(): Promise<any> {
+  stop(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
@@ -119,7 +150,7 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public dispose(): Promise<any> {
+  dispose(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         if (this._recorder) {
@@ -136,11 +167,11 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
     });
   }
 
-  public isRecording() {
+  isRecording() {
     return this._recorder && this._recorder.recording;
   }
 
-  public getMeters(channel?: number) {
+  getMeters(channel?: number) {
     if (this._recorder) {
       if (!this._recorder.meteringEnabled) {
         this._recorder.meteringEnabled = true;
@@ -148,9 +179,5 @@ export class TNSRecorder extends NSObject implements TNSRecordI {
       this._recorder.updateMeters();
       return this._recorder.averagePowerForChannel(channel);
     }
-  }
-
-  public audioRecorderDidFinishRecording(recorder: any, success: boolean) {
-    console.log(`audioRecorderDidFinishRecording: ${success}`);
   }
 }
