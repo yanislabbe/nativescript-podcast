@@ -3,12 +3,12 @@ import { TNSRecordI } from '../common';
 import { AudioRecorderOptions } from '../options';
 
 @NativeClass()
-export class TNS_RecorderDelegate extends NSObject implements AVAudioRecorderDelegate {
+export class TNSRecorderDelegate extends NSObject implements AVAudioRecorderDelegate {
   static ObjCProtocols = [AVAudioRecorderDelegate];
   private _owner: WeakRef<TNSRecorder>;
 
   static initWithOwner(owner: TNSRecorder) {
-    const delegate = <TNS_RecorderDelegate>TNS_RecorderDelegate.new();
+    const delegate = <TNSRecorderDelegate>TNSRecorderDelegate.new();
     delegate._owner = new WeakRef(owner);
     return delegate;
   }
@@ -92,7 +92,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
             if (errorRef && errorRef.value) {
               console.error(`initWithURLSettingsError errorRef: ${errorRef.value}, ${errorRef}`);
             } else {
-              this._recorder.delegate = TNS_RecorderDelegate.initWithOwner(this);
+              this._recorder.delegate = TNSRecorderDelegate.initWithOwner(this);
               if (options.metering) {
                 this._recorder.meteringEnabled = true;
               }
