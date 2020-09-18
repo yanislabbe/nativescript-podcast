@@ -1,6 +1,6 @@
 {
-  "name": "@alexgritton/nativescript-audio",
-  "version": "1.0.0",
+  "name": "nativescript-audio",
+  "version": "5.0.5",
   "description": "NativeScript plugin to record and play audio.",
   "main": "audio",
   "typings": "index.d.ts",
@@ -38,12 +38,9 @@
       "git add"
     ]
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexgritton/nativescript-audio.git"
+    "url": "https://github.com/bradmartin/nativescript-audio.git"
   },
   "keywords": [
     "NativeScript",
@@ -64,8 +61,7 @@
     "url": "https://github.com/bradmartin",
     "email": "bmartin@nstudio.io"
   },
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Nathan Walker",
       "email": "walkerrunpdx@gmail.com",
       "url": "https://github.com/NathanWalker"
