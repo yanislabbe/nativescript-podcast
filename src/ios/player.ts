@@ -96,10 +96,18 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
         this.infoCallback = options.infoCallback;
 
         const audioSession = AVAudioSession.sharedInstance();
-        audioSession.setCategoryWithOptionsError(
-          AVAudioSessionCategoryAmbient,
-          AVAudioSessionCategoryOptions.DuckOthers
-        );
+        if (options.audioMixing) {
+          audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+            AVAudioSessionCategoryOptions.MixWithOthers
+          );
+        }
+        else {
+          audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+            AVAudioSessionCategoryOptions.DuckOthers
+          );
+        }
+
+
         const output = audioSession.currentRoute.outputs.lastObject.portType;
 
         if (output.match(/Receiver/)) {
@@ -180,10 +188,16 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
             this.infoCallback = options.infoCallback;
 
             const audioSession = AVAudioSession.sharedInstance();
-            audioSession.setCategoryWithOptionsError(
-              AVAudioSessionCategoryAmbient,
-              AVAudioSessionCategoryOptions.DuckOthers
-            );
+            if (options.audioMixing) {
+              audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+                AVAudioSessionCategoryOptions.MixWithOthers
+              );
+            }
+            else {
+              audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+                AVAudioSessionCategoryOptions.DuckOthers
+              );
+            }
             const output = audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {

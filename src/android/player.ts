@@ -71,11 +71,19 @@ export class TNSPlayer implements TNSPlayerI {
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
+        this._options = options;
         if (options.autoPlay !== false) {
           options.autoPlay = true;
         }
 
-        this._options = options;
+        if (!this._player) {
+          this._player = new android.media.MediaPlayer();
+        }
+
+        // request audio focus, this will setup the onAudioFocusChangeListener
+        if (!options.audioMixing) {
+          this._mAudioFocusGranted = this._requestAudioFocus();
+        }
 
         const audioPath = resolveAudioFilePath(options.audioFile);
         this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);

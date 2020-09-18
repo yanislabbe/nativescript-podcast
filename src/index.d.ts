@@ -20,6 +20,7 @@ export interface AudioPlayerOptions {
    * Set true to enable audio metering.
    */
   metering?: boolean;
+  audioMixing?: boolean;
 
   /**
    * Callback to execute when playback has completed.
