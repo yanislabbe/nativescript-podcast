@@ -12,7 +12,9 @@ export class TNSRecorder implements TNSRecordI {
 
   public static CAN_RECORD(): boolean {
     const pManager = Application.android.context.getPackageManager();
-    const canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
+    const canRecord = pManager.hasSystemFeature(
+      android.content.pm.PackageManager.FEATURE_MICROPHONE
+    );
     if (canRecord) {
       return true;
     } else {
@@ -23,7 +25,9 @@ export class TNSRecorder implements TNSRecordI {
   public requestRecordPermission(explanation = '') {
     return new Promise(async (resolve, reject) => {
       try {
-        await requestPermission((android as any).Manifest.permission.RECORD_AUDIO).catch(err => {
+        await requestPermission(
+          (android as any).Manifest.permission.RECORD_AUDIO
+        ).catch(err => {
           reject(err);
         });
         resolve();
@@ -34,7 +38,9 @@ export class TNSRecorder implements TNSRecordI {
   }
 
   public hasRecordPermission() {
-    const permission = hasPermission((android as any).Manifest.permission.RECORD_AUDIO);
+    const permission = hasPermission(
+      (android as any).Manifest.permission.RECORD_AUDIO
+    );
     return !0 === permission ? !0 : !1;
   }
 

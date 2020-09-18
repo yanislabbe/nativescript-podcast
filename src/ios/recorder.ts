@@ -3,7 +3,9 @@ import { TNSRecordI } from '../common';
 import { AudioRecorderOptions } from '../options';
 
 @NativeClass()
-export class TNSRecorderDelegate extends NSObject implements AVAudioRecorderDelegate {
+export class TNSRecorderDelegate
+  extends NSObject
+  implements AVAudioRecorderDelegate {
   static ObjCProtocols = [AVAudioRecorderDelegate];
   private _owner: WeakRef<TNSRecorder>;
 
@@ -63,7 +65,10 @@ export class TNSRecorder extends Observable implements TNSRecordI {
       try {
         this._recordingSession = AVAudioSession.sharedInstance();
         let errorRef = new interop.Reference();
-        this._recordingSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord, errorRef);
+        this._recordingSession.setCategoryError(
+          AVAudioSessionCategoryPlayAndRecord,
+          errorRef
+        );
         if (errorRef) {
           console.error(`setCategoryError: ${errorRef.value}, ${errorRef}`);
         }
@@ -75,22 +80,38 @@ export class TNSRecorder extends Observable implements TNSRecordI {
             //   (<any>["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]));
 
             const recordSetting = NSMutableDictionary.alloc().init();
-            recordSetting.setValueForKey(NSNumber.numberWithInt(kAudioFormatMPEG4AAC), 'AVFormatIDKey');
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt(kAudioFormatMPEG4AAC),
+              'AVFormatIDKey'
+            );
             // recordSetting.setValueForKey(
             //   NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue),
             //   'AVEncoderAudioQualityKey'
             // );
-            recordSetting.setValueForKey(NSNumber.numberWithInt(AVAudioQuality.Medium), 'AVEncoderAudioQualityKey');
-            recordSetting.setValueForKey(NSNumber.numberWithFloat(16000.0), 'AVSampleRateKey');
-            recordSetting.setValueForKey(NSNumber.numberWithInt(1), 'AVNumberOfChannelsKey');
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt(AVAudioQuality.Medium),
+              'AVEncoderAudioQualityKey'
+            );
+            recordSetting.setValueForKey(
+              NSNumber.numberWithFloat(16000.0),
+              'AVSampleRateKey'
+            );
+            recordSetting.setValueForKey(
+              NSNumber.numberWithInt(1),
+              'AVNumberOfChannelsKey'
+            );
 
             errorRef = new interop.Reference();
 
             const url = NSURL.fileURLWithPath(options.filename);
 
-            this._recorder = (<any>AVAudioRecorder.alloc()).initWithURLSettingsError(url, recordSetting, errorRef);
+            this._recorder = (<any>(
+              AVAudioRecorder.alloc()
+            )).initWithURLSettingsError(url, recordSetting, errorRef);
             if (errorRef && errorRef.value) {
-              console.error(`initWithURLSettingsError errorRef: ${errorRef.value}, ${errorRef}`);
+              console.error(
+                `initWithURLSettingsError errorRef: ${errorRef.value}, ${errorRef}`
+              );
             } else {
               this._recorder.delegate = TNSRecorderDelegate.initWithOwner(this);
               if (options.metering) {

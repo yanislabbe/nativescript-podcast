@@ -1,11 +1,18 @@
-import { knownFolders, path as nsFilePath, Utils, Observable } from '@nativescript/core';
+import {
+  knownFolders,
+  Observable,
+  path as nsFilePath,
+  Utils
+} from '@nativescript/core';
 import { TNSPlayerI } from '../common';
 import { AudioPlayerOptions } from '../options';
 
 declare var AVAudioPlayer;
 
 @NativeClass()
-export class TNSPlayerDelegate extends NSObject implements AVAudioPlayerDelegate {
+export class TNSPlayerDelegate
+  extends NSObject
+  implements AVAudioPlayerDelegate {
   static ObjCProtocols = [AVAudioPlayerDelegate];
   private _owner: WeakRef<TNSPlayer>;
 
@@ -86,9 +93,14 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
       }
 
       try {
-        let fileName = Utils.isString(options.audioFile) ? options.audioFile.trim() : '';
+        let fileName = Utils.isString(options.audioFile)
+          ? options.audioFile.trim()
+          : '';
         if (fileName.indexOf('~/') === 0) {
-          fileName = nsFilePath.join(knownFolders.currentApp().path, fileName.replace('~/', ''));
+          fileName = nsFilePath.join(
+            knownFolders.currentApp().path,
+            fileName.replace('~/', '')
+          );
         }
 
         this.completeCallback = options.completeCallback;
@@ -97,23 +109,25 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
         const audioSession = AVAudioSession.sharedInstance();
         if (options.audioMixing) {
-          audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+          audioSession.setCategoryWithOptionsError(
+            AVAudioSessionCategoryAmbient,
             AVAudioSessionCategoryOptions.MixWithOthers
           );
-        }
-        else {
-          audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+        } else {
+          audioSession.setCategoryWithOptionsError(
+            AVAudioSessionCategoryAmbient,
             AVAudioSessionCategoryOptions.DuckOthers
           );
         }
-
 
         const output = audioSession.currentRoute.outputs.lastObject.portType;
 
         if (output.match(/Receiver/)) {
           try {
             audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
-            audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverride.Speaker);
+            audioSession.overrideOutputAudioPortError(
+              AVAudioSessionPortOverride.Speaker
+            );
             audioSession.setActiveError(true);
           } catch (err) {
             console.error('setting audioSession catergory failed', err);
@@ -121,7 +135,10 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
         }
 
         const errorRef = new interop.Reference();
-        this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(NSURL.fileURLWithPath(fileName), errorRef);
+        this._player = AVAudioPlayer.alloc().initWithContentsOfURLError(
+          NSURL.fileURLWithPath(fileName),
+          errorRef
+        );
         if (errorRef && errorRef.value) {
           reject(errorRef.value);
           return;
@@ -189,21 +206,27 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
             const audioSession = AVAudioSession.sharedInstance();
             if (options.audioMixing) {
-              audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+              audioSession.setCategoryWithOptionsError(
+                AVAudioSessionCategoryAmbient,
                 AVAudioSessionCategoryOptions.MixWithOthers
               );
-            }
-            else {
-              audioSession.setCategoryWithOptionsError(AVAudioSessionCategoryAmbient,
+            } else {
+              audioSession.setCategoryWithOptionsError(
+                AVAudioSessionCategoryAmbient,
                 AVAudioSessionCategoryOptions.DuckOthers
               );
             }
-            const output = audioSession.currentRoute.outputs.lastObject.portType;
+            const output =
+              audioSession.currentRoute.outputs.lastObject.portType;
 
             if (output.match(/Receiver/)) {
               try {
-                audioSession.setCategoryError(AVAudioSessionCategoryPlayAndRecord);
-                audioSession.overrideOutputAudioPortError(AVAudioSessionPortOverride.Speaker);
+                audioSession.setCategoryError(
+                  AVAudioSessionCategoryPlayAndRecord
+                );
+                audioSession.overrideOutputAudioPortError(
+                  AVAudioSessionPortOverride.Speaker
+                );
                 audioSession.setActiveError(true);
               } catch (err) {
                 console.error('Setting audioSession category failed.', err);
@@ -211,7 +234,10 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
             }
 
             const errorRef = new interop.Reference();
-            this._player = AVAudioPlayer.alloc().initWithDataError(data, errorRef);
+            this._player = AVAudioPlayer.alloc().initWithDataError(
+              data,
+              errorRef
+            );
             if (errorRef && errorRef.value) {
               reject(errorRef.value);
               return;

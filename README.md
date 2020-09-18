@@ -19,10 +19,12 @@
 
 ## Installation
 
-NativeScript 7+:
-`tns plugin add nativescript-audio`
+#### NativeScript 7+:
 
-NativeScript Version prior to 7:
+`ns plugin add nativescript-audio`
+
+#### NativeScript Version prior to 7:
+
 `tns plugin add nativescript-audio@5.1.1`
 
 ---
@@ -136,10 +138,10 @@ const playerOptions = {
 
 player
   .playFromUrl(playerOptions)
-  .then(function (res) {
+  .then(res => {
     console.log(res);
   })
-  .catch(function (err) {
+  .catch(err => {
     console.log('something went wrong...', err);
   });
 ```

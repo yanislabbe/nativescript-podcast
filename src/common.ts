@@ -120,7 +120,10 @@ export function resolveAudioFilePath(path: string) {
       let audioPath;
       let fileName = Utils.isString(path) ? path.trim() : '';
       if (fileName.indexOf('~/') === 0) {
-        fileName = nsFilePath.join(knownFolders.currentApp().path, fileName.replace('~/', ''));
+        fileName = nsFilePath.join(
+          knownFolders.currentApp().path,
+          fileName.replace('~/', '')
+        );
         audioPath = fileName;
       } else {
         audioPath = fileName;

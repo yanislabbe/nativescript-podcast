@@ -9,7 +9,12 @@ import {
   Slider,
   Utils
 } from '@nativescript/core';
-import { AudioPlayerOptions, AudioRecorderOptions, TNSPlayer, TNSRecorder } from 'nativescript-audio';
+import {
+  AudioPlayerOptions,
+  AudioRecorderOptions,
+  TNSPlayer,
+  TNSRecorder
+} from 'nativescript-audio';
 
 export class AudioDemo extends Observable {
   @ObservableProperty() public isPlaying: boolean;
@@ -80,7 +85,9 @@ export class AudioDemo extends Observable {
         androidEncoder = 3;
       }
 
-      const recordingPath = `${audioFolder.path}/recording.${this.platformExtension()}`;
+      const recordingPath = `${
+        audioFolder.path
+      }/recording.${this.platformExtension()}`;
 
       const recorderOptions: AudioRecorderOptions = {
         filename: recordingPath,
@@ -144,7 +151,9 @@ export class AudioDemo extends Observable {
   public getFile(args) {
     try {
       const audioFolder = knownFolders.currentApp().getFolder('audio');
-      const recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
+      const recordedFile = audioFolder.getFile(
+        `recording.${this.platformExtension()}`
+      );
       console.log(JSON.stringify(recordedFile));
       console.log('recording exists: ' + File.exists(recordedFile.path));
       this.recordedAudioFile = recordedFile.path;
@@ -155,7 +164,9 @@ export class AudioDemo extends Observable {
 
   public async playRecordedFile(args) {
     const audioFolder = knownFolders.currentApp().getFolder('audio');
-    const recordedFile = audioFolder.getFile(`recording.${this.platformExtension()}`);
+    const recordedFile = audioFolder.getFile(
+      `recording.${this.platformExtension()}`
+    );
     console.log('RECORDED FILE : ' + JSON.stringify(recordedFile));
 
     const playerOptions: AudioPlayerOptions = {
