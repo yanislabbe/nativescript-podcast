@@ -40,6 +40,8 @@ export class TNSRecorder extends Observable implements TNSRecordI {
   private _recorder: any;
   private _recordingSession: any;
 
+  private _recorderOptions: AudioRecorderOptions;
+
   static CAN_RECORD(): boolean {
     return true;
   }
@@ -61,6 +63,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
   }
 
   start(options: AudioRecorderOptions): Promise<any> {
+    this._recorderOptions = options;
     return new Promise((resolve, reject) => {
       try {
         this._recordingSession = AVAudioSession.sharedInstance();
@@ -80,10 +83,12 @@ export class TNSRecorder extends Observable implements TNSRecordI {
             //   (<any>["AVFormatIDKey", "AVEncoderAudioQualityKey", "AVSampleRateKey", "AVNumberOfChannelsKey"]));
 
             const recordSetting = NSMutableDictionary.alloc().init();
-            recordSetting.setValueForKey(
-              NSNumber.numberWithInt(kAudioFormatMPEG4AAC),
-              'AVFormatIDKey'
-            );
+
+            if (options.format) {
+                recordSetting.setValueForKey(NSNumber.numberWithInt(options.format), 'AVFormatIDKey');
+            } else {
+                recordSetting.setValueForKey(NSNumber.numberWithInt(kAudioFormatMPEG4AAC), 'AVFormatIDKey');
+            }
             // recordSetting.setValueForKey(
             //   NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue),
             //   'AVEncoderAudioQualityKey'
@@ -117,8 +122,13 @@ export class TNSRecorder extends Observable implements TNSRecordI {
               if (options.metering) {
                 this._recorder.meteringEnabled = true;
               }
-              this._recorder.prepareToRecord();
-              this._recorder.record();
+              if (options.maxDuration) {
+                  this._recorder.recordForDuration(options.maxDuration / 1000);
+              } else {
+                  this._recorder.prepareToRecord();
+                  this._recorder.record();
+              }
+
               resolve();
             }
           }

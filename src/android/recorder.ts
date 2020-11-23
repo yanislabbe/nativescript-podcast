@@ -78,6 +78,9 @@ export class TNSRecorder implements TNSRecordI {
         if (options.bitRate) {
           this._recorder.setAudioEncodingBitRate(options.bitRate);
         }
+        if (options.maxDuration) {
+            this._recorder.setMaxDuration(options.maxDuration);
+        }
 
         this._recorder.setOutputFile(options.filename);
 
