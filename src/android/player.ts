@@ -316,13 +316,17 @@ export class TNSPlayer implements TNSPlayerI {
       ) as android.media.AudioManager;
 
       // Request audio focus for play back
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      if (
+        android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
+      ) {
         const playbackAttributes = new android.media.AudioAttributes.Builder()
           .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
           .setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
           .build();
 
-        this._audioFocusRequest = new android.media.AudioFocusRequest.Builder(android.media.AudioManager.AUDIOFOCUS_GAIN)
+        this._audioFocusRequest = new android.media.AudioFocusRequest.Builder(
+          android.media.AudioManager.AUDIOFOCUS_GAIN
+        )
           .setAudioAttributes(playbackAttributes)
           .setAcceptsDelayedFocusGain(true)
           .setOnAudioFocusChangeListener(this._mOnAudioFocusChangeListener)
@@ -335,7 +339,7 @@ export class TNSPlayer implements TNSPlayerI {
           this._durationHint
         );
       }
-      
+
       if (
         focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED
       ) {

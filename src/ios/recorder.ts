@@ -85,9 +85,15 @@ export class TNSRecorder extends Observable implements TNSRecordI {
             const recordSetting = NSMutableDictionary.alloc().init();
 
             if (options.format) {
-                recordSetting.setValueForKey(NSNumber.numberWithInt(options.format), 'AVFormatIDKey');
+              recordSetting.setValueForKey(
+                NSNumber.numberWithInt(options.format),
+                'AVFormatIDKey'
+              );
             } else {
-                recordSetting.setValueForKey(NSNumber.numberWithInt(kAudioFormatMPEG4AAC), 'AVFormatIDKey');
+              recordSetting.setValueForKey(
+                NSNumber.numberWithInt(kAudioFormatMPEG4AAC),
+                'AVFormatIDKey'
+              );
             }
             // recordSetting.setValueForKey(
             //   NSNumber.numberWithInt((<any>AVAudioQuality).Medium.rawValue),
@@ -123,10 +129,10 @@ export class TNSRecorder extends Observable implements TNSRecordI {
                 this._recorder.meteringEnabled = true;
               }
               if (options.maxDuration) {
-                  this._recorder.recordForDuration(options.maxDuration / 1000);
+                this._recorder.recordForDuration(options.maxDuration / 1000);
               } else {
-                  this._recorder.prepareToRecord();
-                  this._recorder.record();
+                this._recorder.prepareToRecord();
+                this._recorder.record();
               }
 
               resolve();
