@@ -25,6 +25,21 @@ export class TNSPlayer implements TNSPlayerI {
     durationHint: AudioFocusDurationHint = AudioFocusDurationHint.AUDIOFOCUS_GAIN
   ) {
     this._durationHint = durationHint;
+
+    // Request audio focus for play back
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      const playbackAttributes = new android.media.AudioAttributes.Builder()
+        .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
+        .setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build();
+      this._audioFocusRequest = new android.media.AudioFocusRequest.Builder(
+        android.media.AudioManager.AUDIOFOCUS_GAIN
+      )
+        .setAudioAttributes(playbackAttributes)
+        .setAcceptsDelayedFocusGain(true)
+        .setOnAudioFocusChangeListener(this._mOnAudioFocusChangeListener)
+        .build();
+    }
   }
 
   public get events() {
@@ -120,7 +135,7 @@ export class TNSPlayer implements TNSPlayerI {
               if (options.autoPlay) {
                 this.play();
               }
-              resolve();
+              resolve(null);
             }
           })
         );
@@ -169,6 +184,7 @@ export class TNSPlayer implements TNSPlayerI {
   public play(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
+        console.log('player play()');
         if (this._player && !this._player.isPlaying()) {
           // request audio focus, this will setup the onAudioFocusChangeListener
           this._mAudioFocusGranted = this._requestAudioFocus();
@@ -262,7 +278,7 @@ export class TNSPlayer implements TNSPlayerI {
 
           this._abandonAudioFocus();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -319,18 +335,6 @@ export class TNSPlayer implements TNSPlayerI {
       if (
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
       ) {
-        const playbackAttributes = new android.media.AudioAttributes.Builder()
-          .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
-          .setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
-          .build();
-
-        this._audioFocusRequest = new android.media.AudioFocusRequest.Builder(
-          android.media.AudioManager.AUDIOFOCUS_GAIN
-        )
-          .setAudioAttributes(playbackAttributes)
-          .setAcceptsDelayedFocusGain(true)
-          .setOnAudioFocusChangeListener(this._mOnAudioFocusChangeListener)
-          .build();
         focusResult = am.requestAudioFocus(this._audioFocusRequest);
       } else {
         focusResult = am.requestAudioFocus(
@@ -358,9 +362,13 @@ export class TNSPlayer implements TNSPlayerI {
     let result = null;
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      console.log('abandonAudioFocusRequest...', this._audioFocusRequest);
       result = am.abandonAudioFocusRequest(this._audioFocusRequest);
-      this._audioFocusRequest = null;
+      console.log('abandonAudioFocusRequest...result...', result);
+
+      // this._audioFocusRequest = null;
     } else {
+      console.log('abandonAudioFocus...', this._mOnAudioFocusChangeListener);
       result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
     }
 
