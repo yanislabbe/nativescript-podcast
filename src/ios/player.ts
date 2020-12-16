@@ -160,7 +160,7 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
             this._player.play();
           }
 
-          resolve();
+          resolve(null);
         } else {
           reject();
         }
@@ -257,7 +257,7 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
                 this._player.play();
               }
 
-              resolve();
+              resolve(null);
             } else {
               reject();
             }
@@ -340,7 +340,7 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
         const audioSession = AVAudioSession.sharedInstance();
         audioSession.setActiveError(false);
         this._reset();
-        resolve();
+        resolve(null);
       } catch (ex) {
         if (this.errorCallback) {
           this.errorCallback({ ex });

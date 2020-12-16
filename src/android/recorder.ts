@@ -30,7 +30,7 @@ export class TNSRecorder implements TNSRecordI {
         ).catch(err => {
           reject(err);
         });
-        resolve();
+        resolve(null);
       } catch (error) {
         reject(error);
       }
@@ -105,7 +105,7 @@ export class TNSRecorder implements TNSRecordI {
         this._recorder.prepare();
         this._recorder.start();
 
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -123,7 +123,7 @@ export class TNSRecorder implements TNSRecordI {
         if (this._recorder) {
           this._recorder.pause();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -136,7 +136,7 @@ export class TNSRecorder implements TNSRecordI {
         if (this._recorder) {
           this._recorder.resume();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -149,7 +149,7 @@ export class TNSRecorder implements TNSRecordI {
         if (this._recorder) {
           this._recorder.stop();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -163,7 +163,7 @@ export class TNSRecorder implements TNSRecordI {
           this._recorder.release();
         }
         this._recorder = undefined;
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }

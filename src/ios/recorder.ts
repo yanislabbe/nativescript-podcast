@@ -135,7 +135,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
                 this._recorder.record();
               }
 
-              resolve();
+              resolve(null);
             }
           }
         });
@@ -151,7 +151,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
         if (this._recorder) {
           this._recorder.pause();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -164,7 +164,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
         if (this._recorder) {
           this._recorder.record();
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -180,7 +180,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
         // may need this in future
         // this._recordingSession.setActiveError(false, null);
         this._recorder.meteringEnabled = false;
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
@@ -197,7 +197,7 @@ export class TNSRecorder extends Observable implements TNSRecordI {
           this._recorder.release();
           this._recorder = undefined;
         }
-        resolve();
+        resolve(null);
       } catch (ex) {
         reject(ex);
       }
