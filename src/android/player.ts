@@ -207,6 +207,12 @@ export class TNSPlayer implements TNSPlayerI {
             }
           );
 
+          if (this._options?.pitch) {
+            const playBackParams = new android.media.PlaybackParams();
+            playBackParams.setPitch(this._options!.pitch);
+            this._player.setPlaybackParams(playBackParams);
+          }
+
           this._player.start();
         }
         resolve(true);
