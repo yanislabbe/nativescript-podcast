@@ -70,7 +70,7 @@ export class AudioFocusManager extends Observable {
     return this._audioPlayerSet.size > 0;
   }
   /**
-   * 
+   *
    * @param owner player requesting focus
    * @returns if we have focus or not
    */
