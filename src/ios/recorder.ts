@@ -3,7 +3,7 @@ import { TNSRecordI } from '../common';
 import { AudioRecorderOptions } from '../options';
 
 @NativeClass()
-export class TNSRecorderDelegate
+class TNSRecorderDelegate
   extends NSObject
   implements AVAudioRecorderDelegate {
   static ObjCProtocols = [AVAudioRecorderDelegate];
@@ -35,6 +35,8 @@ export class TNSRecorderDelegate
     }
   }
 }
+
+export { TNSRecorderDelegate };
 
 export class TNSRecorder extends Observable implements TNSRecordI {
   private _recorder: any;

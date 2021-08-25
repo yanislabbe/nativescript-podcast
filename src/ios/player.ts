@@ -5,7 +5,7 @@ import { AudioPlayerOptions } from '../options';
 declare var AVAudioPlayer;
 
 @NativeClass()
-export class TNSPlayerDelegate
+class TNSPlayerDelegate
   extends NSObject
   implements AVAudioPlayerDelegate {
   static ObjCProtocols = [AVAudioPlayerDelegate];
@@ -37,6 +37,8 @@ export class TNSPlayerDelegate
     }
   }
 }
+
+export { TNSPlayerDelegate };
 
 export class AudioFocusManager extends Observable {
 }
