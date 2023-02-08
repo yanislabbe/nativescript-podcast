@@ -4,9 +4,6 @@
 <h4 align="center">NativeScript plugin to play and record audio files for Android and iOS.</h4>
 
 <p align="center">
-    <a href="https://www.npmjs.com/package/@nstudio/nativescript-audio">
-        <img src="https://github.com/nstudio/nativescript-audio/workflows/Build%20CI/badge.svg" alt="Action Build">
-    </a>
     <a href="https://www.npmjs.com/package/nativescript-audio">
         <img src="https://img.shields.io/npm/v/nativescript-audio.svg" alt="npm">
     </a>
@@ -18,7 +15,7 @@
 
 #### NativeScript 7+:
 
-`ns plugin add nativescript-audio`
+`npm install nativescript-audio`
 
 #### NativeScript Version prior to 7:
 
