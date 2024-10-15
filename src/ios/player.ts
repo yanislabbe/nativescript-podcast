@@ -4,10 +4,7 @@ import { AudioPlayerOptions } from '../options';
 
 declare var AVAudioPlayer;
 
-@NativeClass()
-class TNSPlayerDelegate
-  extends NSObject
-  implements AVAudioPlayerDelegate {
+class TNSPlayerDelegate extends NSObject implements AVAudioPlayerDelegate {
   static ObjCProtocols = [AVAudioPlayerDelegate];
   private _owner: WeakRef<TNSPlayer>;
 
@@ -40,8 +37,7 @@ class TNSPlayerDelegate
 
 export { TNSPlayerDelegate };
 
-export class AudioFocusManager extends Observable {
-}
+export class AudioFocusManager extends Observable {}
 
 export class TNSPlayer extends Observable implements TNSPlayerI {
   completeCallback: any;
@@ -82,7 +78,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
   public initFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
-      // init only
       options.autoPlay = false;
       this.playFromFile(options).then(resolve, reject);
     });
@@ -90,7 +85,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
   public playFromFile(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
-      // only if not explicitly set, default to true
       if (options.autoPlay !== false) {
         options.autoPlay = true;
       }
@@ -149,7 +143,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
           if (this.delegate === undefined)
             this.delegate = TNSPlayerDelegate.initWithOwner(this);
           this._player.delegate = this.delegate;
-          // enableRate to change playback speed
           this._player.enableRate = true;
 
           if (options.metering) {
@@ -179,7 +172,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
   public initFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
-      // init only
       options.autoPlay = false;
       this.playFromUrl(options).then(resolve, reject);
     });
@@ -187,7 +179,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
   public playFromUrl(options: AudioPlayerOptions): Promise<any> {
     return new Promise((resolve, reject) => {
-      // only if not explicitly set, default to true
       if (options.autoPlay !== false) {
         options.autoPlay = true;
       }
@@ -247,10 +238,7 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
               return;
             } else if (this._player) {
               this._player.delegate = TNSPlayerDelegate.initWithOwner(this);
-
-              // enableRate to change playback speed
               this._player.enableRate = true;
-
               this._player.numberOfLoops = options.loop ? -1 : 0;
 
               if (options.metering) {
@@ -374,7 +362,6 @@ export class TNSPlayer extends Observable implements TNSPlayerI {
 
   public changePlayerSpeed(speed) {
     if (this._player && speed) {
-      // make sure speed is a number/float
       if (typeof speed === 'string') {
         speed = parseFloat(speed);
       }
