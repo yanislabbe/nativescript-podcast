@@ -1,6 +1,6 @@
 {
   "name": "nativescript-podcast",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "NativeScript plugin to play audio.",
   "main": "audio",
   "typings": "index.d.ts",
