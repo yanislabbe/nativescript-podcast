@@ -224,14 +224,14 @@ export class TNSPlayer implements TNSPlayerI {
 
   public get duration(): number {
     if (this._player) {
-      return this._player.getDuration();
+      return this._player.getDuration() / 1000;
     } else {
       return 0;
     }
   }
 
   get currentTime(): number {
-    return this._player ? this._player.getCurrentPosition() : 0;
+    return this._player ? this._player.getCurrentPosition() / 1000 : 0;
   }
 
   public setAudioFocusManager(manager: AudioFocusManager) {
@@ -411,7 +411,6 @@ export class TNSPlayer implements TNSPlayerI {
     return new Promise((resolve, reject) => {
       try {
         if (this._player) {
-          time = time * 1000;
           this._player.seekTo(time);
           this._sendEvent(AudioPlayerEvents.seek);
         }
@@ -477,7 +476,7 @@ export class TNSPlayer implements TNSPlayerI {
   public getAudioTrackDuration(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        const duration = this._player ? this._player.getDuration() : 0;
+        const duration = this._player ? this._player.getDuration() / 1000 : 0;
         resolve(duration.toString());
       } catch (ex) {
         reject(ex);
