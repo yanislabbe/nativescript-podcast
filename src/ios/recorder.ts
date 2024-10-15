@@ -11,7 +11,7 @@ class TNSRecorderDelegate
 
   static initWithOwner(owner: TNSRecorder) {
     const delegate = <TNSRecorderDelegate>TNSRecorderDelegate.new();
-    delegate._owner = new WeakRef(owner);
+    delegate._owner = new global.WeakRef(owner);
     return delegate;
   }
 

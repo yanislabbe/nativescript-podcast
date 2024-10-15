@@ -158,7 +158,7 @@ export class AudioFocusManager extends Observable {
         this._getAndroidContext();
       }, 200);
 
-      return;
+      return null;
     }
 
     return ctx;
@@ -526,7 +526,7 @@ export class TNSPlayer implements TNSPlayerI {
         this._getAndroidContext();
       }, 200);
 
-      return;
+      return null;
     }
 
     return ctx;

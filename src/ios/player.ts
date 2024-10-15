@@ -13,7 +13,7 @@ class TNSPlayerDelegate
 
   static initWithOwner(owner: TNSPlayer) {
     const delegate = <TNSPlayerDelegate>TNSPlayerDelegate.new();
-    delegate._owner = new WeakRef(owner);
+    delegate._owner = new global.WeakRef(owner);
     return delegate;
   }
 

@@ -14,7 +14,7 @@ import {
   AudioRecorderOptions,
   TNSPlayer,
   TNSRecorder
-} from 'nativescript-audio';
+} from 'nativescript-podcast';
 
 export class AudioDemo extends Observable {
   @ObservableProperty() public isPlaying: boolean;
