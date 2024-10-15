@@ -1,6 +1,6 @@
 {
   "name": "nativescript-podcast",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "NativeScript plugin to play audio.",
   "main": "audio",
   "typings": "index.d.ts",
@@ -15,11 +15,7 @@
     "build": "npm i && ts-patch install && tsc",
     "tslint": "cd .. && tslint \"**/*.ts\" --config tslint.json --exclude \"**/node_modules/**\" --exclude \"*demo*/platforms/**\"",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/typings/**'",
-    "demo.ios": "npm run build && cd ../demo && ns run ios",
-    "demo.android": "npm run build && cd ../demo && ns run android",
-    "clean.src": "rimraf **/*.js **/*.js.map node_modules package-lock.json",
-    "clean.demo": "cd ../demo && ns clean",
-    "generate.typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" ns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" ns build ios && echo 'Now look for your library typings in demo/typings!'"
+    "clean.src": "rimraf **/*.js **/*.js.map node_modules package-lock.json"
   },
   "lint-staged": {
     "**/*.{js, css, ts, json, scss, html, xml, md}": [
