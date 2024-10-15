@@ -1,5 +1,5 @@
 import { knownFolders, path as nsFilePath, Utils } from '@nativescript/core';
-import { AudioPlayerOptions, AudioRecorderOptions } from './options';
+import { AudioPlayerOptions } from './options';
 
 export interface TNSPlayerI {
   /**
@@ -57,33 +57,6 @@ export interface TNSPlayerI {
    * current time
    */
   readonly currentTime: number;
-}
-
-export interface TNSRecordI {
-  /**
-   * Starts the native audio recording control.
-   */
-  start(options: AudioRecorderOptions): Promise<any>;
-
-  /**
-   * Pauses the native audio recording control.
-   */
-  pause(): Promise<any>;
-
-  /**
-   * Resumes the native audio recording control.
-   */
-  resume(): Promise<any>;
-
-  /**
-   * Stops the native audio recording control.
-   */
-  stop(): Promise<any>;
-
-  /**
-   * Releases resources from the recorder.
-   */
-  dispose(): Promise<any>;
 }
 
 /**
